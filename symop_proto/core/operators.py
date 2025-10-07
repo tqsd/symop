@@ -64,7 +64,7 @@ class LadderOp:
 
     def commutator(self, other: LadderOp) -> complex:
         L = self.mode.label.overlap(other.mode.label)
-        if L < 1e-15:
+        if abs(L) < 1e-15:
             return 0.0 + 0.0j
         if self.is_annihilation and other.is_creation:
             return self.mode.env.overlap(other.mode.env) * L

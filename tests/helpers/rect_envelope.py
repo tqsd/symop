@@ -43,7 +43,7 @@ class RectEnvelope(BaseEnvelope):
         def r(x):
             return round(float(x), dec)
 
-        return ("rect≈", r(self.center), r(self.width), r(self.phase))
+        return ("rect_approx", r(self.center), r(self.width), r(self.phase))
 
     def center_and_scale(self) -> Tuple[float, float]:
         return (self.center, self.width)

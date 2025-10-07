@@ -91,7 +91,7 @@ class TestGaussianClosedForm(ExtendedTestCase):
         cases = [
             # (omega1, sigma1, tau1, omega2, sigma2, tau2)
             (1.0, 0.35, -0.2, 1.3, 0.5, 0.1),
-            (0.0, 0.20, 0.0, 0.0, 0.20, 0.0),  # identical → 1
+            (0.0, 0.20, 0.0, 0.0, 0.20, 0.0),  # identical -> 1
             (2.1, 0.75, 0.8, 1.5, 0.40, -0.3),
             (3.5, 1.00, -0.5, 3.5, 0.60, -0.2),
         ]
