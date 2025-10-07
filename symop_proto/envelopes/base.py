@@ -13,16 +13,11 @@ from symop_proto.core.envelope_protocol import (
 
 
 def _overlap_numeric(
-    f1: Callable[[np.ndarray], np.ndarray],
-    f2: Callable[[np.ndarray], np.ndarray],
-    *,
-    tmin: float,
-    tmax: float,
-    n: int = 2**14,
+    f1, f2, *, tmin: float, tmax: float, n: int = 2**16
 ) -> complex:
     t = np.linspace(tmin, tmax, n, dtype=float)
-    dt = (tmax - tmin) / (n - 1)
-    return np.vdot(f1(t), f2(t)) * dt
+    y = np.conjugate(f1(t)) * f2(t)
+    return np.trapezoid(y, t)
 
 
 @dataclass(frozen=True)

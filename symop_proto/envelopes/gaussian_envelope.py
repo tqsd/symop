@@ -58,7 +58,11 @@ class GaussianEnvelope(BaseEnvelope):
         return super().overlap(other)
 
     def approx_signature(
-        self, *, decimals: int = 12, ignore_global_phase: bool = False
+        self,
+        *,
+        decimals: int = 12,
+        ignore_global_phase: bool = False,
+        **kw: Any,
     ) -> Tuple[Any, ...]:
         r = round
         phi = 0.0 if ignore_global_phase else self.phi0
