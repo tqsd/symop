@@ -5,7 +5,7 @@ from enum import Enum
 from typing import Any, Tuple
 
 from symop_proto.core.envelope_protocol import EnvelopeProto
-from symop_proto.labels.mode_label import ModeLabel
+from symop_proto.core.label_protocol import LabelProto
 
 
 class OperatorKind(str, Enum):
@@ -21,7 +21,7 @@ class ModeOp:
     """
 
     env: EnvelopeProto
-    label: ModeLabel
+    label: LabelProto
 
     ann: LadderOp = field(init=False, repr=False, compare=False)
     create: LadderOp = field(init=False, repr=False, compare=False)

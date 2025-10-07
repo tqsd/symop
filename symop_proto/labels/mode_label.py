@@ -20,6 +20,6 @@ class ModeLabel(LabelProto):
     def approx_signature(self, **kw: Any) -> Tuple[Any, ...]:
         return (
             "mode_label_approx",
-            self.path.approx_signature(*kw),
-            self.pol.approx_signature(*kw),
+            self.path.approx_signature(**kw),
+            self.pol.approx_signature(**kw),
         )
