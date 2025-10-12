@@ -3,7 +3,7 @@ from dataclasses import dataclass, replace
 from typing import Any, Tuple
 import numpy as np
 
-from symop_proto.core.protocols import EnvelopeProto
+from symop_proto.core.protocols import EnvelopeProto, SignatureProto
 from symop_proto.envelopes.base import BaseEnvelope
 
 
@@ -32,7 +32,8 @@ class GaussianEnvelope(BaseEnvelope):
     def phased(self, dphi: float) -> GaussianEnvelope:
         return replace(self, phi0=self.phi0 + dphi)
 
-    def signature(self) -> Tuple[Any, ...]:
+    @property
+    def signature(self) -> SignatureProto:
         return (
             "gauss",
             float(self.omega0),
@@ -63,7 +64,7 @@ class GaussianEnvelope(BaseEnvelope):
         decimals: int = 12,
         ignore_global_phase: bool = False,
         **kw: Any,
-    ) -> Tuple[Any, ...]:
+    ) -> SignatureProto:
         r = round
         phi = 0.0 if ignore_global_phase else self.phi0
         return (

@@ -1,8 +1,11 @@
 from __future__ import annotations
 from typing import Any, Tuple
 
-from symop_proto.core.monomial import MonomialProto
-from symop_proto.core.protocols import DensityTermProto, KetTermProto
+from symop_proto.core.protocols import (
+    DensityTermProto,
+    KetTermProto,
+    MonomialProto,
+)
 
 
 def sig_mono(

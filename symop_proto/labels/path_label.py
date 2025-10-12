@@ -10,8 +10,9 @@ class PathLabel:
     def overlap(self, other: PathLabel) -> complex:
         return 1.0 + 0.0j if self.name == other.name else 0.0 + 0.0j
 
+    @property
     def signature(self) -> Tuple[Any, ...]:
         return ("path", self.name)
 
     def approx_signature(self, **kw: Any) -> Tuple[Any, ...]:
-        return self.signature()
+        return self.signature

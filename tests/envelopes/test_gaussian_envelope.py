@@ -76,7 +76,7 @@ class TestGaussianEnvelope(ExtendedTestCase):
 
     def test_signatures(self):
         g = GaussianEnvelope(1.0, 0.3, 0.2, 0.5)
-        sig = g.signature()
+        sig = g.signature
         self.assertEqual(sig[0], "gauss")
         s8 = g.approx_signature(decimals=8)
         s6 = g.approx_signature(decimals=6, ignore_global_phase=True)

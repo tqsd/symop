@@ -8,7 +8,8 @@ from .overlap_right_left import overlap_right_left
 def density_inner(
     a: Tuple[DensityTermProto, ...], b: Tuple[DensityTermProto, ...]
 ) -> complex:
-    r"""Compute the Hilbert--Schmidt inner product between two density polynomials.
+    r"""Compute the Hilbert--Schmidt inner product between two density
+    polynomials.
 
     This function evaluates the symbolic Hilbert--Schmidt inner product
     :math:`\langle A, B \rangle = \mathrm{Tr}(A^\dagger B)` by expanding the

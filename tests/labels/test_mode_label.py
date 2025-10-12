@@ -9,7 +9,7 @@ from symop_proto.labels.polarization_label import PolarizationLabel
 class TestModeLabel(ExtendedTestCase):
     def test_init_and_signature(self):
         ml = ModeLabel(PathLabel("A"), PolarizationLabel.H())
-        sig = ml.signature()
+        sig = ml.signature
         self.assertIsInstance(sig, tuple)
         self.assertEqual(sig[0], "mode_label")
 
@@ -62,4 +62,4 @@ class TestModeLabel(ExtendedTestCase):
         s = 2**-0.5
         a = ModeLabel(PathLabel("A"), PolarizationLabel((s, s)))
         b = ModeLabel(PathLabel("A"), PolarizationLabel((1j * s, 1j * s)))
-        self.assertEqual(a.signature(), b.signature())
+        self.assertEqual(a.signature, b.signature)

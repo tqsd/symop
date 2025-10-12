@@ -14,8 +14,9 @@ class ModeLabel(LabelProto):
     def overlap(self, other: ModeLabel) -> complex:
         return self.path.overlap(other.path) * self.pol.overlap(other.pol)
 
+    @property
     def signature(self) -> SignatureProto:
-        return ("mode_label", self.path.signature(), self.pol.signature())
+        return ("mode_label", self.path.signature, self.pol.signature)
 
     def approx_signature(self, **kw: Any) -> SignatureProto:
         return (

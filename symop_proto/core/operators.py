@@ -56,8 +56,8 @@ class ModeOp(ModeOpProto):
         return replace(self, display_index=idx)
 
     @property
-    def signature(self) -> Tuple[Any, ...]:
-        return ("mode", self.env.signature(), self.label.signature())
+    def signature(self) -> SignatureProto:
+        return ("mode", self.env.signature, self.label.signature)
 
     def approx_signature(self, **kw: Any) -> Tuple[Any, ...]:
         return (

@@ -97,7 +97,7 @@ class TestPolarizationLabel(ExtendedTestCase):
         s = 2**-0.5
         a = PolarizationLabel((s, s))
         b = PolarizationLabel((1j * s, 1j * s))  # same up to global phase
-        self.assertEqual(a.signature(), b.signature())
+        self.assertEqual(a.signature, b.signature)
 
         # nearly equal vectors -> same approx_signature at lower precision, but not necessarily same exact signature
         a2 = PolarizationLabel((s, s))

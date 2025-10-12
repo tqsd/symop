@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from typing import Any, Tuple
 import numpy as np
 
+from symop_proto.core.protocols import SignatureProto
+
 
 @dataclass(frozen=True)
 class PolarizationLabel:
@@ -87,7 +89,8 @@ class PolarizationLabel:
         c, s = np.cos(theta), np.sin(theta)
         return PolarizationLabel((c * a + s * b, -s * a + c * b))
 
-    def signature(self) -> Tuple[Any, ...]:
+    @property
+    def signature(self) -> SignatureProto:
         a, b = self.jones
         return (
             "pol",
@@ -99,7 +102,7 @@ class PolarizationLabel:
 
     def approx_signature(
         self, *, decimals: int = 12, **kw: Any
-    ) -> Tuple[Any, ...]:
+    ) -> SignatureProto:
         def r(z):
             return (round(z.real, decimals), round(z.imag, decimals))
 

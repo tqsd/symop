@@ -7,12 +7,17 @@ SignatureProto = Tuple[Any, ...]
 
 
 @runtime_checkable
-class EnvelopeProto(Protocol):
+class HasSignature(Protocol):
+    @property
+    def signature(self) -> SignatureProto: ...
+    def approx_signature(self) -> SignatureProto: ...
+
+
+@runtime_checkable
+class EnvelopeProto(HasSignature, Protocol):
     def overlap(self, other: EnvelopeProto) -> complex: ...
     def delayed(self, dt: float) -> EnvelopeProto: ...
     def phased(self, dphi: float) -> EnvelopeProto: ...
-    def signature(self) -> Tuple[Any, ...]: ...
-    def approx_signature(self, **kw: Any) -> Tuple[Any, ...]: ...
 
 
 @runtime_checkable
@@ -27,14 +32,12 @@ class SupportsOverlapWIthGeneric(Protocol):
 
 
 @runtime_checkable
-class LabelProto(Protocol):
+class LabelProto(HasSignature, Protocol):
     def overlap(self, other: Self) -> complex: ...
-    def signature(self) -> SignatureProto: ...
-    def approx_signature(self, **kw: Any) -> Tuple[Any, ...]: ...
 
 
 @runtime_checkable
-class ModeOpProto(Protocol):
+class ModeOpProto(HasSignature, Protocol):
     env: EnvelopeProto
     label: LabelProto
 
@@ -46,9 +49,6 @@ class ModeOpProto(Protocol):
 
     def with_label(self, tag: str) -> ModeOpProto: ...
     def with_index(self, idx: int) -> ModeOpProto: ...
-    @property
-    def signature(self) -> SignatureProto: ...
-    def approx_signature(self, **kw: Any) -> SignatureProto: ...
 
 
 @runtime_checkable
@@ -58,7 +58,7 @@ class OperatorKindProto(Protocol):
 
 
 @runtime_checkable
-class LadderOpProto(Protocol):
+class LadderOpProto(HasSignature, Protocol):
     kind: OperatorKindProto
     mode: ModeOpProto
 
@@ -70,14 +70,11 @@ class LadderOpProto(Protocol):
     def commutator(self, other: LadderOpProto) -> complex: ...
 
     @property
-    def signature(self) -> SignatureProto: ...
-    def approx_signature(self, **env_kw: Any) -> SignatureProto: ...
-    @property
     def latex(self) -> str: ...
 
 
 @runtime_checkable
-class MonomialProto(Protocol):
+class MonomialProto(HasSignature, Protocol):
     creators: Tuple[LadderOpProto, ...]
     annihilators: Tuple[LadderOpProto, ...]
 
@@ -85,9 +82,7 @@ class MonomialProto(Protocol):
     def mode_ops(self) -> Tuple[ModeOpProto, ...]: ...
 
     def adjoint(self) -> MonomialProto: ...
-    @property
-    def signature(self) -> SignatureProto: ...
-    def approx_signature(self, **env_kw) -> SignatureProto: ...
+
     @property
     def is_creator_only(self) -> bool: ...
     @property
@@ -101,16 +96,13 @@ class MonomialProto(Protocol):
 
 
 @runtime_checkable
-class KetTermProto(Protocol):
+class KetTermProto(HasSignature, Protocol):
     coeff: complex
     monomial: MonomialProto
 
     @staticmethod
     def identity() -> KetTermProto: ...
     def adjoint(self) -> KetTermProto: ...
-    @property
-    def signature(self) -> SignatureProto: ...
-    def approx_signature(self, **env_kw) -> SignatureProto: ...
     @property
     def is_creator_only(self) -> bool: ...
     @property
@@ -128,7 +120,7 @@ class KetTermProto(Protocol):
 
 
 @runtime_checkable
-class DensityTermProto(Protocol):
+class DensityTermProto(HasSignature, Protocol):
     coeff: complex
     left: MonomialProto
     right: MonomialProto
@@ -136,9 +128,7 @@ class DensityTermProto(Protocol):
     @staticmethod
     def identity() -> DensityTermProto: ...
     def adjoint(self) -> DensityTermProto: ...
-    @property
-    def signature(self) -> SignatureProto: ...
-    def approx_signature(self) -> SignatureProto: ...
+
     @property
     def is_creator_only_left(self) -> bool: ...
     @property

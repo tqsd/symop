@@ -7,6 +7,7 @@ import numpy as np
 
 from symop_proto.core.protocols import (
     EnvelopeProto,
+    SignatureProto,
     SupportsOverlapWIthGeneric,
     TimeEvaluable,
 )
@@ -32,8 +33,9 @@ class BaseEnvelope(EnvelopeProto, ABC):
     @abstractmethod
     def phased(self, dphi: float) -> BaseEnvelope: ...
 
+    @property
     @abstractmethod
-    def signature(self) -> Tuple[Any, ...]: ...
+    def signature(self) -> SignatureProto: ...
 
     @abstractmethod
     def approx_signature(self, **kw: Any) -> Tuple[Any, ...]: ...

@@ -1,50 +1,18 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, Iterable, Tuple, Union, Optional
+from typing import Any, Iterable, Tuple, Union, Optional
 from numpy import sqrt, cos, sin
 
-from symop_proto.core.operators import LadderOp, ModeOp
-from symop_proto.core.protocols import LadderOpProto
-
-
-def op_from_words(
-    words: Iterable[Iterable[LadderOpProto]],
-    coeffs: Optional[Iterable[complex]] = None,
-) -> Tuple[OpTerm, ...]:
-    ws = [tuple(w) for w in words]
-    if coeffs is None:
-        coeffs = [1.0] * len(ws)
-    return tuple(OpTerm(w, c) for w, c in zip(ws, coeffs))
-
-
-def op_multiply(
-    a: Tuple[OpTerm, ...], b: Tuple[OpTerm, ...]
-) -> Tuple[OpTerm, ...]:
-    return tuple(
-        OpTerm(ti.ops + tj.ops, ti.coeff * tj.coeff) for ti in a for tj in b
-    )
-
-
-def op_combine_like_terms(
-    terms: Tuple[OpTerm, ...], *, use_approx: bool = False, **env_kw
-) -> Tuple[OpTerm, ...]:
-    key = (
-        (lambda t: t.approx_signature(**env_kw))
-        if use_approx
-        else (lambda t: t.signature)
-    )
-    buckets: Dict[tuple, complex] = {}
-    reps: Dict[tuple, Tuple[LadderOp, ...]] = {}
-    for t in terms:
-        k = key(t)
-        buckets[k] = buckets.get(k, 0.0j) + t.coeff
-        reps.setdefault(k, t.ops)
-    return tuple(OpTerm(reps[k], c) for k, c in buckets.items() if c != 0.0)
+from symop_proto.algebra.op_poly.combine import op_combine_like_terms
+from symop_proto.algebra.op_poly.from_words import op_from_words
+from symop_proto.algebra.op_poly.multiply import op_multiply
+from symop_proto.algebra.protocols import OpPolyProto, OpTermProto
+from symop_proto.core.protocols import LadderOpProto, ModeOpProto
 
 
 @dataclass(frozen=True)
-class OpTerm:
+class OpTerm(OpTermProto):
     r"""
     Single operator "word" with a complex coefficient.
 
@@ -101,7 +69,7 @@ class OpTerm:
 
 
 @dataclass(frozen=True)
-class OpPoly:
+class OpPoly(OpPolyProto):
     r"""
     Finite linear combination of :class:`OpTerm` objects.
 
@@ -127,7 +95,7 @@ class OpPoly:
 
     Normalization
     -------------
-    ``combine_like_terms(use_approx=False, **env_kw)`` merges terms with identical
+    ``combine_like_terms(approx=False, **env_kw)`` merges terms with identical
     (exact or approximate) signatures by summing their coefficients and discarding
     zeros.
 
@@ -143,14 +111,14 @@ class OpPoly:
     - All helpers accept any iterables; generators are safely materialized.
     """
 
-    terms: Tuple[OpTerm, ...] = ()
+    terms: Tuple[OpTermProto, ...] = ()
 
     @staticmethod
     def from_words(
-        words: Iterable[Iterable[LadderOp]],
+        words: Iterable[Iterable[LadderOpProto]],
         coeffs: Optional[Iterable[complex]] = None,
     ) -> OpPoly:
-        return OpPoly(op_from_words(words, coeffs))
+        return OpPoly(op_from_words(words, coeffs, term_factory=OpTerm))
 
     @staticmethod
     def identity(c: complex = 1.0) -> OpPoly:
@@ -161,36 +129,36 @@ class OpPoly:
         return OpPoly(())
 
     @staticmethod
-    def a(mode: ModeOp) -> OpPoly:
+    def a(mode: ModeOpProto) -> OpPoly:
         return OpPoly.from_words([[mode.ann]])
 
     @staticmethod
-    def adag(mode: ModeOp) -> OpPoly:
+    def adag(mode: ModeOpProto) -> OpPoly:
         return OpPoly.from_words([[mode.create]])
 
     @staticmethod
-    def n(mode: ModeOp) -> OpPoly:
+    def n(mode: ModeOpProto) -> OpPoly:
         return OpPoly.from_words([[mode.create, mode.ann]])
 
     @staticmethod
-    def q(mode: ModeOp) -> OpPoly:
+    def q(mode: ModeOpProto) -> OpPoly:
         return (
             OpPoly.from_words([[mode.ann]])
             + OpPoly.from_words([[mode.create]])
         ) * (1.0 / sqrt(2))
 
     @staticmethod
-    def x(mode: ModeOp) -> OpPoly:
+    def x(mode: ModeOpProto) -> OpPoly:
         return OpPoly.q(mode)
 
     @staticmethod
-    def p(mode: ModeOp) -> OpPoly:
+    def p(mode: ModeOpProto) -> OpPoly:
         return OpPoly.from_words([[mode.create]]) * (
             1j / sqrt(2)
         ) + OpPoly.from_words([[mode.ann]]) * (-1j / sqrt(2))
 
     @staticmethod
-    def X_theta(mode: "ModeOp", theta: float) -> OpPoly:
+    def X_theta(mode: ModeOpProto, theta: float) -> OpPoly:
         e_m = cos(theta) - 1j * sin(theta)
         e_p = cos(theta) + 1j * sin(theta)
         return (
@@ -199,17 +167,17 @@ class OpPoly:
         ) * (1.0 / sqrt(2))
 
     @staticmethod
-    def q2(mode: ModeOp) -> OpPoly:
+    def q2(mode: ModeOpProto) -> OpPoly:
         q = OpPoly.q(mode)
         return (q * q).combine_like_terms()
 
     @staticmethod
-    def p2(mode: ModeOp) -> OpPoly:
+    def p2(mode: ModeOpProto) -> OpPoly:
         p = OpPoly.p(mode)
         return (p * p).combine_like_terms()
 
     @staticmethod
-    def n2(mode: ModeOp) -> OpPoly:
+    def n2(mode: ModeOpProto) -> OpPoly:
         n = OpPoly.n(mode)
         return (n * n).combine_like_terms()
 
@@ -220,7 +188,9 @@ class OpPoly:
         return OpPoly(tuple(term.adjoint() for term in self.terms))
 
     def combine_like_terms(self, **kw):
-        return OpPoly(op_combine_like_terms(self.terms, **kw))
+        return OpPoly(
+            op_combine_like_terms(self.terms, term_factory=OpTerm, **kw)
+        )
 
     @property
     def is_zero(self) -> bool:
@@ -230,13 +200,15 @@ class OpPoly:
     def is_identity(self) -> bool:
         return len(self.terms) > 0 and all(len(t.ops) == 0 for t in self.terms)
 
-    def __add__(self, other: OpPoly) -> OpPoly:
+    def __add__(self, other: OpPolyProto) -> OpPoly:
         return OpPoly((*self.terms, *other.terms))
 
-    def __mul__(self, other: Union[OpPoly, complex]) -> OpPoly:
+    def __mul__(self, other: Union[OpPolyProto, complex]) -> OpPoly:
         if isinstance(other, (int, float, complex)):
             return self.scaled(other)
-        return OpPoly(op_multiply(self.terms, other.terms))
+        return OpPoly(
+            op_multiply(self.terms, other.terms, term_factory=OpTerm)
+        )
 
     def __rmul__(self, other: complex) -> "OpPoly":
         if isinstance(other, (int, float, complex)):

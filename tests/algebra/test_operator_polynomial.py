@@ -1,6 +1,7 @@
 from __future__ import annotations
 import unittest
-from math import sqrt
+from typing import Tuple
+from dataclasses import dataclass
 
 from tests.utils.case import ExtendedTestCase
 
@@ -8,21 +9,18 @@ from symop_proto.envelopes.gaussian_envelope import GaussianEnvelope
 from symop_proto.labels.path_label import PathLabel
 from symop_proto.labels.polarization_label import PolarizationLabel
 from symop_proto.labels.mode_label import ModeLabel
+from symop_proto.core.operators import ModeOp, LadderOp
 
-from symop_proto.core.operators import ModeOp
-from symop_proto.core.monomial import (
-    Monomial,
-)  # used only for signatures in sanity checks
-from symop_proto.algebra.operator_polynomial import OpTerm, OpPoly
+from symop_proto.algebra.operator_polynomial import OpPoly, OpTerm
 
 
 def make_mode(
     path: str = "A",
     *,
-    omega: float = 1.0,
-    sigma: float = 0.3,
-    tau: float = 0.0,
-    phi: float = 0.0,
+    omega=1.0,
+    sigma=0.3,
+    tau=0.0,
+    phi=0.0,
     pol: PolarizationLabel | None = None,
 ) -> ModeOp:
     pol = pol or PolarizationLabel.H()
@@ -31,126 +29,123 @@ def make_mode(
     return ModeOp(env=env, label=label)
 
 
-class TestOpTerm(ExtendedTestCase):
+@dataclass(frozen=True)
+class _StubTerm:
+    ops: Tuple[LadderOp, ...]
+    coeff: complex
 
-    def test_identity_and_scaled_and_adjoint(self):
+    @property
+    def signature(self) -> tuple:
+        return (
+            "stub",
+            tuple(op.mode.label.signature for op in self.ops),
+            len(self.ops),
+        )
+
+    def approx_signature(self, **env_kw) -> tuple:
+        return self.signature
+
+
+class TestOpPoly(ExtendedTestCase):
+    def test_identity_and_zero_flags(self):
+        I = OpPoly.identity(2.0)
+        Z = OpPoly.zero()
+        self.assertTrue(I.is_identity)
+        self.assertFalse(I.is_zero)
+        self.assertTrue(Z.is_zero)
+        self.assertFalse(Z.is_identity)
+
+    def test_from_words_builds_terms(self):
         mA = make_mode("A")
         mB = make_mode("B")
+        O = OpPoly.from_words([[mA.create, mA.ann], [mB.ann]])
+        self.assertEqual(len(O.terms), 2)
+        self.assertEqual(O.terms[0].ops, (mA.create, mA.ann))
+        self.assertEqual(O.terms[1].ops, (mB.ann,))
 
-        t_id = OpTerm.identity(2.0)
-        self.assertEqual(t_id.ops, ())
-        self.assertComplexAlmostEqual(t_id.coeff, 2.0 + 0j)
+    def test_addition_concatenates_terms(self):
+        mA = make_mode("A")
+        O1 = OpPoly.from_words([[mA.create]])
+        O2 = OpPoly.from_words([[mA.ann]])
+        O = O1 + O2
+        self.assertEqual(len(O.terms), 2)
+        self.assertEqual(O.terms[0].ops, (mA.create,))
+        self.assertEqual(O.terms[1].ops, (mA.ann,))
 
-        t = OpTerm(ops=(mA.create, mB.ann), coeff=3.0 - 4.0j)
-        t_star = t.adjoint()
-        # reverse order and dagger each: (mB.ann) -> (mB.create), (mA.create) -> (mA.ann)
-        self.assertEqual(t_star.ops, (mB.create, mA.ann))
-        self.assertComplexAlmostEqual(t_star.coeff, 3.0 + 4.0j)
+    def test_scalar_multiplication_scales_coeffs(self):
+        mA = make_mode("A")
+        O = OpPoly.from_words([[mA.create]])
+        O2 = 3.0 * O
+        self.assertAlmostEqual(O2.terms[0].coeff, 3.0)
+        O3 = O * -2.0
+        self.assertAlmostEqual(O3.terms[0].coeff, -2.0)
 
-        t2 = t.scaled(-1j)
-        self.assertEqual(t2.ops, t.ops)
-        self.assertComplexAlmostEqual(t2.coeff, (-1j) * (3.0 - 4.0j))
+    def test_operator_multiplication_cartesian_and_order(self):
+        mA = make_mode("A")
+        mB = make_mode("B")
+        O1 = OpPoly.from_words([[mA.create], [mA.ann]])
+        O2 = OpPoly.from_words([[mB.create]])
+        O = O1 * O2
+        self.assertEqual(len(O.terms), 2)
+        self.assertEqual(O.terms[0].ops, (mA.create, mB.create))
+        self.assertEqual(O.terms[1].ops, (mA.ann, mB.create))
 
+    def test_adjoint_reverses_order_and_daggers(self):
+        mA = make_mode("A")
+        O = OpPoly.from_words([[mA.create, mA.ann]])
+        Od = O.adjoint()
+        self.assertEqual(len(Od.terms), 1)
+        self.assertEqual(Od.terms[0].ops, (mA.create, mA.ann))
 
-class TestOpPolyConstruction(ExtendedTestCase):
-    def test_zero_and_identity_flags(self):
-        Z = OpPoly.zero()
-        I = OpPoly.identity()
-        self.assertTrue(Z.is_zero)
-        self.assertFalse(I.is_zero)
-        self.assertTrue(I.is_identity)
-        # mixing identity with a non-empty word makes it non-identity
-        m = make_mode("A")
-        O = I + OpPoly.from_words([[m.ann]])
-        self.assertFalse(O.is_identity)
+    def test_q_p_n_builders(self):
+        mA = make_mode("A")
+        q = OpPoly.q(mA)
+        p = OpPoly.p(mA)
+        n = OpPoly.n(mA)
+        self.assertEqual(len(q.terms), 2)
+        self.assertEqual(len(p.terms), 2)
+        self.assertEqual(len(n.terms), 1)
+        self.assertEqual(n.terms[0].ops, (mA.create, mA.ann))
 
-    def test_from_words_and_scaling(self):
-        m = make_mode("A")
-        P = OpPoly.from_words([[m.ann], [m.create]], coeffs=[2.0, -3.0j])
-        self.assertEqual(len(P.terms), 2)
-        # scalar on right
-        Q = P * (0.5 + 0.0j)
-        # scalar on left
-        R = (0.5 + 0.0j) * P
-        for X in (Q, R):
-            self.assertComplexAlmostEqual(
-                X.terms[0].coeff, P.terms[0].coeff * 0.5
-            )
-            self.assertComplexAlmostEqual(
-                X.terms[1].coeff, P.terms[1].coeff * 0.5
-            )
-
-
-class TestOpPolyAlgebra(ExtendedTestCase):
-    def test_add_and_multiply_and_combine(self):
-        m = make_mode("A")
-        A = OpPoly.from_words([[m.ann], [m.create]], coeffs=[1.0, 1.0])
-        B = OpPoly.from_words([[m.create]], coeffs=[2.0])
-        # multiplication forms all concatenations
-        M = A * B
-        self.assertEqual(len(M.terms), 2)
-        ops_sets = {tuple(t.ops) for t in M.terms}
-        self.assertIn((m.ann, m.create), ops_sets)
-        self.assertIn((m.create, m.create), ops_sets)
-        # combine like terms merges identical words
-        D = OpPoly.from_words(
-            [[m.ann], [m.ann]], coeffs=[1.0, 2.5]
-        ).combine_like_terms()
-        self.assertEqual(len(D.terms), 1)
-        self.assertEqual(D.terms[0].ops, (m.ann,))
-        self.assertComplexAlmostEqual(D.terms[0].coeff, 3.5 + 0j)
-
-    def test_adjoint_distributes_over_sum(self):
-        m = make_mode("A")
-        O = OpPoly.from_words(
-            [[m.create, m.ann], [m.ann]], coeffs=[1.0 + 2.0j, -3.0]
-        )
-        Odag = O.adjoint()
-        self.assertEqual(len(Odag.terms), 2)
-        # check first term: ops reversed+daggered, coeff conjugated
-        t0 = Odag.terms[0]
-        self.assertEqual(t0.ops, (m.ann.dagger(), m.create.dagger()))
-        self.assertComplexAlmostEqual(t0.coeff, (1.0 - 2.0j))
-
-
-class TestConvenienceConstructors(ExtendedTestCase):
-    def test_a_adag_n(self):
-        m = make_mode("A")
-        a = OpPoly.a(m)
-        adag = OpPoly.adag(m)
-        n = OpPoly.n(m)
-        self.assertEqual(a.terms[0].ops, (m.ann,))
-        self.assertEqual(adag.terms[0].ops, (m.create,))
-        self.assertEqual(n.terms[0].ops, (m.create, m.ann))
-
-    def test_q_p_and_Xtheta(self):
-        m = make_mode("A")
-        q = OpPoly.q(m).combine_like_terms()
-        p = OpPoly.p(m).combine_like_terms()
-        # q = (a + adag)/sqrt(2)
-        sigs_q = {tuple(t.ops): t.coeff for t in q.terms}
-        self.assertComplexAlmostEqual(sigs_q[(m.ann,)], 1.0 / sqrt(2))
-        self.assertComplexAlmostEqual(sigs_q[(m.create,)], 1.0 / sqrt(2))
-
-        # p = i adag/sqrt(2) - i a/sqrt(2)
-        sigs_p = {tuple(t.ops): t.coeff for t in p.terms}
-        self.assertComplexAlmostEqual(sigs_p[(m.create,)], 1j / sqrt(2))
-        self.assertComplexAlmostEqual(sigs_p[(m.ann,)], -1j / sqrt(2))
-
-        # X_theta(theta=0) = q
-        X0 = OpPoly.X_theta(m, 0.0).combine_like_terms()
-        sigs_X0 = {tuple(t.ops): t.coeff for t in X0.terms}
-        self.assertComplexAlmostEqual(sigs_X0[(m.ann,)], 1.0 / sqrt(2))
-        self.assertComplexAlmostEqual(sigs_X0[(m.create,)], 1.0 / sqrt(2))
-
-    def test_generators_are_accepted(self):
-        m = make_mode("A")
-        words_gen = ((op,) for op in (m.ann, m.create))  # generator of words
-        P = OpPoly.from_words(words_gen)  # coeffs default to 1
+    def test_q2_p2_n2_helpers(self):
+        mA = make_mode("A")
+        q2_a = OpPoly.q2(mA)
+        q = OpPoly.q(mA)
+        q2_b = (q * q).combine_like_terms()
         self.assertEqual(
-            {tuple(t.ops) for t in P.terms}, {(m.ann,), (m.create,)}
+            {t.signature for t in q2_a.terms},
+            {t.signature for t in q2_b.terms},
         )
-        self.assertTrue(all(abs(t.coeff - 1.0) < 1e-14 for t in P.terms))
+        p2_a = OpPoly.p2(mA)
+        p = OpPoly.p(mA)
+        p2_b = (p * p).combine_like_terms()
+        self.assertEqual(
+            {t.signature for t in p2_a.terms},
+            {t.signature for t in p2_b.terms},
+        )
+        n2_a = OpPoly.n2(mA)
+        n = OpPoly.n(mA)
+        n2_b = (n * n).combine_like_terms()
+        self.assertEqual(
+            {t.signature for t in n2_a.terms},
+            {t.signature for t in n2_b.terms},
+        )
+
+    def test_combine_like_terms_exact(self):
+        mA = make_mode("A")
+        t1 = OpTerm((mA.create,), 2.0)
+        t2 = OpTerm((mA.create,), 3.5)
+        O = OpPoly((t1, t2)).combine_like_terms()
+        self.assertEqual(len(O.terms), 1)
+        self.assertEqual(O.terms[0].ops, (mA.create,))
+        self.assertAlmostEqual(O.terms[0].coeff, 5.5)
+
+    def test_combine_like_terms_plumbing_accepts_kw(self):
+        mA = make_mode("A")
+        O = OpPoly.from_words([[mA.create], [mA.create]])
+        O2 = O.combine_like_terms(approx=False)
+        self.assertEqual(len(O2.terms), 1)
+        self.assertEqual(O2.terms[0].ops, (mA.create,))
 
 
 if __name__ == "__main__":

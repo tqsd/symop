@@ -17,7 +17,7 @@ class TestPathLabel(ExtendedTestCase):
 
     def test_signatures_roundtrip(self):
         a = PathLabel("A")
-        sig = a.signature()
+        sig = a.signature
         approx = a.approx_signature()
         self.assertIsInstance(sig, tuple)
         self.assertIsInstance(approx, tuple)
