@@ -1,4 +1,4 @@
-from symop_proto.core.envelope_protocol import (
+from symop_proto.core.protocols import (
     EnvelopeProto,
     SupportsOverlapWIthGeneric,
 )

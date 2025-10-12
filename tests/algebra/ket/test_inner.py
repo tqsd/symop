@@ -29,7 +29,6 @@ def make_mode(
 
 class TestKetInner(ExtendedTestCase):
     def test_vacuum_inner_is_one(self):
-        # |0> corresponds to monomial with no creators/annihilators
         psi = (KetTerm(1.0, Monomial((), ())),)
         self.assertComplexAlmostEqual(ket_inner(psi, psi), 1.0 + 0j)
 
@@ -47,7 +46,6 @@ class TestKetInner(ExtendedTestCase):
         self.assertComplexAlmostEqual(ket_inner(psi_b, psi_a), 0.0 + 0j)
 
     def test_nonorthogonal_polarization_overlap(self):
-        # <H|D> = 1/sqrt(2)
         aH = make_mode("A", pol=PolarizationLabel.H())
         aD = make_mode("A", pol=PolarizationLabel.D())
         psi_H = (KetTerm(1.0, Monomial((aH.create,), ())),)
@@ -58,15 +56,10 @@ class TestKetInner(ExtendedTestCase):
 
     def test_superposition_norm_and_orthogonality(self):
         a = make_mode("A")
-        b = make_mode("B")  # orthogonal path to A
-        psi_a = KetTerm(
-            2.0, Monomial((a.create,), ())
-        )  # amplitude 2 -> |2|^2 = 4
-        psi_b = KetTerm(
-            1.0j, Monomial((b.create,), ())
-        )  # amplitude i -> |i|^2 = 1
+        b = make_mode("B")
+        psi_a = KetTerm(2.0, Monomial((a.create,), ()))
+        psi_b = KetTerm(1.0j, Monomial((b.create,), ()))
         psi = (psi_a, psi_b)
-        # <psi|psi> = |2|^2 + |i|^2 = 5
         self.assertComplexAlmostEqual(ket_inner(psi, psi), 5.0 + 0j)
 
     def test_conjugate_symmetry(self):

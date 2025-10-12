@@ -46,10 +46,12 @@ class TestKetMultiply(ExtendedTestCase):
         self.assertEqual(len(out1), 1)
         self.assertEqual(len(out2), 1)
         self.assertEqual(
-            out1[0].monomial.signature, Monomial((m.create,), ()).signature
+            out1[0].monomial.signature,
+            Monomial((m.create,), ()).signature,
         )
         self.assertEqual(
-            out2[0].monomial.signature, Monomial((m.create,), ()).signature
+            out2[0].monomial.signature,
+            Monomial((m.create,), ()).signature,
         )
         self.assertComplexAlmostEqual(out1[0].coeff, 3.0)
         self.assertComplexAlmostEqual(out2[0].coeff, 3.0)

@@ -1,13 +1,18 @@
 from __future__ import annotations
 from typing import List, Tuple
-from symop_proto.core.terms import KetTerm
+from symop_proto.core.protocols import KetTermProto
 from symop_proto.algebra.ket.from_word import ket_from_word
 from .combine import combine_like_terms_ket
 
 
 def ket_multiply(
-    a: Tuple[KetTerm, ...], b: Tuple[KetTerm, ...]
-) -> Tuple[KetTerm, ...]:
+    a: Tuple[KetTermProto, ...],
+    b: Tuple[KetTermProto, ...],
+    *,
+    eps: float = 1e-12,
+    approx: bool = False,
+    **env_kw,
+) -> Tuple[KetTermProto, ...]:
     """Multiply two symbolic ket expansions
 
     Forms the product of two tuples of :class:`KetTerm` objects by
@@ -30,19 +35,27 @@ def ket_multiply(
         in ``a`` and ``b``, and C(L) is the cost of expanding a single
         operator word of length L via :func:`ket_from_word`.
     """
-    out: List[KetTerm] = []
+    from symop_proto.core.terms import KetTerm
+
+    out: List[KetTermProto] = []
     for ti in a:
+        if abs(ti.coeff) <= eps:
+            continue
+        mi = ti.monomial
         for tj in b:
+            if abs(tj.coeff) <= eps:
+                continue
+            mj = tj.monomial
             word_terms = ket_from_word(
                 ops=(
-                    *ti.monomial.creators,
-                    *ti.monomial.annihilators,
-                    *tj.monomial.creators,
-                    *tj.monomial.annihilators,
+                    *mi.creators,
+                    *mi.annihilators,
+                    *mj.creators,
+                    *mj.annihilators,
                 )
             )
             for tk in word_terms:
                 out.append(
                     KetTerm(ti.coeff * tj.coeff * tk.coeff, tk.monomial)
                 )
-    return combine_like_terms_ket(out)
+    return combine_like_terms_ket(out, eps=eps, approx=approx, **env_kw)

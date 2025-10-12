@@ -1,10 +1,12 @@
 from __future__ import annotations
-from dataclasses import replace
 from typing import Tuple
-from symop_proto.core.terms import KetTerm
+
+from symop_proto.core.protocols import KetTermProto
 
 
-def ket_scale(terms: Tuple[KetTerm, ...], c: complex) -> Tuple[KetTerm, ...]:
+def ket_scale(
+    terms: Tuple[KetTermProto, ...], c: complex
+) -> Tuple[KetTermProto, ...]:
     """Scale a tuple of ket terms by a complex coefficient
 
     Multiplies the coefficient of each :class:`KetTerm` given by the
@@ -26,4 +28,9 @@ def ket_scale(terms: Tuple[KetTerm, ...], c: complex) -> Tuple[KetTerm, ...]:
           :math:`c \\cdot |\\psi\\rangle`.
 
     """
-    return tuple(replace(t, coeff=c * t.coeff) for t in terms)
+
+    from symop_proto.core.terms import KetTerm
+
+    return tuple(
+        KetTerm(coeff=c * t.coeff, monomial=t.monomial) for t in terms
+    )

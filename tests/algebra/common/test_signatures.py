@@ -9,7 +9,6 @@ from symop_proto.labels.mode_label import ModeLabel
 from symop_proto.core.operators import ModeOp
 from symop_proto.core.monomial import Monomial
 from symop_proto.core.terms import KetTerm, DensityTerm
-
 from symop_proto.algebra.common.signatures import (
     sig_mono,
     sig_ket,

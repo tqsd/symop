@@ -33,11 +33,11 @@ class TestMonomial(ExtendedTestCase):
 
     def test_is_creator_only(self):
         ma = make_mode("A")
-        self.assertTrue(Monomial(creators=(ma.create,)).is_creator_only())
+        self.assertTrue(Monomial(creators=(ma.create,)).is_creator_only)
         self.assertFalse(
             Monomial(
                 creators=(ma.create,), annihilators=(ma.ann,)
-            ).is_creator_only()
+            ).is_creator_only
         )
 
     def test_adjoint_swaps_and_daggers(self):

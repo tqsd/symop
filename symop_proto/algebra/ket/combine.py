@@ -1,16 +1,16 @@
 from __future__ import annotations
 from typing import Dict, Iterable, List, Tuple
-from symop_proto.core.terms import KetTerm
 from symop_proto.algebra.common.signatures import sig_mono
+from symop_proto.core.protocols import KetTermProto, MonomialProto
 
 
 def combine_like_terms_ket(
-    terms: Iterable[KetTerm],
+    terms: Iterable[KetTermProto],
     eps: float = 1e-12,
     *,
     approx: bool = False,
     **env_kw,
-) -> Tuple[KetTerm, ...]:
+) -> Tuple[KetTermProto, ...]:
     """Combine like terms in a list of KetTerms
 
     This function groups together terms that share the same monomial (up to an
@@ -36,15 +36,17 @@ def combine_like_terms_ket(
         approximation).
 
     """
+    from symop_proto.core.terms import KetTerm
+
     acc_c: Dict[tuple, complex] = {}
-    acc_m = {}
+    acc_m: Dict[tuple, MonomialProto] = {}
     for t in terms:
         k = sig_mono(t.monomial, approx=approx, **env_kw)
         acc_c[k] = acc_c.get(k, 0j) + t.coeff
         acc_m.setdefault(k, t.monomial)
     out: List[KetTerm] = []
     for k, c in acc_c.items():
-        if abs(c.real) < eps and abs(c.imag) < eps:
+        if abs(c) <= eps:
             continue
         out.append(KetTerm(c, acc_m[k]))
     out.sort(key=lambda t: t.monomial.signature)

@@ -1,11 +1,16 @@
 from __future__ import annotations
 from typing import Dict, Iterable, Tuple
-from symop_proto.core.operators import LadderOp
-from symop_proto.core.monomial import Monomial
-from symop_proto.core.terms import KetTerm
+
+from symop_proto.core.protocols import (
+    KetTermProto,
+    LadderOpProto,
+    MonomialProto,
+)
 
 
-def ket_from_word(*, ops: Iterable[LadderOp]) -> Tuple[KetTerm, ...]:
+def ket_from_word(
+    *, ops: Iterable[LadderOpProto], eps: float = 1e-12
+) -> Tuple[KetTermProto, ...]:
     """Construct ket terms from a sequence ("word") of ladder operators.
 
     This function expands a product of ladder operators (a "word") into
@@ -40,6 +45,10 @@ def ket_from_word(*, ops: Iterable[LadderOp]) -> Tuple[KetTerm, ...]:
           also be supported if provided by the commutator definitions
 
     """
+
+    from symop_proto.core.monomial import Monomial
+    from symop_proto.core.terms import KetTerm
+
     coeffs: Dict[tuple, complex] = {}
     reps: Dict[tuple, Monomial] = {}
     k0 = Monomial((), ()).signature
@@ -81,6 +90,6 @@ def ket_from_word(*, ops: Iterable[LadderOp]) -> Tuple[KetTerm, ...]:
                         new_coeffs[kc] = new_coeffs.get(kc, 0j) + c * w
                         new_reps.setdefault(kc, m_contract)
         coeffs, reps = new_coeffs, new_reps
-    terms = [KetTerm(c, reps[k]) for k, c in coeffs.items() if abs(c) > 1e-12]
+    terms = [KetTerm(c, reps[k]) for k, c in coeffs.items() if abs(c) > eps]
     terms.sort(key=lambda t: t.monomial.signature)
     return tuple(terms)

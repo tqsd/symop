@@ -1,11 +1,16 @@
 from __future__ import annotations
 from typing import Tuple
-from symop_proto.core.terms import KetTerm
 from symop_proto.algebra.ket.from_word import ket_from_word
 from symop_proto.algebra.ket.identity_coeff import identity_coeff
+from symop_proto.core.protocols import KetTermProto
 
 
-def ket_inner(a: Tuple[KetTerm, ...], b: Tuple[KetTerm, ...]) -> complex:
+def ket_inner(
+    a: Tuple[KetTermProto, ...],
+    b: Tuple[KetTermProto, ...],
+    *,
+    eps: float = 1e-12,
+) -> complex:
     """Compute the inner product between two symbolic ket expansions.
 
     Evalutes the overlap <a|b> between the two tuples of :class:`KetTerm`
@@ -42,16 +47,24 @@ def ket_inner(a: Tuple[KetTerm, ...], b: Tuple[KetTerm, ...]) -> complex:
     """
     total: complex = 0.0 + 0.0j
     for ti in a:
-        L_cre = tuple(op.dagger() for op in ti.monomial.annihilators)
-        L_ann = tuple(op.dagger() for op in ti.monomial.creators)
+        if abs(ti.coeff) <= eps:
+            continue
+        mi = ti.monomial
+
+        L_cre = tuple(op.dagger() for op in reversed(mi.annihilators))
+        L_ann = tuple(op.dagger() for op in reversed(mi.creators))
         for tj in b:
+            if abs(tj.coeff) <= eps:
+                continue
+            mj = tj.monomial
             word_terms = ket_from_word(
                 ops=(
                     *L_cre,
                     *L_ann,
-                    *tj.monomial.creators,
-                    *tj.monomial.annihilators,
-                )
+                    *mj.creators,
+                    *mj.annihilators,
+                ),
+                eps=eps,
             )
             total += (
                 ti.coeff.conjugate() * tj.coeff * identity_coeff(word_terms)

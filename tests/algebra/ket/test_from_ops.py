@@ -9,6 +9,11 @@ from symop_proto.envelopes.gaussian_envelope import GaussianEnvelope
 from symop_proto.labels.path_label import PathLabel
 from symop_proto.labels.polarization_label import PolarizationLabel
 from symop_proto.labels.mode_label import ModeLabel
+import symop_proto.algebra.ket.from_ops as fops
+import symop_proto.core.monomial as mon_mod
+
+print("from_ops path:", fops.__file__)
+print("Monomial path:", mon_mod.__file__)
 
 
 def make_mode(
