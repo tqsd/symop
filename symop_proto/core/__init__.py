@@ -1,4 +1,4 @@
-from .monomial import Monomial
+from .monomial import MonomialProto
 from .operators import OperatorKind, ModeOp, LadderOp
 from .terms import KetTerm, DensityTerm
 

@@ -1,9 +1,0 @@
-from __future__ import annotations
-from typing import Any, Protocol, Tuple, runtime_checkable
-
-
-@runtime_checkable
-class LabelProto(Protocol):
-    def overlap(self, other: LabelProto) -> complex: ...
-    def signature(self) -> Tuple[Any, ...]: ...
-    def approx_signature(self, **kw: Any) -> Tuple[Any, ...]: ...

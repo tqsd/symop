@@ -3,7 +3,7 @@ from dataclasses import dataclass, replace
 from typing import Any, Tuple
 import numpy as np
 
-from symop_proto.core.envelope_protocol import EnvelopeProto
+from symop_proto.core.protocols import EnvelopeProto
 from symop_proto.envelopes.base import BaseEnvelope
 
 

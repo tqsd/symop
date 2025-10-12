@@ -1,11 +1,11 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any, Callable, Tuple
+from typing import Any, Tuple
 
 import numpy as np
 
-from symop_proto.core.envelope_protocol import (
+from symop_proto.core.protocols import (
     EnvelopeProto,
     SupportsOverlapWIthGeneric,
     TimeEvaluable,

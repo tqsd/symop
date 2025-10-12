@@ -1,11 +1,21 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from enum import Enum
-from typing import Any, Tuple
+from typing import Any, Optional, Tuple
+from itertools import count
 
-from symop_proto.core.envelope_protocol import EnvelopeProto
-from symop_proto.core.label_protocol import LabelProto
+from symop_proto.core.pretty.ladder import ladder_latex, ladder_text
+from symop_proto.core.protocols import (
+    EnvelopeProto,
+    LabelProto,
+    LadderOpProto,
+    ModeOpProto,
+    OperatorKindProto,
+    SignatureProto,
+)
+
+_mode_display_counter = count(1)
 
 
 class OperatorKind(str, Enum):
@@ -14,7 +24,7 @@ class OperatorKind(str, Enum):
 
 
 @dataclass(frozen=True)
-class ModeOp:
+class ModeOp(ModeOpProto):
     """
     Logical Mode -> Envelope + label
     creates ladder-operators
@@ -23,8 +33,13 @@ class ModeOp:
     env: EnvelopeProto
     label: LabelProto
 
-    ann: LadderOp = field(init=False, repr=False, compare=False)
-    create: LadderOp = field(init=False, repr=False, compare=False)
+    user_label: Optional[str] = None
+    display_index: Optional[int] = field(
+        default_factory=lambda: next(_mode_display_counter)
+    )
+
+    ann: LadderOpProto = field(init=False, repr=False, compare=False)
+    create: LadderOpProto = field(init=False, repr=False, compare=False)
 
     def __post_init__(self):
         object.__setattr__(
@@ -33,6 +48,12 @@ class ModeOp:
         object.__setattr__(
             self, "create", LadderOp(kind=OperatorKind.CREATE, mode=self)
         )
+
+    def with_label(self, tag: str) -> ModeOp:
+        return replace(self, user_label=tag)
+
+    def with_index(self, idx: int) -> ModeOp:
+        return replace(self, display_index=idx)
 
     @property
     def signature(self) -> Tuple[Any, ...]:
@@ -47,22 +68,22 @@ class ModeOp:
 
 
 @dataclass(frozen=True)
-class LadderOp:
-    kind: OperatorKind
-    mode: ModeOp
+class LadderOp(LadderOpProto):
+    kind: OperatorKindProto
+    mode: ModeOpProto
 
     @property
     def is_annihilation(self) -> bool:
-        return self.kind is OperatorKind.ANN
+        return self.kind.value == OperatorKind.ANN.value
 
     @property
     def is_creation(self) -> bool:
-        return self.kind is OperatorKind.CREATE
+        return self.kind.value == OperatorKind.CREATE.value
 
-    def dagger(self) -> LadderOp:
+    def dagger(self) -> LadderOpProto:
         return self.mode.ann if self.is_creation else self.mode.create
 
-    def commutator(self, other: LadderOp) -> complex:
+    def commutator(self, other: LadderOpProto) -> complex:
         L = self.mode.label.overlap(other.mode.label)
         if abs(L) < 1e-15:
             return 0.0 + 0.0j
@@ -73,8 +94,18 @@ class LadderOp:
         return 0.0 + 0.0j
 
     @property
-    def signature(self) -> Tuple[Any, ...]:
+    def signature(self) -> SignatureProto:
         return ("lop", self.kind.value, self.mode.signature)
 
-    def approx_signature(self, **env_kw: Any) -> Tuple[Any, ...]:
+    def approx_signature(self, **env_kw: Any) -> SignatureProto:
         return ("lop", self.kind.value, self.mode.approx_signature(**env_kw))
+
+    def __repr__(self) -> str:
+        return ladder_text(self)
+
+    @property
+    def latex(self) -> str:
+        return rf"{ladder_latex(self)}"
+
+    def _repr_latex_(self) -> str:
+        return rf"${self.latex}$"

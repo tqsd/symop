@@ -1,4 +1,5 @@
-from symop_proto.labels.path_label import PathLabel
-from symop_proto.labels.polarization_label import PolarizationLabel
+from .path_label import PathLabel
+from .polarization_label import PolarizationLabel
+from .mode_label import ModeLabel
 
-__all__ = ["PathLabel", "PolarizationLabel"]
+__all__ = ["PathLabel", "PolarizationLabel", "ModeLabel"]
