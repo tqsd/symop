@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import Iterable, List
+from symop_proto.algebra.ket.apply import ket_apply_word
 from symop_proto.algebra.ket.multiply import ket_multiply
 from symop_proto.core.protocols import (
     KetTermProto,
@@ -40,6 +41,7 @@ def expand_word_times_monomial(
     """
     from symop_proto.core.terms import KetTerm
 
-    left = ket_from_word(ops=tuple(word))
-    right = (KetTerm(1.0, M),)
-    return list(ket_multiply(left, right))
+    terms: List[KetTermProto] = [KetTerm(1.0, M)]
+    for op in reversed(tuple(word)):
+        terms = list(ket_apply_word(tuple(terms), (op,)))
+    return terms

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Dict, Iterable, Tuple
+from typing import Callable, Dict, Iterable, Optional, Tuple
 
 from symop_proto.core.protocols import (
     KetTermProto,
@@ -8,27 +8,31 @@ from symop_proto.core.protocols import (
 )
 
 
+TermFactory = Callable[[complex, MonomialProto], KetTermProto]
+
+
 def ket_from_word(
-    *, ops: Iterable[LadderOpProto], eps: float = 1e-12
+    *,
+    ops: Iterable[LadderOpProto],
+    apply_to_vacuum: bool = False,
+    eps: float = 1e-12,
+    term_factory: Optional[TermFactory] = None,
 ) -> Tuple[KetTermProto, ...]:
-    """Construct ket terms from a sequence ("word") of ladder operators.
+    r"""Construct ket terms from a sequence (*word*) of ladder operators.
 
-    This function expands a product of ladder operators (a "word") into
-    a linear combination of normally ordered :class:`KetTerm` instances.
-    Commutation relations between creation and annihilation operators are
-    applied recursively at each step to generate all valid monomials and
-    their coefficients.
-
-    A *word* is an ordered iterable of ladder operators, e.g.
-    ``[adag[1], a[2], adag[3]]``, representing an operators product
-    :math:`\\hat a_1^\\dagger \\hat a_2 \\hat a_3^\\dagger`.
-    The resulting ket terms correspond to the symbolic expansion of this
-    operator word acting on the vacuum.
+    Expands an operator *word* into a linear combination of normally ordered
+    :class:`KetTerm` instances. The expansion is done symbolically using the
+    cannonical commutation relations (including non-orthogonal modes).
 
     Args:
         ops: Operator objects representing the operator word to expand.
             Operators are processed from left to right in the order they
             appear.
+        apply_to_vacuum: If True the annihilation ordering is skipped and
+            the annihilation operators are dropped.
+        eps: Trheshold for neglecting the coefficients.
+        term_factory: The term factory to build the resulting :class:`KetPoly`
+
 
     Returns:
         Tuple of resulting ket terms, each containing the combined complex
@@ -36,18 +40,108 @@ def ket_from_word(
         with negligible coefficients (|c| < 1e-12) are discarded and the
         output is sorted by monomial signature.
 
-    Notes:
-        - Each time an operator pair is encountered, their commutator
-          contributes an additional "contracted" term.
-        - The algorithm performs a symbolic normal ordering without explicit
-          matrix representations.
-        - Coefficeints are accumulated numerically, symbolic coefficients can
-          also be supported if provided by the commutator definitions
+    Mathematics:
+    ------------
+        The algorithm performs **symbolic normal ordering** by recursively
+        applying the commutator:
 
+        .. math::
+
+            [\hat a_i, \hat a_j^\dagger] = \langle m_i | m_j \rangle,
+
+        where :math:`m_i` refers to the mode degrees of freedom (path,
+        polarization, envelope).
+
+        For an unordere product (a *word*)
+
+        .. math::
+
+            W = \hat a_{i_1}^{s_1}\,\hat a_{i_2}^{s_2}\,\cdots\,
+            \hat a_{i_n}^{s_n},\quad
+            s_k \in \{1,\dagger\}.
+
+
+        The function produces a normally ordere]expansion
+
+        .. math::
+
+            W = \sum_k c_k
+            \hat a_{j_1(k)}^\dagger \cdots
+            \hat a_{j_m(k)}^\dagger
+            \hat a_{l_1(k)} \cdots \hat a_{l_p(k)},
+
+        here each coefficient :math:`c_k` results from the commutation rules
+        generated during the reordering.
+
+        If ``apply_to_vacuum=True``, the result models
+        :math:`W\lvert 0\rangle`, and all terms still containing annihilator
+        vanish:
+
+        .. math::
+
+            W |0\rangle = \sum_k c_k
+            \hat a{j_1(k)}^\dagger \cdots \hat a_{j_m(k)}^\dagger
+            |0\rangle.
+
+        This corresponds to a superposition of Fock basis vectors with
+        with amblitudes :math:`c_k`.
+
+    Notes:
+        * The left-to-right scheme contracts **once**, when a creation
+          operator crosses existing annihilation operator: symmetric
+          contraction on both sides would double-count.
+        * Non-orthogonality is handled via the inner product
+          :math:`\langle m_i \mid m_j \rangle` in the commutator definitions.
+
+    Examples:
+    ---------
+    **Operator normal ordering (single orthogonal mode):**
+    For :math:`[\hat a, \hat a^\dagger]=1`,
+
+    .. math::
+
+        \hat a \, \hat a^\dagger \;=\; a^\dagger a \;+\; 1, \qquad
+        \hat a \, \hat a^\dagger a^\dagger \; = \; \hat a^\dagger
+        \hat a^\dagger \hat a \; +\; 2\,\hat a^\dagger.
+
+    .. jupyter-execute::
+
+        from symop_proto.envelopes.gaussian_envelope import GaussianEnvelope
+        from symop_proto.labels.path_label import PathLabel
+        from symop_proto.labels.polarization_label import PolarizationLabel
+        from symop_proto.labels.mode_label import ModeLabel
+        from symop_proto.core.operators import ModeOp
+        from symop_proto.algebra.ket.from_word import ket_from_word
+        from symop_proto.algebra.polynomial import KetPoly
+        from IPython.display import Math, display
+
+        env = GaussianEnvelope(omega0=1.0, sigma=0.3, tau=0.0, phi0=0.0)
+        label = ModeLabel(PathLabel("A"), PolarizationLabel.H())
+        m = ModeOp(env=env, label=label)
+
+        terms = ket_from_word(
+            ops=[m.ann, m.create, m.create],
+            apply_to_vacuum=False)
+
+        ket = KetPoly(terms)
+
+        display(Math(ket.latex))
+
+        terms = ket_from_word(
+            ops=[m.ann, m.create, m.create],
+            apply_to_vacuum=True
+            )
+        ket = KetPoly(terms)
+
+        display(Math(ket.latex))
     """
 
     from symop_proto.core.monomial import Monomial
-    from symop_proto.core.terms import KetTerm
+
+    if term_factory is None:
+        from symop_proto.core.terms import KetTerm as _KetTerm
+
+        term_factory = _KetTerm
 
     coeffs: Dict[tuple, complex] = {}
     reps: Dict[tuple, Monomial] = {}
@@ -64,16 +158,6 @@ def ket_from_word(
                 kp = m_pass.signature
                 new_coeffs[kp] = new_coeffs.get(kp, 0j) + c
                 new_reps.setdefault(kp, m_pass)
-                for idx, Ck in enumerate(m.creators):
-                    w = op.commutator(Ck)
-                    if w != 0.0:
-                        m_contract = Monomial(
-                            m.creators[:idx] + m.creators[idx + 1:],
-                            m.annihilators,
-                        )
-                        kc = m_contract.signature
-                        new_coeffs[kc] = new_coeffs.get(kc, 0j) + c * w
-                        new_reps.setdefault(kc, m_contract)
             else:
                 m_pass = Monomial(m.creators + (op,), m.annihilators)
                 kp = m_pass.signature
@@ -90,6 +174,11 @@ def ket_from_word(
                         new_coeffs[kc] = new_coeffs.get(kc, 0j) + c * w
                         new_reps.setdefault(kc, m_contract)
         coeffs, reps = new_coeffs, new_reps
-    terms = [KetTerm(c, reps[k]) for k, c in coeffs.items() if abs(c) > eps]
+    terms = [
+        term_factory(c, reps[k]) for k, c in coeffs.items() if abs(c) > eps
+    ]
+    if apply_to_vacuum:
+        terms = [t for t in terms if not t.monomial.annihilators]
+
     terms.sort(key=lambda t: t.monomial.signature)
     return tuple(terms)

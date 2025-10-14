@@ -12,7 +12,6 @@ from symop_proto.algebra.ket.apply import (
     ket_apply_word,
     ket_apply_words_linear,
 )
-from symop_proto.algebra.pretty.density import density_latex, density_repr
 from symop_proto.algebra.pretty.ket import ket_latex, ket_repr
 from symop_proto.algebra.protocols import DensityPolyProto, KetPolyProto
 from symop_proto.core.protocols import (
@@ -47,8 +46,8 @@ class KetPoly(KetPolyProto):
       :meth:`multiply`, :meth:`inner`, :meth:`norm2`, :meth:`normalize`.
     - Operator application: :meth:`apply_word`, :meth:`apply_words`.
     - Canonicalization and queries: :meth:`combine_like_terms`,
-      :pyattr:`is_creator_only`, :pyattr:`is_annihilator_only`,
-      :pyattr:`is_identity`, :pyattr:`unique_modes`, :pyattr:`mode_count`.
+      :py:attr:`is_creator_only`, :py:attr:`is_annihilator_only`,
+      :py:attr:`is_identity`, :py:attr:`unique_modes`, :py:attr:`mode_count`.
 
     All manipulations are purely symbolic (normal ordering plus
     commutator contractions) and do not rely on matrix representations.
@@ -118,8 +117,12 @@ class KetPoly(KetPolyProto):
     def __repr__(self) -> str:
         return ket_repr(self.terms)
 
-    def _repr_latex_(self) -> str:
+    @property
+    def latex(self) -> str:
         return ket_latex(self.terms)
+
+    def _repr_latex_(self) -> str:
+        return f"${self.latex}$"
 
     def is_normalized(self, eps: float = 1e-14) -> bool:
         return abs(self.norm2() - 1) < eps
@@ -185,8 +188,8 @@ class DensityPoly(DensityPolyProto):
     - Physical operations: :meth:`trace`, :meth:`normalize_trace`,
       :meth:`purity`, :meth:`partial_trace`, left/right application of
       operator words (:meth:`apply_left`, :meth:`apply_right`).
-    - Structural queries: :pyattr:`unique_modes`, :pyattr:`mode_count`,
-      :pyattr:`is_diagonal_in_monomials`, :pyattr:`is_creator_only`,
+    - Structural queries: :py:attr:`unique_modes`, :py:attr:`mode_count`,
+      :py:attr:`is_diagonal_in_monomials`, :py:attr:`is_creator_only`,
       :meth:`is_trace_normalized`, :meth:`require_trace_normalized`,
       :meth:`is_block_diagonal_by_modes`.
 
@@ -296,7 +299,11 @@ class DensityPoly(DensityPolyProto):
         return True
 
     def __repr__(self) -> str:
+        from symop_proto.algebra.pretty.density import density_repr
+
         return density_repr(self.terms)
 
     def _repr_latex_(self) -> str:
-        return density_latex(self.terms)
+        from symop_proto.algebra.pretty.density import density_latex
+
+        return rf"${density_latex(self.terms, style="brackets")}$"

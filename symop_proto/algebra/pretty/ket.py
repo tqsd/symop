@@ -32,8 +32,5 @@ def ket_latex(terms: Tuple[KetTermProto, ...], is_state: bool = False) -> str:
         c = complex_to_latex(t.coeff)
         needs_paren = ("+" in c[1:] or "-" in c[1:]) and not c.startswith("-")
         c_tex = rf"\left({c}\right)" if needs_paren else c
-        pieces.append(rf"{c_tex}\,\cdot\,{mon_lx}")
-    body = r" \;+\; ".join(pieces).replace("+ -", "- ")
-    if is_state:
-        return rf"$\displaystyle {body}\,\lvert 0\rangle$"
-    return rf"$\displaystyle {body}$"
+        pieces.append(rf"{c_tex}\!\cdot\!{mon_lx}")
+    return r" \;+\; ".join(pieces).replace("+ -", "- ")

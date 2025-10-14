@@ -7,7 +7,15 @@ from numpy import sqrt, cos, sin
 from symop_proto.algebra.op_poly.combine import op_combine_like_terms
 from symop_proto.algebra.op_poly.from_words import op_from_words
 from symop_proto.algebra.op_poly.multiply import op_multiply
+from symop_proto.algebra.pretty.operator_polynomial import (
+    oppoly_to_latex,
+    oppoly_to_str,
+    opterm_to_latex,
+    opterm_to_str,
+)
 from symop_proto.algebra.protocols import OpPolyProto, OpTermProto
+from symop_proto.core.monomial import Monomial
+from symop_proto.core.pretty.monomial import collect_mode_order
 from symop_proto.core.protocols import LadderOpProto, ModeOpProto
 
 
@@ -66,6 +74,34 @@ class OpTerm(OpTermProto):
             "OP_approx",
             tuple(op.approx_signature(**env_kw) for op in self.ops),
         )
+
+    def __repr__(self) -> str:
+        monos = list(
+            (
+                Monomial(creators=(op,))
+                if op.is_creation
+                else Monomial(annihilators=(op,))
+            )
+            for op in self.ops
+        )
+        idx = collect_mode_order(monos)
+        return opterm_to_str(self.ops, self.coeff, idx)
+
+    @property
+    def latex(self) -> str:
+        monos = list(
+            (
+                Monomial(creators=(op,))
+                if op.is_creation
+                else Monomial(annihilators=(op,))
+            )
+            for op in self.ops
+        )
+        idx = collect_mode_order(monos)
+        return opterm_to_latex(self.ops, self.coeff, idx)
+
+    def _repr_latex_(self) -> str:
+        return rf"${self.latex}$"
 
 
 @dataclass(frozen=True)
@@ -214,3 +250,15 @@ class OpPoly(OpPolyProto):
         if isinstance(other, (int, float, complex)):
             return self.scaled(other)
         return NotImplemented
+
+    def __repr__(self) -> str:
+        pairs = tuple((t.ops, t.coeff) for t in self.terms)
+        return oppoly_to_str(pairs)
+
+    @property
+    def latex(self) -> str:
+        pairs = tuple((t.ops, t.coeff) for t in self.terms)
+        return oppoly_to_latex(pairs)
+
+    def _repr_latex_(self) -> str:
+        return rf"${self.latex}$"
