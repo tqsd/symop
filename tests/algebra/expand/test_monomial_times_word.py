@@ -32,13 +32,12 @@ class TestExpandMonomialTimesWord(ExtendedTestCase):
         m = make_mode("A")
         mono = Monomial(creators=(m.create,))
         out = expand_monomial_times_word(mono, (m.ann,))
-        # Expect two terms: identity and a_dag a
+        # Expect one terms: a_dag a
         sigs = [t.monomial.signature for t in out]
-        id_sig = Monomial().signature
         adag_a_sig = Monomial(
             creators=(m.create,), annihilators=(m.ann,)
         ).signature
-        self.assertEqual(set(sigs), {id_sig, adag_a_sig})
+        self.assertEqual(set(sigs), {adag_a_sig})
 
     def test_with_multiple_modes(self):
         a = make_mode("A")

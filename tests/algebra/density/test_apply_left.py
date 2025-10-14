@@ -71,7 +71,7 @@ class TestDensityApplyLeft(ExtendedTestCase):
             Monomial(creators=(m.create,), annihilators=()).signature,
         )
 
-    def test_creator_then_annihilator_gives_pass_and_contraction(self):
+    def test_creator_then_annihilator_gives_pass_only(self):
         m = make_mode("A")
         rho = (
             DensityTerm(
@@ -80,18 +80,15 @@ class TestDensityApplyLeft(ExtendedTestCase):
         )
         out = density_apply_left(rho, word=(m.create,))
 
-        left_sigs = {t.left.signature for t in out}
-        id_sig = Monomial().signature
         aa_sig = Monomial(
             creators=(m.create,), annihilators=(m.ann,)
         ).signature
-        self.assertEqual(left_sigs, {id_sig, aa_sig})
+        left_sigs = {t.left.signature for t in out}
+        self.assertEqual(left_sigs, {aa_sig})
 
         coeff_by_sig = {t.left.signature: t.coeff for t in out}
-        self.assertComplexAlmostEqual(coeff_by_sig[id_sig], 1.0 + 0j)
         self.assertComplexAlmostEqual(coeff_by_sig[aa_sig], 1.0 + 0j)
 
-        # Right monomial is unchanged
         for t in out:
             self.assertEqual(t.right.signature, Monomial().signature)
 

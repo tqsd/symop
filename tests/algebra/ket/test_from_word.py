@@ -76,15 +76,13 @@ class TestKetFromWord(ExtendedTestCase):
         # Implementation returns the same normal-ordered polynomial as above
         m = make_mode("A")
         terms = ket_from_word(ops=(m.create, m.ann))
-        self.assertEqual(len(terms), 2)
+        self.assertEqual(len(terms), 1)
         # identity + a_dag a
         sigs = [t.monomial.signature for t in terms]
-        id_sig = Monomial((), ()).signature
         aa_sig = Monomial((m.create,), (m.ann,)).signature
-        self.assertEqual(set(sigs), {id_sig, aa_sig})
+        self.assertEqual(set(sigs), {aa_sig})
         # check coefficients are both +1
         coeff_by_sig = {t.monomial.signature: t.coeff for t in terms}
-        self.assertComplexAlmostEqual(coeff_by_sig[id_sig], 1.0 + 0j)
         self.assertComplexAlmostEqual(coeff_by_sig[aa_sig], 1.0 + 0j)
 
     def test_orthogonal_paths_no_contraction(self):

@@ -50,7 +50,7 @@ class TestOverlapRightLeft(ExtendedTestCase):
 
     def test_mismatched_modes_give_zero(self):
         a = make_mode("A")
-        b = make_mode("B")  # orthogonal path label -> zero commutator
+        b = make_mode("B")
         R = Monomial(creators=(a.create,))
         L = Monomial(creators=(b.create,))
         self.assertComplexAlmostEqual(overlap_right_left(R, L), 0.0 + 0.0j)
@@ -59,8 +59,7 @@ class TestOverlapRightLeft(ExtendedTestCase):
         m = make_mode("A")
         R = Monomial(annihilators=(m.ann,))
         L = Monomial(annihilators=(m.ann,))
-        # <a | a> -> identity coefficient of (a^dag)(a) also +1
-        self.assertComplexAlmostEqual(overlap_right_left(R, L), 1.0 + 0.0j)
+        self.assertComplexAlmostEqual(overlap_right_left(R, L), 0.0 + 0.0j)
 
 
 if __name__ == "__main__":

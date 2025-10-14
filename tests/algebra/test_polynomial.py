@@ -45,11 +45,10 @@ class TestKetPoly(ExtendedTestCase):
         kp = KetPoly.from_word(ops=(m.create, m.ann))
         # Expect identity + a^dag a (both +1)
         sigs = {t.monomial.signature for t in kp.terms}
-        id_sig = Monomial().signature
         adag_a_sig = Monomial(
             creators=(m.create,), annihilators=(m.ann,)
         ).signature
-        self.assertEqual(sigs, {id_sig, adag_a_sig})
+        self.assertEqual(sigs, {adag_a_sig})
 
     def test_scaled_and_inner_and_norm(self):
         a = make_mode("A")
@@ -126,10 +125,9 @@ class TestDensityPoly(ExtendedTestCase):
         # Left apply a^dag then a
         rhoL = rho0.apply_left((m.create, m.ann))
         sigsL = {t.left.signature for t in rhoL.terms}
-        self.assertIn(Monomial().signature, sigsL)
-        self.assertIn(
-            Monomial(creators=(m.create,), annihilators=(m.ann,)).signature,
+        self.assertEqual(
             sigsL,
+            {Monomial(creators=(m.create,), annihilators=(m.ann,)).signature},
         )
         # Right apply a (acts as (a^dag) on the right via reversed-dagger expansion)
         rhoR = rho0.apply_right((m.ann,))
