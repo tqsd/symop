@@ -1,0 +1,109 @@
+/* ============================================================
+   Dark-mode styles that work for both forced dark and auto dark
+   ============================================================ */
+
+/* Forced dark (user explicitly selected dark) */
+:is(html, body)[data-theme="dark"] {
+	--color-code-background: #0f1115;
+	--color-code-foreground: #e6e9ef;
+}
+
+/* Auto dark: only when system prefers dark AND the user did NOT force light */
+@media (prefers-color-scheme: dark) {
+	:is(html, body)[data-theme]:not([data-theme="light"]) {
+		--color-code-background: #0f1115;
+		--color-code-foreground: #e6e9ef;
+	}
+}
+
+/* Generic highlighted code blocks */
+:is(html, body)[data-theme="dark"] .highlight,
+:is(html, body)[data-theme="dark"] .highlight pre,
+:is(html, body)[data-theme="dark"] .highlight code {
+	background: var(--color-code-background) !important;
+	color: var(--color-code-foreground) !important;
+}
+@media (prefers-color-scheme: dark) {
+	:is(html, body)[data-theme]:not([data-theme="light"]) .highlight,
+	:is(html, body)[data-theme]:not([data-theme="light"]) .highlight pre,
+	:is(html, body)[data-theme]:not([data-theme="light"]) .highlight code {
+		background: var(--color-code-background) !important;
+		color: var(--color-code-foreground) !important;
+	}
+}
+
+/* Optional: remove outer borders/backgrounds around cells (both themes) */
+.jupyter_cell,
+.jupyter_container {
+	border: 0 !important;
+	background: transparent !important;
+}
+
+/* Jupyter input cell */
+:is(html, body)[data-theme="dark"] .jupyter_container .code_cell .cell_input,
+:is(html, body)[data-theme="dark"] .jupyter_cell .cell_input {
+	background: #0f1115 !important;
+	border: 1px solid #2b3240 !important;
+	border-radius: 5px 5px 0 0 !important;
+}
+@media (prefers-color-scheme: dark) {
+	:is(html, body)[data-theme]:not([data-theme="light"])
+		.jupyter_container
+		.code_cell
+		.cell_input,
+	:is(html, body)[data-theme]:not([data-theme="light"])
+		.jupyter_cell
+		.cell_input {
+		background: #0f1115 !important;
+		border: 1px solid #2b3240 !important;
+		border-radius: 5px 5px 0 0 !important;
+	}
+}
+
+/* Jupyter output cell */
+:is(html, body)[data-theme="dark"] .jupyter_container .code_cell .cell_output,
+:is(html, body)[data-theme="dark"] .jupyter_cell .cell_output {
+	background: #12151b !important;
+	border: 1px solid #2b3240 !important;
+	border-top: none !important;
+	border-radius: 0 0 5px 5px !important;
+}
+@media (prefers-color-scheme: dark) {
+	:is(html, body)[data-theme]:not([data-theme="light"])
+		.jupyter_container
+		.code_cell
+		.cell_output,
+	:is(html, body)[data-theme]:not([data-theme="light"])
+		.jupyter_cell
+		.cell_output {
+		background: #12151b !important;
+		border: 1px solid #2b3240 !important;
+		border-top: none !important;
+		border-radius: 0 0 5px 5px !important;
+	}
+}
+
+/* Make tokens fully readable in dark */
+:is(html, body)[data-theme="dark"] .jupyter_cell .cell_input .highlight,
+:is(html, body)[data-theme="dark"] .jupyter_cell .cell_input .highlight * {
+	background: transparent !important;
+	color: #e6e9ef !important;
+	opacity: 1 !important;
+	filter: none !important;
+}
+@media (prefers-color-scheme: dark) {
+	:is(html, body)[data-theme]:not([data-theme="light"])
+		.jupyter_cell
+		.cell_input
+		.highlight,
+	:is(html, body)[data-theme]:not([data-theme="light"])
+		.jupyter_cell
+		.cell_input
+		.highlight
+		* {
+		background: transparent !important;
+		color: #e6e9ef !important;
+		opacity: 1 !important;
+		filter: none !important;
+	}
+}
