@@ -13,9 +13,6 @@ from symop_proto.core.pretty.scalars import (
 )
 
 
-# ----- KetTerm c·M -----
-
-
 def ketterm_to_str(term: KetTermProto, mode_index: Dict[Tuple, int]) -> str:
     mon = monomial_to_str(term.monomial, mode_index)
     return f"({complex_to_text(term.coeff)})·{mon}"
@@ -27,10 +24,7 @@ def ketterm_to_latex(term: KetTermProto, mode_index: Dict[Tuple, int]) -> str:
     # parenthesize multi-term complex coeffs like a±bi (handled inside the latex helper if you want)
     needs_paren = ("+" in c[1:] or "-" in c[1:]) and not c.startswith("-")
     c_tex = rf"\left({c}\right)" if needs_paren else c
-    return rf"{c_tex}\,\cdot\,{mon}"  # bare LaTeX
-
-
-# ----- DensityTerm c·L·R^\dagger -----
+    return rf"{c_tex}\!\cdot\!{mon}"  # bare LaTeX
 
 
 class _AdjointView:
@@ -61,10 +55,7 @@ def densityterm_to_latex(
     c = complex_to_latex(term.coeff)
     needs_paren = ("+" in c[1:] or "-" in c[1:]) and not c.startswith("-")
     c_tex = rf"\left({c}\right)" if needs_paren else c
-    return rf"{c_tex}\,\cdot\,{left}\,\cdot\,{right_dag}"  # bare LaTeX
-
-
-# ----- Standalone helpers (small per-term index) -----
+    return rf"{c_tex}\!\cdot\!\left[{left}\right]\!\left[{right_dag}\right]"
 
 
 def ketterm_text(term: KetTermProto) -> str:

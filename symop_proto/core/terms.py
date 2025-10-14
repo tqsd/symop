@@ -3,6 +3,12 @@ from dataclasses import dataclass
 from typing import Tuple
 
 from symop_proto.core.pretty.monomial import collect_mode_order
+from symop_proto.core.pretty.terms import (
+    densityterm_latex,
+    densityterm_text,
+    ketterm_latex,
+    ketterm_text,
+)
 from symop_proto.core.protocols import (
     DensityTermProto,
     KetTermProto,
@@ -10,7 +16,6 @@ from symop_proto.core.protocols import (
     MonomialProto,
     SignatureProto,
 )
-from symop_proto.core.pretty.terms import ketterm_to_latex, ketterm_to_str
 
 
 @dataclass(frozen=True)
@@ -67,12 +72,14 @@ class KetTerm(KetTermProto):
         return self.monomial.mode_ops
 
     def __repr__(self) -> str:
-        idx = collect_mode_order([self.monomial])
-        return ketterm_to_str(self, idx)
+        return ketterm_text(self)
+
+    @property
+    def latex(self) -> str:
+        return ketterm_latex(self)
 
     def _repr_latex_(self) -> str:
-        idx = collect_mode_order([self.monomial])
-        return rf"$\displaystyle {ketterm_to_latex(self, idx)}$"
+        return rf"${self.latex}$"
 
 
 @dataclass(frozen=True)
@@ -164,3 +171,13 @@ class DensityTerm(DensityTermProto):
     @property
     def mode_ops_right(self):
         return self.right.mode_ops
+
+    def __repr__(self) -> str:
+        return densityterm_text(self)
+
+    @property
+    def latex(self) -> str:
+        return densityterm_latex(self)
+
+    def _repr_latex_(self) -> str:
+        return rf"${self.latex}$"
