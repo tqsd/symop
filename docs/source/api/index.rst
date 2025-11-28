@@ -11,3 +11,5 @@ The following sections are generated automatically from the source.
    symop_proto.core
    symop_proto.labels
    symop_proto.envelopes
+   symop_proto.state
+   symop_proto.rewrites

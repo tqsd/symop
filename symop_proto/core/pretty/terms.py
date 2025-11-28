@@ -4,7 +4,6 @@ from typing import Dict, Tuple
 from symop_proto.core.protocols import DensityTermProto, KetTermProto
 from symop_proto.algebra.pretty.monomial import (
     monomial_to_str,
-    monomial_to_latex,
     collect_mode_order,
 )
 from symop_proto.core.pretty.scalars import (
@@ -18,13 +17,24 @@ def ketterm_to_str(term: KetTermProto, mode_index: Dict[Tuple, int]) -> str:
     return f"({complex_to_text(term.coeff)})·{mon}"
 
 
-def ketterm_to_latex(term: KetTermProto, mode_index: Dict[Tuple, int]) -> str:
-    mon = monomial_to_latex(term.monomial, mode_index)  # bare
+def ketterm_to_latex(
+    term: KetTermProto,
+    mode_index: Dict[Tuple, int],
+    *,
+    show_identity: bool = True,
+) -> str:
+    from .monomial import monomial_to_latex
+    from symop_proto.core.pretty.scalars import complex_to_latex
+
+    mon = monomial_to_latex(
+        term.monomial,
+        mode_index,
+        show_identity=show_identity,
+    )  # bare
     c = complex_to_latex(term.coeff)
-    # parenthesize multi-term complex coeffs like a±bi (handled inside the latex helper if you want)
     needs_paren = ("+" in c[1:] or "-" in c[1:]) and not c.startswith("-")
     c_tex = rf"\left({c}\right)" if needs_paren else c
-    return rf"{c_tex}\!\cdot\!{mon}"  # bare LaTeX
+    return rf"{c_tex}\!\cdot\!{mon}" if mon else c_tex
 
 
 class _AdjointView:
@@ -50,6 +60,8 @@ def densityterm_to_str(
 def densityterm_to_latex(
     term: DensityTermProto, mode_index: Dict[Tuple, int]
 ) -> str:
+    from .monomial import monomial_to_latex
+
     left = monomial_to_latex(term.left, mode_index)
     right_dag = monomial_to_latex(_right_dagger_view(term), mode_index)
     c = complex_to_latex(term.coeff)
@@ -63,9 +75,9 @@ def ketterm_text(term: KetTermProto) -> str:
     return ketterm_to_str(term, idx)
 
 
-def ketterm_latex(term: KetTermProto) -> str:
+def ketterm_latex(term: KetTermProto, *, show_identity: bool = True) -> str:
     idx = collect_mode_order([term.monomial])
-    return ketterm_to_latex(term, idx)
+    return ketterm_to_latex(term, idx, show_identity=show_identity)
 
 
 def densityterm_text(term: DensityTermProto) -> str:

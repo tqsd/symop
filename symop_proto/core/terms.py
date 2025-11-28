@@ -1,5 +1,5 @@
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Tuple
 
 from symop_proto.core.pretty.monomial import collect_mode_order
@@ -35,6 +35,13 @@ class KetTerm(KetTermProto):
         return KetTerm(
             coeff=self.coeff.conjugate(), monomial=self.monomial.adjoint()
         )
+
+    def scaled(self, s: complex) -> "KetTerm":
+        """
+        Return a new KetTerm with the coefficient multiplied by `s`.
+        Does not touch the monomial.
+        """
+        return replace(self, coeff=self.coeff * s)
 
     @property
     def signature(self) -> SignatureProto:
@@ -98,6 +105,10 @@ class DensityTerm(DensityTermProto):
 
     def adjoint(self) -> DensityTerm:
         return DensityTerm(self.coeff.conjugate(), self.right, self.left)
+
+    def scaled(self, s: complex) -> DensityTerm:
+        """Scale the density term's coefficient by `s`."""
+        return replace(self, coeff=self.coeff * s)
 
     @property
     def signature(self) -> tuple:

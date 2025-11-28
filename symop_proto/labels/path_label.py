@@ -2,9 +2,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Tuple
 
+from symop_proto.labels.protocols import PathLabelProto
+
 
 @dataclass(frozen=True)
-class PathLabel:
+class PathLabel(PathLabelProto):
     name: str
 
     def overlap(self, other: PathLabel) -> complex:

@@ -22,15 +22,31 @@ def ket_repr(terms: Tuple[KetTermProto, ...], is_state: bool = False) -> str:
     return " + ".join(parts)
 
 
-def ket_latex(terms: Tuple[KetTermProto, ...], is_state: bool = False) -> str:
+def ket_latex(
+    terms: Tuple[KetTermProto, ...],
+    is_state: bool = False,
+    show_identity: bool = True,
+) -> str:
+    """
+    Render a sum of ket-terms to LaTeX.
+
+    Args:
+        terms: Polynomial terms.
+        is_state: If False and `terms` is empty, return "$0$".
+        show_identity: Forwarded to `ketterm_latex`.
+
+    Returns:
+        LaTeX string.
+    """
+
+    from symop_proto.core.pretty.terms import ketterm_latex
+
     if not terms:
-        return r"$0$"
-    mode_index = collect_mode_order(terms)
-    pieces: List[str] = []
-    for t in terms:
-        mon_lx = monomial_to_latex(t.monomial, mode_index)
-        c = complex_to_latex(t.coeff)
-        needs_paren = ("+" in c[1:] or "-" in c[1:]) and not c.startswith("-")
-        c_tex = rf"\left({c}\right)" if needs_paren else c
-        pieces.append(rf"{c_tex}\!\cdot\!{mon_lx}")
+        if not is_state:
+            return r""
+
+    pieces: List[str] = [
+        ketterm_latex(t, show_identity=show_identity) for t in terms
+    ]
+    # Keep the same join/cleanup semantics as before.
     return r" \;+\; ".join(pieces).replace("+ -", "- ")

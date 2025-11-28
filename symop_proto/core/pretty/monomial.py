@@ -98,7 +98,7 @@ def monomial_to_latex(
         a_parts.append(_pow_group_latex(sym, n))
 
     if not c_parts and not a_parts:
-        return IDENTITY_LATEX if show_identity else "1"
+        return IDENTITY_LATEX if show_identity else ""
 
     if c_parts and a_parts:
         # small spacing between creation and annihilation blocks

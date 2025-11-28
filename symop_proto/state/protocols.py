@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import (
+    Any,
     Protocol,
     runtime_checkable,
     Iterable,
@@ -11,7 +12,11 @@ from typing import (
 )
 from collections.abc import Iterable as IterableABC
 
-from symop_proto.algebra.protocols import DensityPolyProto, KetPolyProto
+from symop_proto.algebra.protocols import (
+    DensityPolyProto,
+    KetPolyProto,
+    OpPolyProto,
+)
 from symop_proto.core.protocols import LadderOpProto, ModeOpProto
 
 
@@ -23,14 +28,14 @@ class PrettyPrintable(Protocol):
 
 @runtime_checkable
 class Normalizable(Protocol):
-    def is_normalized(self, eps: float = 1e-14) -> bool: ...
-    def normalized(self, *, eps: float = 1e-14): ...
+    def is_normalized(self, *, eps: float = 1e-14) -> bool: ...
+    def normalized(self, *, eps: float = 1e-14) -> Any: ...
 
 
 @runtime_checkable
 class ExpectationOnOpPoly(Protocol):
     def expect(
-        self, op: OpPoly, *, normalize: bool = True, eps: float = 1e-14
+        self, op: OpPolyProto, *, normalize: bool = True, eps: float = 1e-14
     ) -> complex: ...
 
 
@@ -48,13 +53,15 @@ class PurityLike(Protocol):
 
 @runtime_checkable
 class PartialTraceable(Protocol):
-    def partial_trace(self, trace_over_modes: set): ...
+    def partial_trace(
+        self, trace_over_modes: set
+    ) -> DensityPolyStateProto: ...
 
 
 @runtime_checkable
 class HasUniqueModes(Protocol):
     @property
-    def unique_modes(self): ...
+    def unique_modes(self) -> Tuple[ModeOpProto, ...]: ...
 
 
 # --- Operator application protocol (left-action) --------------
@@ -70,7 +77,7 @@ class LeftActionable(Protocol):
     """
 
     @overload
-    def __rmatmul__(self, other: OpPoly): ...
+    def __rmatmul__(self, other: OpPolyProto): ...
     @overload
     def __rmatmul__(self, other: KetPolyProto): ...
     @overload
@@ -118,8 +125,6 @@ class KetPolyStateProto(
 
     @property
     def norm2(self) -> float: ...
-    @property
-    def unique_modes(self): ...
 
     def to_density(self) -> "DensityPolyStateProto": ...
 

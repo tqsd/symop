@@ -19,6 +19,9 @@ class RectEnvelope(BaseEnvelope):
         out[inside] = amp
         return out
 
+    def freq_eval(self, w: np.ndarray) -> np.ndarray:
+        return NotImplemented
+
     def delayed(self, dt: float) -> "RectEnvelope":
         return RectEnvelope(
             center=self.center + dt, width=self.width, phase=self.phase

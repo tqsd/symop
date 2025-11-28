@@ -7,10 +7,11 @@ from itertools import count
 
 from symop_proto.core.pretty.ladder import ladder_latex, ladder_text
 from symop_proto.core.protocols import (
-    EnvelopeProto,
+    EnvelopeLike,
     LabelProto,
     LadderOpProto,
     ModeOpProto,
+    ModeLabelLike,
     OperatorKindProto,
     SignatureProto,
 )
@@ -30,8 +31,8 @@ class ModeOp(ModeOpProto):
     creates ladder-operators
     """
 
-    env: EnvelopeProto
-    label: LabelProto
+    env: EnvelopeLike
+    label: ModeLabelLike
 
     user_label: Optional[str] = None
     display_index: Optional[int] = field(
@@ -49,11 +50,23 @@ class ModeOp(ModeOpProto):
             self, "create", LadderOp(kind=OperatorKind.CREATE, mode=self)
         )
 
-    def with_label(self, tag: str) -> ModeOp:
+    def with_user_label(self, tag: str) -> ModeOp:
         return replace(self, user_label=tag)
 
     def with_index(self, idx: int) -> ModeOp:
         return replace(self, display_index=idx)
+
+    def with_env(self, env:EnvelopeLike) -> ModeOp:
+        return replace(self, env=env)
+    
+    def with_label(self, label: LabelProto) -> ModeOp:
+        return replace(self, label=label)
+
+    def with_pol(self, pol: LabelProto ) -> ModeOp:
+        return replace(self, label=self.label.with_pol(pol))
+
+    def with_path(self, path: LabelProto) -> ModeOp:
+        return replace(self, path=self.label.with_path(path))
 
     @property
     def signature(self) -> SignatureProto:

@@ -35,6 +35,7 @@ autodoc_default_options = {
     "inherited-members": False,
     "private-members": True,
 }
+autodoc_mock_imports = ["matplotlib"]
 
 
 add_module_names = False

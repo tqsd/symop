@@ -1,17 +1,26 @@
 from __future__ import annotations
-from dataclasses import dataclass
-from typing import Any, Tuple
-from symop_proto.core.protocols import LabelProto, SignatureProto
-from symop_proto.labels.path_label import PathLabel
-from symop_proto.labels.polarization_label import PolarizationLabel
+from dataclasses import dataclass, replace
+from typing import Any
+from symop_proto.core.protocols import SignatureProto
+from symop_proto.labels.protocols import (
+    ModeLabelProto,
+    PathLabelProto,
+    PolraizationLabelProto,
+)
 
 
 @dataclass(frozen=True)
-class ModeLabel(LabelProto):
-    path: PathLabel
-    pol: PolarizationLabel
+class ModeLabel(ModeLabelProto):
+    path: PathLabelProto
+    pol: PolraizationLabelProto
 
-    def overlap(self, other: ModeLabel) -> complex:
+    def with_path(self, path: PathLabelProto) -> ModeLabel:
+        return replace(self, path=path)
+
+    def with_pol(self, pol: PolraizationLabelProto) -> ModeLabel:
+        return replace(self, pol=pol)
+
+    def overlap(self, other: ModeLabelProto) -> complex:
         return self.path.overlap(other.path) * self.pol.overlap(other.pol)
 
     @property

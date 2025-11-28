@@ -3,8 +3,9 @@ from dataclasses import dataclass, replace
 from typing import Any, Tuple
 import numpy as np
 
-from symop_proto.core.protocols import EnvelopeProto, SignatureProto
+from symop_proto.core.protocols import SignatureProto
 from symop_proto.envelopes.base import BaseEnvelope
+from symop_proto.envelopes.protocols import FloatArray, RCArray, EnvelopeProto
 
 
 @dataclass(frozen=True)
@@ -43,9 +44,18 @@ class GaussianEnvelope(BaseEnvelope):
     tau: float
     phi0: float = 0.0
 
-    def time_eval(self, t: np.ndarray) -> np.ndarray:
+    def time_eval(self, t: FloatArray) -> RCArray:
         norm = (1.0 / (2.0 * np.pi * self.sigma**2)) ** 0.25
         x = t - self.tau
+        return (
+            norm
+            * np.exp(-(x**2) / (4.0 * self.sigma**2))
+            * np.exp(1j * (self.omega0 * x + self.phi0))
+        )
+
+    def freq_eval(self, w: FloatArray) -> RCArray:
+        norm = (1.0 / (2.0 * np.pi * self.sigma**2)) ** 0.25
+        x = w - self.tau
         return (
             norm
             * np.exp(-(x**2) / (4.0 * self.sigma**2))

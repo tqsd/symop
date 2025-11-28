@@ -1,13 +1,14 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import Any, Tuple
+from typing import Any
 import numpy as np
 
 from symop_proto.core.protocols import SignatureProto
+from symop_proto.labels.protocols import PolraizationLabelProto
 
 
 @dataclass(frozen=True)
-class PolarizationLabel:
+class PolarizationLabel(PolraizationLabelProto):
     jones: tuple[complex, complex]
 
     def __post_init__(self):
@@ -62,22 +63,22 @@ class PolarizationLabel:
 
     @classmethod
     def D(cls) -> PolarizationLabel:
-        s = 2**-0.05
+        s = 2**-0.5
         return cls((s + 0j, s + 0j))
 
     @classmethod
     def A(cls) -> PolarizationLabel:
-        s = 2**-0.05
+        s = 2**-0.5
         return cls((s + 0j, -s + 0j))
 
     @classmethod
     def R(cls) -> PolarizationLabel:
-        s = 2**-0.05
+        s = 2**-0.5
         return cls((s + 0j, -1j * s))
 
     @classmethod
     def L(cls) -> PolarizationLabel:
-        s = 2**-0.05
+        s = 2**-0.5
         return cls((s + 0j, 1j * s))
 
     @classmethod

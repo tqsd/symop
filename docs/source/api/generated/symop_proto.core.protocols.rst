@@ -1,4 +1,4 @@
-symop\_proto.core.protocols
+﻿symop\_proto.core.protocols
 ===========================
 
 .. automodule:: symop_proto.core.protocols
@@ -9,11 +9,12 @@ symop\_proto.core.protocols
    .. autosummary::
    
       DensityTermProto
-      EnvelopeProto
+      EnvelopeLike
       HasSignature
       KetTermProto
       LabelProto
       LadderOpProto
+      ModeLabelLike
       ModeOpProto
       MonomialProto
       OperatorKindProto

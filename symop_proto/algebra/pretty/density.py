@@ -2,6 +2,7 @@ from __future__ import annotations
 from itertools import chain
 from typing import Iterable
 
+from symop_proto.core.pretty.monomial import monomial_to_latex
 from symop_proto.core.protocols import DensityTermProto
 from symop_proto.algebra.pretty.monomial import collect_mode_order
 from symop_proto.core.pretty.terms import (
@@ -10,7 +11,6 @@ from symop_proto.core.pretty.terms import (
 )
 
 from symop_proto.core.pretty.terms import (
-    monomial_to_latex,
     complex_to_latex,
 )
 from symop_proto.core.pretty.terms import (
