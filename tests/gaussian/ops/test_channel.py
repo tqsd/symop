@@ -57,9 +57,7 @@ class TestEmbedSubsetAffine(unittest.TestCase):
         # Ensure untouched indices remain identity / zero
         untouched = [0, 2]
         self.assertTrue(
-            np.allclose(
-                X_full[np.ix_(untouched, untouched)], np.eye(2, dtype=complex)
-            )
+            np.allclose(X_full[np.ix_(untouched, untouched)], np.eye(2, dtype=complex))
         )
         self.assertTrue(
             np.allclose(

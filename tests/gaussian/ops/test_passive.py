@@ -49,9 +49,7 @@ class TestGaussianOpsPassive(unittest.TestCase):
             [[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]],
             dtype=complex,
         )
-        out = apply_passive_unitary_subset(
-            core, idx=[0, 1], U=U, check_unitary=True
-        )
+        out = apply_passive_unitary_subset(core, idx=[0, 1], U=U, check_unitary=True)
 
         self.assert_allclose(out.alpha, core.alpha)
         self.assert_allclose(out.N, core.N)
@@ -66,9 +64,7 @@ class TestGaussianOpsPassive(unittest.TestCase):
             [[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]],
             dtype=complex,
         )
-        out = apply_passive_unitary_subset(
-            core, idx=[0, 1], U=U, check_unitary=True
-        )
+        out = apply_passive_unitary_subset(core, idx=[0, 1], U=U, check_unitary=True)
         self.assert_allclose(out.alpha, U @ alpha)
 
         # For displaced vacuum, the result should still be displaced vacuum
@@ -89,9 +85,7 @@ class TestGaussianOpsPassive(unittest.TestCase):
 
         phi = 0.31
         U = np.array([[np.exp(1j * phi), 0.0], [0.0, 1.0]], dtype=complex)
-        out = apply_passive_unitary_subset(
-            core, idx=[0, 1], U=U, check_unitary=True
-        )
+        out = apply_passive_unitary_subset(core, idx=[0, 1], U=U, check_unitary=True)
 
         self.assert_allclose(out.N, core.N)
         self.assert_allclose(out.M[0, 1], np.exp(1j * phi) * core.M[0, 1])
@@ -107,9 +101,7 @@ class TestGaussianOpsPassive(unittest.TestCase):
         core = GaussianCore.vacuum(self.B)
         U = np.array([[2.0, 0.0], [0.0, 0.5]], dtype=complex)
         with self.assertRaises(ValueError):
-            apply_passive_unitary_subset(
-                core, idx=[0, 1], U=U, check_unitary=True
-            )
+            apply_passive_unitary_subset(core, idx=[0, 1], U=U, check_unitary=True)
 
 
 if __name__ == "__main__":

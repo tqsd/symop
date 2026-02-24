@@ -133,15 +133,9 @@ def _build_initial_core(params: DemoParams):
         phi0=0.0,
     )
 
-    mA = ModeOp(
-        env=env, label=ModeLabel(PathLabel("A"), PolarizationLabel.H())
-    )
-    mB = ModeOp(
-        env=env, label=ModeLabel(PathLabel("B"), PolarizationLabel.H())
-    )
-    mE = ModeOp(
-        env=env, label=ModeLabel(PathLabel("E"), PolarizationLabel.H())
-    )
+    mA = ModeOp(env=env, label=ModeLabel(PathLabel("A"), PolarizationLabel.H()))
+    mB = ModeOp(env=env, label=ModeLabel(PathLabel("B"), PolarizationLabel.H()))
+    mE = ModeOp(env=env, label=ModeLabel(PathLabel("E"), PolarizationLabel.H()))
 
     basis = ModeBasis.build([mA, mB, mE])
     core = GaussianCore.vacuum(basis)
@@ -151,9 +145,7 @@ def _build_initial_core(params: DemoParams):
 def _apply_two_mode_squeezing(core, mA, mB, r: float):
     from symop_proto.gaussian.maps.bogoliubov import TwoModeSqueezer
 
-    op = TwoModeSqueezer(
-        mode1=mA, mode2=mB, r=float(r), phi=0.0, check_ccr=True
-    )
+    op = TwoModeSqueezer(mode1=mA, mode2=mB, r=float(r), phi=0.0, check_ccr=True)
     return op.apply(core)
 
 
@@ -216,9 +208,7 @@ def run_demo(params: DemoParams) -> None:
     plt.plot(jammer_powers, det_cov, marker="o", markersize=3)
     plt.xlabel("jammer mean photons |beta|^2")
     plt.ylabel("det( Cov[outcome xp] )")
-    plt.title(
-        "Outcome covariance determinant vs jammer strength (coherent jammer)"
-    )
+    plt.title("Outcome covariance determinant vs jammer strength (coherent jammer)")
     plt.tight_layout()
     plt.show()
 
@@ -232,24 +222,18 @@ def run_demo(params: DemoParams) -> None:
 
     print("Done.")
     print(
-        f"params: squeeze_r={params.squeeze_r}, eta_mix={
-            params.eta_mix}, meas_var={params.meas_var}"
+        f"params: squeeze_r={params.squeeze_r}, eta_mix={params.eta_mix}, meas_var={
+            params.meas_var
+        }"
+    )
+    print(f"det_cov at nbar={float(jammer_powers[0]):.3g}: {float(det_cov[0]):.6g}")
+    print(f"det_cov at nbar={float(jammer_powers[-1]):.3g}: {float(det_cov[-1]):.6g}")
+    print(
+        f"mean_norm2 at nbar={float(jammer_powers[0]):.3g}: {float(mean_norm2[0]):.6g}"
     )
     print(
-        f"det_cov at nbar={float(jammer_powers[0]):.3g}: {
-            float(det_cov[0]):.6g}"
-    )
-    print(
-        f"det_cov at nbar={
-            float(jammer_powers[-1]):.3g}: {float(det_cov[-1]):.6g}"
-    )
-    print(
-        f"mean_norm2 at nbar={float(jammer_powers[0]):.3g}: {
-            float(mean_norm2[0]):.6g}"
-    )
-    print(
-        f"mean_norm2 at nbar={
-            float(jammer_powers[-1]):.3g}: {float(mean_norm2[-1]):.6g}"
+        f"mean_norm2 at nbar={float(jammer_powers[-1]):.3g}: {
+            float(mean_norm2[-1]):.6g}"
     )
 
 

@@ -53,9 +53,7 @@ class TestKetFromOps(ExtendedTestCase):
 
     def test_with_annihilators(self):
         a = make_mode("A")
-        terms = ket_from_ops(
-            creators=(a.create,), annihilators=(a.ann,), coeff=1.0
-        )
+        terms = ket_from_ops(creators=(a.create,), annihilators=(a.ann,), coeff=1.0)
         self.assertEqual(len(terms), 1)
         t = terms[0]
         self.assertEqual(t.monomial.creators, (a.create,))

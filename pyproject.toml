@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 
 [project]
-name = "symop_proto"
+name = "symop"
 version = "0.1.0"
 description = "Prototype implementation of hybrid Gaussian + symbolic quantum optics states"
-authors = [{ name = "Anonymous", email = "anonymous@example.com" }]
+authors = [{ name = "Simon Sekavcnik", email = "simon.sekavcnik@tum.de" }]
 readme = "README.md"
 license = { text = "Apache-2.0" }
 requires-python = ">=3.13"
@@ -19,11 +19,11 @@ dependencies = [
 ]
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
 exclude = ["tests*", "examples*"]
 
 [tool.setuptools.package-data]
-"symop_proto" = ["py.typed"]
+"symop" = ["py.typed"]
 
 [project.optional-dependencies]
 dev = [
@@ -35,12 +35,72 @@ dev = [
 line-length = 79
 target-version = ["py313"]
 
-[tool.ruff]
-line-length = 79
-
 [tool.flake8]
 max-line-length = 79
 
 
 
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+fix = true
+
+# Keep the rule set tight and useful during refactors.
+[tool.ruff.lint]
+select = [
+  "E",   # pycodestyle errors
+  "F",   # pyflakes
+  "W",   # pycodestyle warnings
+  "I",   # import sorting
+  "UP",  # pyupgrade
+  "B",   # bugbear (common footguns)
+  "SIM", # simplifications
+  "D"
+]
+ignore = [
+  "E501", # line length handled by formatter
+  "D203",
+  "D213"
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"src/symop/core/protocols/*.py" = ["D"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+
+[tool.mypy]
+python_version = "3.13"
+mypy_path = ["src"]
+
+# Make it behave like a "contract checker".
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_return_any = true
+no_implicit_optional = true
+strict_equality = true
+
+# Good strictness baseline that is usually realistic.
+disallow_untyped_defs = true
+check_untyped_defs = true
+disallow_incomplete_defs = true
+
+# Refactors often involve some Any at the edges; this keeps it manageable.
+disallow_any_generics = true
+disallow_subclassing_any = true
+
+# disallow_any_unimported = true
+# disallow_any_expr = true
+
+ignore_missing_imports = false
+
+[[tool.mypy.overrides]]
+module = [
+  "numpy",
+]
+ignore_missing_imports = true
 

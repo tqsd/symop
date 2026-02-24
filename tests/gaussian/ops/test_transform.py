@@ -46,9 +46,7 @@ class TestQuadratureToLadderAffine(unittest.TestCase):
 
         self.assertTrue(np.allclose(Xq2, Xq, atol=1e-12, rtol=0.0))
         self.assertTrue(np.allclose(Yq2, Yq, atol=1e-12, rtol=0.0))
-        self.assertTrue(
-            np.allclose(dq2, dq.astype(complex), atol=1e-12, rtol=0.0)
-        )
+        self.assertTrue(np.allclose(dq2, dq.astype(complex), atol=1e-12, rtol=0.0))
 
     def test_dq_none_returns_zero_complex(self) -> None:
         k = 1
@@ -126,9 +124,7 @@ class TestQuadratureToLadderAffine(unittest.TestCase):
             quadrature_to_ladder_affine(Xq, Yq, None, check_finite=True)
 
         # but allowed if check_finite=False
-        Xl, Yl, dl = quadrature_to_ladder_affine(
-            Xq, Yq, None, check_finite=False
-        )
+        Xl, Yl, dl = quadrature_to_ladder_affine(Xq, Yq, None, check_finite=False)
         self.assertEqual(Xl.shape, (2, 2))
         self.assertEqual(Yl.shape, (2, 2))
         self.assertEqual(dl.shape, (2,))
@@ -181,9 +177,7 @@ class TestLadderToQuadratureAffine(unittest.TestCase):
         with self.assertRaises(ValueError):
             ladder_to_quadrature_affine(Xl, Yl, None, check_finite=True)
 
-        Xq, Yq, dq = ladder_to_quadrature_affine(
-            Xl, Yl, None, check_finite=False
-        )
+        Xq, Yq, dq = ladder_to_quadrature_affine(Xl, Yl, None, check_finite=False)
         self.assertEqual(Xq.shape, (2, 2))
         self.assertEqual(Yq.shape, (2, 2))
         self.assertEqual(dq.shape, (2,))

@@ -34,11 +34,7 @@ class TestDensityApplyRight(ExtendedTestCase):
     def test_identity_word_no_change(self):
         """Empty word leaves density terms unchanged."""
         m = make_mode("A")
-        rho = (
-            DensityTerm(
-                2.0, left=Monomial(creators=(m.create,)), right=Monomial()
-            ),
-        )
+        rho = (DensityTerm(2.0, left=Monomial(creators=(m.create,)), right=Monomial()),)
         out = density_apply_right(rho, word=())  # empty iterable
         self.assertEqual(out, rho)
 
@@ -50,9 +46,7 @@ class TestDensityApplyRight(ExtendedTestCase):
         t = out[0]
         self.assertComplexAlmostEqual(t.coeff, 3.0 + 0j)
         self.assertEqual(t.left.signature, Monomial().signature)
-        self.assertEqual(
-            t.right.signature, Monomial(creators=(m.create,)).signature
-        )
+        self.assertEqual(t.right.signature, Monomial(creators=(m.create,)).signature)
 
     def test_combines_like_terms_after_application(self):
         """Linearity: two identical outcomes combine coefficients."""
@@ -66,25 +60,17 @@ class TestDensityApplyRight(ExtendedTestCase):
         t = out[0]
         self.assertComplexAlmostEqual(t.coeff, 4.0 + 0j)
         self.assertEqual(t.left.signature, Monomial().signature)
-        self.assertEqual(
-            t.right.signature, Monomial(creators=(m.create,)).signature
-        )
+        self.assertEqual(t.right.signature, Monomial(creators=(m.create,)).signature)
 
     def test_creator_against_existing_creator_on_right(self):
         m = make_mode("A")
         # Start with right monomial having a single creator
-        rho = (
-            DensityTerm(
-                1.0, left=Monomial(), right=Monomial(creators=(m.create,))
-            ),
-        )
+        rho = (DensityTerm(1.0, left=Monomial(), right=Monomial(creators=(m.create,))),)
         out = density_apply_right(rho, word=(m.create,))
 
         right_sigs = {t.right.signature for t in out}
         id_sig = Monomial().signature
-        adag_a_sig = Monomial(
-            creators=(m.create,), annihilators=(m.ann,)
-        ).signature
+        adag_a_sig = Monomial(creators=(m.create,), annihilators=(m.ann,)).signature
         self.assertEqual(right_sigs, {id_sig, adag_a_sig})
 
         coeff_by_sig = {t.right.signature: t.coeff for t in out}

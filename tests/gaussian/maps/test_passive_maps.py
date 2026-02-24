@@ -21,9 +21,7 @@ from symop_proto.gaussian.maps.passive import (
 
 
 class TestGaussianPassiveMaps(unittest.TestCase):
-    def assert_allclose(
-        self, a, b, atol=1e-12, rtol=1e-12, msg: str = ""
-    ) -> None:
+    def assert_allclose(self, a, b, atol=1e-12, rtol=1e-12, msg: str = "") -> None:
         ok = np.allclose(a, b, atol=atol, rtol=rtol)
         if not ok:
             diff = float(np.max(np.abs(np.asarray(a) - np.asarray(b))))
@@ -90,9 +88,9 @@ class TestGaussianPassiveMaps(unittest.TestCase):
             dtype=complex,
         )
 
-        out = PassiveUnitary(
-            modes=(self.m1, self.m2), U=U, check_unitary=True
-        ).apply(core)
+        out = PassiveUnitary(modes=(self.m1, self.m2), U=U, check_unitary=True).apply(
+            core
+        )
 
         alpha2 = U @ alpha
         expected = GaussianCore.coherent(self.B2, alpha2)
@@ -124,9 +122,7 @@ class TestGaussianPassiveMaps(unittest.TestCase):
 
     def test_subset_action_updates_cross_blocks_in_3mode_state(self) -> None:
         # Build a 3-mode state with cross-correlations between (m1,m2) and (m3).
-        alpha = np.array(
-            [0.1 + 0.0j, -0.2 + 0.1j, 0.05 - 0.02j], dtype=complex
-        )
+        alpha = np.array([0.1 + 0.0j, -0.2 + 0.1j, 0.05 - 0.02j], dtype=complex)
 
         # Start from vacuum-like base (alpha only), then inject some correlations.
         core = GaussianCore.from_moments(
@@ -182,9 +178,7 @@ class TestGaussianPassiveMaps(unittest.TestCase):
         core = GaussianCore.vacuum(self.B2)
 
         U_bad = np.array([[2.0, 0.0], [0.0, 0.5]], dtype=complex)
-        op = PassiveUnitary(
-            modes=(self.m1, self.m2), U=U_bad, check_unitary=True
-        )
+        op = PassiveUnitary(modes=(self.m1, self.m2), U=U_bad, check_unitary=True)
 
         with self.assertRaises(ValueError):
             op.apply(core)
@@ -193,9 +187,7 @@ class TestGaussianPassiveMaps(unittest.TestCase):
         core = GaussianCore.vacuum(self.B2)
 
         U_wrong = np.eye(3, dtype=complex)
-        op = PassiveUnitary(
-            modes=(self.m1, self.m2), U=U_wrong, check_unitary=False
-        )
+        op = PassiveUnitary(modes=(self.m1, self.m2), U=U_wrong, check_unitary=False)
 
         with self.assertRaises(ValueError):
             op.apply(core)
@@ -204,9 +196,7 @@ class TestGaussianPassiveMaps(unittest.TestCase):
         core = GaussianCore.vacuum(self.B2)
 
         env = GaussianEnvelope(omega0=0.0, sigma=0.5, tau=0.0, phi0=0.0)
-        mX = ModeOp(
-            env=env, label=ModeLabel(PathLabel("X"), PolarizationLabel.H())
-        )
+        mX = ModeOp(env=env, label=ModeLabel(PathLabel("X"), PolarizationLabel.H()))
 
         op = PhaseShift(mode=mX, phi=0.1)
         with self.assertRaises(KeyError):

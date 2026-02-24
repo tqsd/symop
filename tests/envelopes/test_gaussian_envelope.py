@@ -120,9 +120,7 @@ class TestGaussianClosedForm(ExtendedTestCase):
 
             z_cf = gauss_overlap_closed_form(
                 sigma1=s1, sigma2=s2, omega1=w1, omega2=w2, tau1=t1, tau2=t2
-            ) * np.exp(
-                1j * (p2 - p1)
-            )  # global-phase extension
+            ) * np.exp(1j * (p2 - p1))  # global-phase extension
             self.assertComplexAlmostEqual(z_impl, z_cf, rtol=1e-12, atol=1e-12)
 
     def test_self_overlap_is_one(self):
@@ -135,6 +133,4 @@ class TestGaussianClosedForm(ExtendedTestCase):
         g2 = GaussianEnvelope(omega0=1.3, sigma=0.5, tau=+0.1, phi0=-0.6)
         z12 = g1.overlap(g2)
         z21 = g2.overlap(g1)
-        self.assertComplexAlmostEqual(
-            z12.conjugate(), z21, rtol=1e-13, atol=1e-13
-        )
+        self.assertComplexAlmostEqual(z12.conjugate(), z21, rtol=1e-13, atol=1e-13)

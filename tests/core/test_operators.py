@@ -80,12 +80,8 @@ class TestOperators(ExtendedTestCase):
 
     def test_commutator_with_different_envelopes(self):
         # envelope overlap enters multiplicatively
-        m1 = make_mode(
-            "A", PolarizationLabel.H(), omega=1.0, sigma=0.35, tau=-0.2
-        )
-        m2 = make_mode(
-            "A", PolarizationLabel.H(), omega=1.3, sigma=0.5, tau=+0.1
-        )
+        m1 = make_mode("A", PolarizationLabel.H(), omega=1.0, sigma=0.35, tau=-0.2)
+        m2 = make_mode("A", PolarizationLabel.H(), omega=1.3, sigma=0.5, tau=+0.1)
         env_overlap = m1.env.overlap(m2.env)  # analytic Gaussian overlap
         z = m1.ann.commutator(m2.create)
         self.assertComplexAlmostEqual(z, env_overlap, rtol=1e-12, atol=1e-12)

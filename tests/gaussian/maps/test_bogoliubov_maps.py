@@ -38,13 +38,9 @@ class TestBogoliubovMap(unittest.TestCase):
         V = np.array([[np.exp(1j * phi) * sh]], dtype=complex)
 
         out_map = Bogoliubov(modes=(m,), U=U, V=V, check_ccr=True).apply(core)
-        out_kernel = apply_bogoliubov_subset(
-            core, idx=[0], U=U, V=V, check_ccr=True
-        )
+        out_kernel = apply_bogoliubov_subset(core, idx=[0], U=U, V=V, check_ccr=True)
 
-        self.assertTrue(
-            np.allclose(out_map.alpha, out_kernel.alpha, atol=1e-12)
-        )
+        self.assertTrue(np.allclose(out_map.alpha, out_kernel.alpha, atol=1e-12))
         self.assertTrue(np.allclose(out_map.N, out_kernel.N, atol=1e-12))
         self.assertTrue(np.allclose(out_map.M, out_kernel.M, atol=1e-12))
 
@@ -61,12 +57,8 @@ class TestBogoliubovMap(unittest.TestCase):
         U = np.array([[ch, 0.0], [0.0, ch]], dtype=complex)
         V = np.array([[0.0, sh], [sh, 0.0]], dtype=complex)
 
-        out_map = Bogoliubov(modes=(m1, m2), U=U, V=V, check_ccr=True).apply(
-            core
-        )
-        out_kernel = apply_bogoliubov_subset(
-            core, idx=[0, 1], U=U, V=V, check_ccr=True
-        )
+        out_map = Bogoliubov(modes=(m1, m2), U=U, V=V, check_ccr=True).apply(core)
+        out_kernel = apply_bogoliubov_subset(core, idx=[0, 1], U=U, V=V, check_ccr=True)
 
         self.assertTrue(np.allclose(out_map.N, out_kernel.N, atol=1e-12))
         self.assertTrue(np.allclose(out_map.M, out_kernel.M, atol=1e-12))

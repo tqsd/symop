@@ -69,6 +69,4 @@ class TestKetInner(ExtendedTestCase):
         psi2 = (KetTerm(-0.5 + 0.25j, Monomial((aR.create,), ())),)
         z12 = ket_inner(psi1, psi2)
         z21 = ket_inner(psi2, psi1)
-        self.assertComplexAlmostEqual(
-            z12, z21.conjugate(), rtol=1e-12, atol=1e-12
-        )
+        self.assertComplexAlmostEqual(z12, z21.conjugate(), rtol=1e-12, atol=1e-12)

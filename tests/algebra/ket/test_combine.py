@@ -63,9 +63,7 @@ class TestCombineLikeTermsKet(ExtendedTestCase):
 
     def test_approx_false_does_not_combine_nearby_envs(self):
         m1 = make_mode("A", tau=0.0)
-        m2 = make_mode(
-            "A", tau=1e-11
-        )  # tiny env change -> different exact signature
+        m2 = make_mode("A", tau=1e-11)  # tiny env change -> different exact signature
         t1 = KetTerm(1.0, Monomial(creators=(m1.create,)))
         t2 = KetTerm(2.0, Monomial(creators=(m2.create,)))
         out = combine_like_terms_ket((t1, t2), approx=False)
@@ -94,9 +92,7 @@ class TestCombineLikeTermsKet(ExtendedTestCase):
         sigs = [t.monomial.signature for t in out]
         self.assertLessEqual(sigs[0], sigs[1])  # sorted non-decreasing
         # And contains the expected keys
-        self.assertEqual(
-            set(sigs), {tA.monomial.signature, tB.monomial.signature}
-        )
+        self.assertEqual(set(sigs), {tA.monomial.signature, tB.monomial.signature})
 
 
 if __name__ == "__main__":

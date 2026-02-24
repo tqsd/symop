@@ -119,6 +119,4 @@ class TestKetFromWord(ExtendedTestCase):
             terms[1].monomial.signature, terms[0].monomial.signature
         )
         # identity first
-        self.assertEqual(
-            terms[0].monomial.signature, Monomial((), ()).signature
-        )
+        self.assertEqual(terms[0].monomial.signature, Monomial((), ()).signature)

@@ -34,11 +34,7 @@ class TestDensityApplyLeft(ExtendedTestCase):
     def test_identity_word_no_change(self):
         """Empty word leaves density terms unchanged."""
         m = make_mode("A")
-        rho = (
-            DensityTerm(
-                2.0, left=Monomial(), right=Monomial(creators=(m.create,))
-            ),
-        )
+        rho = (DensityTerm(2.0, left=Monomial(), right=Monomial(creators=(m.create,))),)
         out = density_apply_left(rho, word=())  # empty iterable
         self.assertEqual(out, rho)
 
@@ -74,15 +70,11 @@ class TestDensityApplyLeft(ExtendedTestCase):
     def test_creator_then_annihilator_gives_pass_only(self):
         m = make_mode("A")
         rho = (
-            DensityTerm(
-                1.0, left=Monomial(annihilators=(m.ann,)), right=Monomial()
-            ),
+            DensityTerm(1.0, left=Monomial(annihilators=(m.ann,)), right=Monomial()),
         )
         out = density_apply_left(rho, word=(m.create,))
 
-        aa_sig = Monomial(
-            creators=(m.create,), annihilators=(m.ann,)
-        ).signature
+        aa_sig = Monomial(creators=(m.create,), annihilators=(m.ann,)).signature
         left_sigs = {t.left.signature for t in out}
         self.assertEqual(left_sigs, {aa_sig})
 

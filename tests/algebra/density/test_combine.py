@@ -85,9 +85,7 @@ class TestCombineLikeTermsDensity(ExtendedTestCase):
         self.assertEqual(len(out_exact), 2)
 
         # Approx (e.g., decimals=8): merged
-        out_approx = combine_like_terms_density(
-            (d1, d2), approx=True, decimals=8
-        )
+        out_approx = combine_like_terms_density((d1, d2), approx=True, decimals=8)
         self.assertEqual(len(out_approx), 1)
         self.assertComplexAlmostEqual(out_approx[0].coeff, 3.5 + 0j)
 
@@ -96,12 +94,8 @@ class TestCombineLikeTermsDensity(ExtendedTestCase):
         a = make_mode("A")
         b = make_mode("B")
         # Create deliberately out-of-order inputs
-        d2 = DensityTerm(
-            1.0, left=Monomial(creators=(b.create,)), right=Monomial()
-        )
-        d1 = DensityTerm(
-            1.0, left=Monomial(creators=(a.create,)), right=Monomial()
-        )
+        d2 = DensityTerm(1.0, left=Monomial(creators=(b.create,)), right=Monomial())
+        d1 = DensityTerm(1.0, left=Monomial(creators=(a.create,)), right=Monomial())
 
         out = combine_like_terms_density((d2, d1))
         pairs = [(t.left.signature, t.right.signature) for t in out]

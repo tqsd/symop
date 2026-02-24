@@ -4,7 +4,7 @@ from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
 
 project = "symop_proto"
 author = "Simon Sekavčnik"
@@ -51,7 +51,7 @@ mathjax3_config = {
     }
 }
 
-jupyter_execute_notebooks = "cache"
+jupyter_execute_notebooks = "off"
 jupyter_execute_timeout = 120
 jupyter_execute_data_priority = [
     "text/html",

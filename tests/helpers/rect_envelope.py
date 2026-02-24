@@ -23,9 +23,7 @@ class RectEnvelope(BaseEnvelope):
         return NotImplemented
 
     def delayed(self, dt: float) -> "RectEnvelope":
-        return RectEnvelope(
-            center=self.center + dt, width=self.width, phase=self.phase
-        )
+        return RectEnvelope(center=self.center + dt, width=self.width, phase=self.phase)
 
     def phased(self, dphi: float) -> "RectEnvelope":
         return RectEnvelope(

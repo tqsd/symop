@@ -11,7 +11,6 @@ from symop_proto.gaussian.core import GaussianCore
 
 
 class TestGaussianCore(unittest.TestCase):
-
     def setUp(self):
         # Build an orthogonal two-mode basis using different paths.
         env = GaussianEnvelope(omega0=0.0, sigma=0.5, tau=0.0, phi0=0.0)

@@ -18,14 +18,11 @@ def make_mode(path: str, *, omega=1.0, sigma=0.3, tau=0.0, phi=0.0):
 
 
 class TestMonomial(ExtendedTestCase):
-
     def test_mode_ops_collects_unique_in_first_seen_order(self):
         ma = make_mode("A")
         mb = make_mode("B")
         # duplicate A in creators, plus A in annihilators
-        m = Monomial(
-            creators=(ma.create, ma.create, mb.create), annihilators=(ma.ann,)
-        )
+        m = Monomial(creators=(ma.create, ma.create, mb.create), annihilators=(ma.ann,))
         modes = m.mode_ops
         self.assertEqual(
             tuple(md.signature for md in modes), (ma.signature, mb.signature)
@@ -35,9 +32,7 @@ class TestMonomial(ExtendedTestCase):
         ma = make_mode("A")
         self.assertTrue(Monomial(creators=(ma.create,)).is_creator_only)
         self.assertFalse(
-            Monomial(
-                creators=(ma.create,), annihilators=(ma.ann,)
-            ).is_creator_only
+            Monomial(creators=(ma.create,), annihilators=(ma.ann,)).is_creator_only
         )
 
     def test_adjoint_swaps_and_daggers(self):

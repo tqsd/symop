@@ -16,15 +16,9 @@ from symop_proto.gaussian.core import GaussianCore
 class TestGaussianCoreStructuralOps(unittest.TestCase):
     def _make_modes(self):
         env = GaussianEnvelope(omega0=0.0, sigma=0.5, tau=0.0, phi0=0.0)
-        m1 = ModeOp(
-            env=env, label=ModeLabel(PathLabel("A"), PolarizationLabel.H())
-        )
-        m2 = ModeOp(
-            env=env, label=ModeLabel(PathLabel("B"), PolarizationLabel.H())
-        )
-        m3 = ModeOp(
-            env=env, label=ModeLabel(PathLabel("C"), PolarizationLabel.H())
-        )
+        m1 = ModeOp(env=env, label=ModeLabel(PathLabel("A"), PolarizationLabel.H()))
+        m2 = ModeOp(env=env, label=ModeLabel(PathLabel("B"), PolarizationLabel.H()))
+        m3 = ModeOp(env=env, label=ModeLabel(PathLabel("C"), PolarizationLabel.H()))
         return env, m1, m2, m3
 
     def test_keep_slices_moments_and_gram(self):
@@ -43,9 +37,7 @@ class TestGaussianCoreStructuralOps(unittest.TestCase):
 
         # Alpha matches slice in that order
         self.assertTrue(
-            np.allclose(
-                sub.alpha, np.array([alpha[2], alpha[0]], dtype=complex)
-            )
+            np.allclose(sub.alpha, np.array([alpha[2], alpha[0]], dtype=complex))
         )
 
         # Gram matches the corresponding sub-block of original gram

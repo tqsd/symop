@@ -15,6 +15,8 @@ symop_proto documentation
 
 .. toctree::
    :maxdepth: 2
-   :caption: API Reference
+   :caption: Architecture
 
-   api/index
+   architecture/index
+   architecture/packages
+

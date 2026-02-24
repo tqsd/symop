@@ -34,25 +34,19 @@ class TestModeLabel(ExtendedTestCase):
         aH = ModeLabel(PathLabel("A"), PolarizationLabel.H())
         aD = ModeLabel(PathLabel("A"), PolarizationLabel.D())
         self.assertComplexAlmostEqual(aH.overlap(aD), s + 0j)
-        self.assertComplexAlmostEqual(
-            aH.overlap(aD), aD.overlap(aH).conjugate()
-        )
+        self.assertComplexAlmostEqual(aH.overlap(aD), aD.overlap(aH).conjugate())
 
     def test_overlap_with_phase_in_pol(self):
         s = 2**-0.5
         aH = ModeLabel(PathLabel("A"), PolarizationLabel.H())
         aD = ModeLabel(PathLabel("A"), PolarizationLabel.D())
-        aD_phased = ModeLabel(
-            PathLabel("A"), PolarizationLabel((1j * s, 1j * s))
-        )
+        aD_phased = ModeLabel(PathLabel("A"), PolarizationLabel((1j * s, 1j * s)))
         self.assertComplexAlmostEqual(aH.overlap(aD), aH.overlap(aD_phased))
 
     def test_approx_signature(self):
         s = 2**-0.5
         a = ModeLabel(PathLabel("A"), PolarizationLabel((s, s)))
-        b = ModeLabel(
-            PathLabel("A"), PolarizationLabel((s + 1e-11, s - 1e-11))
-        )
+        b = ModeLabel(PathLabel("A"), PolarizationLabel((s + 1e-11, s - 1e-11)))
         self.assertEqual(
             a.approx_signature(decimals=8),
             b.approx_signature(decimals=8),

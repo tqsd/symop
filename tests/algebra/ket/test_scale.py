@@ -48,9 +48,7 @@ class TestKetScale(ExtendedTestCase):
         t2 = KetTerm(-0.5j, mono)
         out = ket_scale((t1, t2), 1.0 + 2.0j)
         self.assertEqual(len(out), 2)
-        self.assertComplexAlmostEqual(
-            out[0].coeff, (1.0 + 0.0j) * (1.0 + 2.0j)
-        )
+        self.assertComplexAlmostEqual(out[0].coeff, (1.0 + 0.0j) * (1.0 + 2.0j))
         self.assertComplexAlmostEqual(out[1].coeff, (-0.5j) * (1.0 + 2.0j))
         # order preserved
         self.assertEqual(out[0].monomial.signature, t1.monomial.signature)

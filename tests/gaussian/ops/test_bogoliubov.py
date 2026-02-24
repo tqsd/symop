@@ -67,9 +67,7 @@ class TestApplyBogoliubovSubset(unittest.TestCase):
         U = np.array([[ch, 0.0], [0.0, ch]], dtype=complex)
         V = np.array([[0.0, sh], [sh, 0.0]], dtype=complex)
 
-        out = apply_bogoliubov_subset(
-            core, idx=[0, 1], U=U, V=V, check_ccr=True
-        )
+        out = apply_bogoliubov_subset(core, idx=[0, 1], U=U, V=V, check_ccr=True)
 
         expected_N = sh * sh
         expected_M12 = sh * ch
@@ -141,9 +139,7 @@ class TestApplyBogoliubovSubset(unittest.TestCase):
         V = np.eye(1, dtype=complex)
 
         with self.assertRaises(ValueError):
-            apply_bogoliubov_subset(
-                core, idx=[0, 1], U=U, V=V, check_ccr=False
-            )
+            apply_bogoliubov_subset(core, idx=[0, 1], U=U, V=V, check_ccr=False)
 
 
 if __name__ == "__main__":

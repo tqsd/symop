@@ -4,7 +4,6 @@ from tests.utils.case import ExtendedTestCase
 
 
 class TestPolarizationLabel(ExtendedTestCase):
-
     def test_initiation(self):
         s = 2**-0.5
         pl_H = PolarizationLabel.H()
@@ -28,12 +27,8 @@ class TestPolarizationLabel(ExtendedTestCase):
 
     def test_linear_preset(self):
         s = 2**-0.5
-        self.assertComplexAlmostEqual(
-            PolarizationLabel.linear(0.0).jones[0], 1.0 + 0j
-        )
-        self.assertComplexAlmostEqual(
-            PolarizationLabel.linear(0.0).jones[1], 0.0 + 0j
-        )
+        self.assertComplexAlmostEqual(PolarizationLabel.linear(0.0).jones[0], 1.0 + 0j)
+        self.assertComplexAlmostEqual(PolarizationLabel.linear(0.0).jones[1], 0.0 + 0j)
 
         self.assertComplexAlmostEqual(
             PolarizationLabel.linear(np.pi / 2).jones[0], 0.0 + 0j
@@ -53,12 +48,8 @@ class TestPolarizationLabel(ExtendedTestCase):
         V = PolarizationLabel.V()
         A = PolarizationLabel.A()
 
-        self.assertComplexAlmostEqual(
-            H.rotated(np.pi / 2).jones[0], V.jones[0]
-        )
-        self.assertComplexAlmostEqual(
-            H.rotated(np.pi / 2).jones[1], V.jones[1]
-        )
+        self.assertComplexAlmostEqual(H.rotated(np.pi / 2).jones[0], V.jones[0])
+        self.assertComplexAlmostEqual(H.rotated(np.pi / 2).jones[1], V.jones[1])
 
         r = H.rotated(np.pi / 4)
         self.assertComplexAlmostEqual(r.jones[0], A.jones[0])

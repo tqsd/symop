@@ -10,7 +10,6 @@ from symop_proto.core.operators import ModeOp
 
 
 class TestModeBasis(unittest.TestCase):
-
     def setUp(self):
         # Two temporal modes on same path (partially overlapping)
         env1 = GaussianEnvelope(omega0=0.0, sigma=0.5, tau=0.0, phi0=0.0)

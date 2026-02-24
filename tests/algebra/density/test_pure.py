@@ -72,9 +72,7 @@ class TestDensityPure(ExtendedTestCase):
         out = density_pure((k1, k2))
         # Now we should have 4 distinct (left,right) pairs
         self.assertEqual(len(out), 4)
-        coeff_map = {
-            (t.left.signature, t.right.signature): t.coeff for t in out
-        }
+        coeff_map = {(t.left.signature, t.right.signature): t.coeff for t in out}
         self.assertComplexAlmostEqual(
             coeff_map[(k1.monomial.signature, k2.monomial.signature)],
             (1.0 + 1.0j) * (1.0 - 1.0j).conjugate(),  # = (1+i)*(1+i) = 2i

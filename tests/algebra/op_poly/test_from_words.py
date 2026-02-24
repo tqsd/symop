@@ -94,9 +94,7 @@ class TestOpFromWords(ExtendedTestCase):
             yield (mA.create,)
             yield (mB.ann,)
 
-        out = op_from_words(
-            words_gen(), coeffs=[1.2, -2.3], term_factory=_factory
-        )
+        out = op_from_words(words_gen(), coeffs=[1.2, -2.3], term_factory=_factory)
         self.assertEqual(len(out), 2)
         self.assertEqual(out[0].ops, (mA.create,))
         self.assertAlmostEqual(out[0].coeff, 1.2)
@@ -113,9 +111,7 @@ class TestOpFromWords(ExtendedTestCase):
         def _factory_x(ops: Tuple[LadderOp, ...], coeff: complex) -> _TermX:
             return _TermX(ops=ops, coeff=coeff)
 
-        out = op_from_words(
-            [(mA.create,)], coeffs=[2.0], term_factory=_factory_x
-        )
+        out = op_from_words([(mA.create,)], coeffs=[2.0], term_factory=_factory_x)
         self.assertEqual(len(out), 1)
         self.assertIsInstance(out[0], _TermX)
         self.assertEqual(out[0].ops, (mA.create,))

@@ -36,9 +36,7 @@ class TestExpandWordTimesMonomial(ExtendedTestCase):
         # Expect two terms: identity and a^dag a, both with coeff +1
         sigs = [t.monomial.signature for t in out]
         id_sig = Monomial().signature
-        adag_a_sig = Monomial(
-            creators=(m.create,), annihilators=(m.ann,)
-        ).signature
+        adag_a_sig = Monomial(creators=(m.create,), annihilators=(m.ann,)).signature
         self.assertEqual(set(sigs), {id_sig, adag_a_sig})
         coeff_by_sig = {t.monomial.signature: t.coeff for t in out}
         self.assertComplexAlmostEqual(coeff_by_sig[id_sig], 1.0 + 0.0j)

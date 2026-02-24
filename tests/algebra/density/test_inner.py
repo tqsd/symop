@@ -13,15 +13,9 @@ class TestDensityInner(ExtendedTestCase):
     def test_empty_against_anything_is_zero(self):
         rho_empty: Tuple[DensityTerm, ...] = ()
         rho_one = (DensityTerm(1.0, left=Monomial(), right=Monomial()),)
-        self.assertComplexAlmostEqual(
-            density_inner(rho_empty, rho_empty), 0.0 + 0.0j
-        )
-        self.assertComplexAlmostEqual(
-            density_inner(rho_empty, rho_one), 0.0 + 0.0j
-        )
-        self.assertComplexAlmostEqual(
-            density_inner(rho_one, rho_empty), 0.0 + 0.0j
-        )
+        self.assertComplexAlmostEqual(density_inner(rho_empty, rho_empty), 0.0 + 0.0j)
+        self.assertComplexAlmostEqual(density_inner(rho_empty, rho_one), 0.0 + 0.0j)
+        self.assertComplexAlmostEqual(density_inner(rho_one, rho_empty), 0.0 + 0.0j)
 
     def test_identity_with_identity_is_one(self):
         rho = (DensityTerm(1.0, left=Monomial(), right=Monomial()),)

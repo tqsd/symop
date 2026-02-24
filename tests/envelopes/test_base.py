@@ -7,7 +7,6 @@ from symop_proto.envelopes.base import BaseEnvelope, _overlap_numeric
 
 
 class TestOverlapNumeric(ExtendedTestCase):
-
     def test_constant_functions_exact_formula(self):
         tmin, tmax, n = 0.0, 1.0, 11
 
@@ -55,9 +54,7 @@ class TestBaseEnvelopeOverlap(ExtendedTestCase):
         e1 = RectEnvelope(center=0.0, width=W, phase=0.0)
         e2 = e1.phased(phi)
         z = e1.overlap(e2)
-        self.assertComplexAlmostEqual(
-            z, np.exp(1j * phi), rtol=1e-4, atol=1e-6
-        )
+        self.assertComplexAlmostEqual(z, np.exp(1j * phi), rtol=1e-4, atol=1e-6)
 
     def test_conjugate_symmetry(self):
         e1 = RectEnvelope(center=-0.3, width=1.2, phase=0.7)
@@ -70,9 +67,7 @@ class TestBaseEnvelopeOverlap(ExtendedTestCase):
     def test_cross_family_hook_is_used(self):
         e = RectEnvelope()
         h = HookEnv()
-        z = e.overlap(
-            h
-        )  # BaseEnvelope should call other.overlap_with_generic(self)
+        z = e.overlap(h)  # BaseEnvelope should call other.overlap_with_generic(self)
         self.assertAlmostEqual(z.real, 0.123, places=15)
         self.assertAlmostEqual(z.imag, 0.0, places=15)
 

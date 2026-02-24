@@ -50,25 +50,17 @@ class TestGaussianEvaluator(unittest.TestCase):
         self.assert_allclose(self.ev_vac.expect_monomial(mon_a1), 0.0 + 0.0j)
 
         mon_adag1 = Monomial(creators=(self.m1.create,), annihilators=())
-        self.assert_allclose(
-            self.ev_vac.expect_monomial(mon_adag1), 0.0 + 0.0j
-        )
+        self.assert_allclose(self.ev_vac.expect_monomial(mon_adag1), 0.0 + 0.0j)
 
-        mon_n1 = Monomial(
-            creators=(self.m1.create,), annihilators=(self.m1.ann,)
-        )
+        mon_n1 = Monomial(creators=(self.m1.create,), annihilators=(self.m1.ann,))
         self.assert_allclose(self.ev_vac.expect_monomial(mon_n1), 0.0 + 0.0j)
 
-        mon_a1a2 = Monomial(
-            creators=(), annihilators=(self.m1.ann, self.m2.ann)
-        )
+        mon_a1a2 = Monomial(creators=(), annihilators=(self.m1.ann, self.m2.ann))
         self.assert_allclose(self.ev_vac.expect_monomial(mon_a1a2), 0.0 + 0.0j)
 
     def test_commutator_identity_diagonal(self):
         # For any state: <a_i a_i^dag> = G_ii + <a_i^dag a_i>.
-        mon_n1 = Monomial(
-            creators=(self.m1.create,), annihilators=(self.m1.ann,)
-        )
+        mon_n1 = Monomial(creators=(self.m1.create,), annihilators=(self.m1.ann,))
         rhs = self.B.gram[0, 0] + self.ev_vac.expect_monomial(mon_n1)
         self.assert_allclose(rhs, self.B.gram[0, 0])
 
@@ -82,18 +74,12 @@ class TestGaussianEvaluator(unittest.TestCase):
         self.assert_allclose(ev.expect_monomial(mon_a1), alpha[0])
         self.assert_allclose(ev.expect_monomial(mon_a2), alpha[1])
 
-        mon_n1 = Monomial(
-            creators=(self.m1.create,), annihilators=(self.m1.ann,)
-        )
-        mon_n2 = Monomial(
-            creators=(self.m2.create,), annihilators=(self.m2.ann,)
-        )
+        mon_n1 = Monomial(creators=(self.m1.create,), annihilators=(self.m1.ann,))
+        mon_n2 = Monomial(creators=(self.m2.create,), annihilators=(self.m2.ann,))
         self.assert_allclose(ev.expect_monomial(mon_n1), abs(alpha[0]) ** 2)
         self.assert_allclose(ev.expect_monomial(mon_n2), abs(alpha[1]) ** 2)
 
-        mon_adag1_a2 = Monomial(
-            creators=(self.m1.create,), annihilators=(self.m2.ann,)
-        )
+        mon_adag1_a2 = Monomial(creators=(self.m1.create,), annihilators=(self.m2.ann,))
         self.assert_allclose(
             ev.expect_monomial(mon_adag1_a2),
             np.conjugate(alpha[0]) * alpha[1],
@@ -111,23 +97,15 @@ class TestGaussianEvaluator(unittest.TestCase):
         core = GaussianCore.from_moments(self.B, alpha=alpha0, N=N, M=M)
         ev = GaussianEvaluator(core)
 
-        mon_a1a2 = Monomial(
-            creators=(), annihilators=(self.m1.ann, self.m2.ann)
-        )
+        mon_a1a2 = Monomial(creators=(), annihilators=(self.m1.ann, self.m2.ann))
         self.assert_allclose(ev.expect_monomial(mon_a1a2), M[0, 1])
 
-        mon_n1 = Monomial(
-            creators=(self.m1.create,), annihilators=(self.m1.ann,)
-        )
-        mon_n2 = Monomial(
-            creators=(self.m2.create,), annihilators=(self.m2.ann,)
-        )
+        mon_n1 = Monomial(creators=(self.m1.create,), annihilators=(self.m1.ann,))
+        mon_n2 = Monomial(creators=(self.m2.create,), annihilators=(self.m2.ann,))
         self.assert_allclose(ev.expect_monomial(mon_n1), N[0, 0])
         self.assert_allclose(ev.expect_monomial(mon_n2), N[1, 1])
 
-        mon_a1a1 = Monomial(
-            creators=(), annihilators=(self.m1.ann, self.m1.ann)
-        )
+        mon_a1a1 = Monomial(creators=(), annihilators=(self.m1.ann, self.m1.ann))
         self.assert_allclose(ev.expect_monomial(mon_a1a1), M[0, 0])
 
     def test_fourth_order_thermal_like_single_mode(self):
@@ -158,9 +136,7 @@ class TestGaussianEvaluator(unittest.TestCase):
             creators=(m.create, m.create),
             annihilators=(m.ann, m.ann),
         )
-        self.assert_allclose(
-            ev.expect_monomial(mon_adag2_a2), 2.0 * nbar * nbar
-        )
+        self.assert_allclose(ev.expect_monomial(mon_adag2_a2), 2.0 * nbar * nbar)
 
     def test_nonorthogonal_offdiag_commutator_identity(self):
         # Build two modes that overlap partially in time so Gram has off-diagonal.

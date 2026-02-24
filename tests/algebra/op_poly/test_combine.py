@@ -56,12 +56,8 @@ def _factory(ops: Tuple[LadderOp, ...], coeff: complex) -> _TestTerm:
 class TestOpCombineLikeTerms(ExtendedTestCase):
     def test_combine_exact_signature_and_sum_coeffs(self):
         mA = make_mode("A")
-        t1 = _TestTerm(
-            ops=(mA.create,), coeff=2.0, _sig=("S", 1), _approx_sig=("A", 1)
-        )
-        t2 = _TestTerm(
-            ops=(mA.ann,), coeff=3.0, _sig=("S", 1), _approx_sig=("A", 1)
-        )
+        t1 = _TestTerm(ops=(mA.create,), coeff=2.0, _sig=("S", 1), _approx_sig=("A", 1))
+        t2 = _TestTerm(ops=(mA.ann,), coeff=3.0, _sig=("S", 1), _approx_sig=("A", 1))
         t3 = _TestTerm(
             ops=(
                 mA.create,
@@ -105,9 +101,7 @@ class TestOpCombineLikeTerms(ExtendedTestCase):
             _approx_sig=("Ap", "A", "C"),
         )
         self.assertEqual(t1.approx_signature(), t2.approx_signature())
-        out = op_combine_like_terms(
-            (t1, t2), approx=True, term_factory=_factory
-        )
+        out = op_combine_like_terms((t1, t2), approx=True, term_factory=_factory)
         self.assertEqual(len(out), 1)
         self.assertEqual(out[0].ops, t1.ops)
         self.assertAlmostEqual(out[0].coeff, 3.0)
@@ -127,9 +121,7 @@ class TestOpCombineLikeTerms(ExtendedTestCase):
             _sig=("E", 2),
             _approx_sig=("Ap", "B", "C"),
         )
-        out = op_combine_like_terms(
-            (t1, t2), approx=True, term_factory=_factory
-        )
+        out = op_combine_like_terms((t1, t2), approx=True, term_factory=_factory)
         self.assertEqual(len(out), 2)
 
     def test_env_kwargs_are_forwarded_and_preserve_word(self):
@@ -143,12 +135,8 @@ class TestOpCombineLikeTerms(ExtendedTestCase):
                 )
                 return ("ApTol", env_kw.get("tol", None), w)
 
-        t1 = _EnvTerm(
-            ops=(mA.create,), coeff=1.0, _sig=("E", 1), _approx_sig=("X",)
-        )
-        t2 = _EnvTerm(
-            ops=(mA.create,), coeff=2.0, _sig=("E", 2), _approx_sig=("X",)
-        )
+        t1 = _EnvTerm(ops=(mA.create,), coeff=1.0, _sig=("E", 1), _approx_sig=("X",))
+        t2 = _EnvTerm(ops=(mA.create,), coeff=2.0, _sig=("E", 2), _approx_sig=("X",))
         k1 = t1.approx_signature(tol=42)
         k2 = t2.approx_signature(tol=42)
         self.assertEqual(k1, k2)

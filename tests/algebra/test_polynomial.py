@@ -36,18 +36,14 @@ class TestKetPoly(ExtendedTestCase):
         self.assertEqual(len(kp.terms), 1)
         t = kp.terms[0]
         self.assertComplexAlmostEqual(t.coeff, 2.0 + 0.0j)
-        self.assertEqual(
-            t.monomial.signature, Monomial(creators=(a.create,)).signature
-        )
+        self.assertEqual(t.monomial.signature, Monomial(creators=(a.create,)).signature)
 
     def test_from_word_adag_then_a_same_mode(self):
         m = make_mode("A")
         kp = KetPoly.from_word(ops=(m.create, m.ann))
         # Expect identity + a^dag a (both +1)
         sigs = {t.monomial.signature for t in kp.terms}
-        adag_a_sig = Monomial(
-            creators=(m.create,), annihilators=(m.ann,)
-        ).signature
+        adag_a_sig = Monomial(creators=(m.create,), annihilators=(m.ann,)).signature
         self.assertEqual(sigs, {adag_a_sig})
 
     def test_scaled_and_inner_and_norm(self):
@@ -110,9 +106,7 @@ class TestDensityPoly(ExtendedTestCase):
 
     def test_scaled_and_combine_like_terms(self):
         m = Monomial()
-        rho = DensityPoly(
-            terms=(DensityTerm(1.0, m, m), DensityTerm(2.0, m, m))
-        )
+        rho = DensityPoly(terms=(DensityTerm(1.0, m, m), DensityTerm(2.0, m, m)))
         comb = rho.combine_like_terms()
         self.assertEqual(len(comb.terms), 1)
         self.assertComplexAlmostEqual(comb.terms[0].coeff, 3.0 + 0.0j)

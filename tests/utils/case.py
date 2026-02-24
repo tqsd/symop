@@ -95,9 +95,7 @@ class ExtendedTestCase(unittest.TestCase):
         b = np.asarray(desired)
         if a.shape != b.shape:
             self.fail(
-                self._formatMessage(
-                    err_msg, f"shape mismatch: {a.shape} != {b.shape}"
-                )
+                self._formatMessage(err_msg, f"shape mismatch: {a.shape} != {b.shape}")
             )
         if equal_nan:
             same = (a == b) | (np.isnan(a) & np.isnan(b))
@@ -106,8 +104,7 @@ class ExtendedTestCase(unittest.TestCase):
                 self.fail(
                     self._formatMessage(
                         err_msg,
-                        f"arrays differ at indices (first 5): {
-                            idx[:5].tolist()}",
+                        f"arrays differ at indices (first 5): {idx[:5].tolist()}",
                     )
                 )
         else:
@@ -127,12 +124,8 @@ class ExtendedTestCase(unittest.TestCase):
         err_msg: str | None = None,
     ) -> None:
         A = np.asarray(A)
-        self.assertTrue(
-            A.ndim == 2 and A.shape[0] == A.shape[1], "A must be square"
-        )
-        self.assertArrayAllClose(
-            A, A.conj().T, rtol=rtol, atol=atol, err_msg=err_msg
-        )
+        self.assertTrue(A.ndim == 2 and A.shape[0] == A.shape[1], "A must be square")
+        self.assertArrayAllClose(A, A.conj().T, rtol=rtol, atol=atol, err_msg=err_msg)
 
     def assertUnitary(
         self,
@@ -143,9 +136,7 @@ class ExtendedTestCase(unittest.TestCase):
         err_msg: str | None = None,
     ) -> None:
         U = np.asarray(U)
-        self.assertTrue(
-            U.ndim == 2 and U.shape[0] == U.shape[1], "U must be square"
-        )
+        self.assertTrue(U.ndim == 2 and U.shape[0] == U.shape[1], "U must be square")
         n = U.shape[0]
         I = np.eye(n, dtype=U.dtype)
         self.assertArrayAllClose(

@@ -16,9 +16,7 @@ from symop_proto.gaussian.physicality import project_to_physical_gaussian
 
 def _make_mode(path: str) -> ModeOp:
     env = GaussianEnvelope(omega0=0.0, sigma=0.5, tau=0.0, phi0=0.0)
-    return ModeOp(
-        env=env, label=ModeLabel(PathLabel(path), PolarizationLabel.H())
-    )
+    return ModeOp(env=env, label=ModeLabel(PathLabel(path), PolarizationLabel.H()))
 
 
 class TestGaussianPhysicality(unittest.TestCase):
