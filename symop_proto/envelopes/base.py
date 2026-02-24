@@ -37,72 +37,20 @@ def _overlap_numeric(
     tmax: float,
     n: int = 2**16,
 ) -> complex:
-    r"""
-    Numerically compute the overlap between two time-domain envelope functions.
+    t: FloatArray = np.linspace(float(tmin), float(tmax), int(n), dtype=float)
+    y1: RCArray = f1(t)
+    y2: RCArray = f2(t)
 
-    Parameters:
+    if not np.isfinite(y1).all():
+        bad = np.argwhere(~np.isfinite(y1))
+        i = int(bad[0, 0])
+        raise ValueError(f"Non-finite values from f1 at t={t[i]}: {y1[i]!r}")
+    if not np.isfinite(y2).all():
+        bad = np.argwhere(~np.isfinite(y2))
+        i = int(bad[0, 0])
+        raise ValueError(f"Non-finite values from f2 at t={t[i]}: {y2[i]!r}")
 
-        f1, f2: Time-dependent envelope functions.
-        tmin, tmax: Integration limits.
-        n: int: Optional, Number sampling points (default: :math:`2^{16}`)
-
-    Returns:
-        Numerical estimate of the overlap integral.
-
-    Mathematics:
-    ------------
-        This function approximates computes the integral:
-
-        .. math::
-
-            \int_{\text{tmin}}^{\text{tmax}}f_1^*(t) f_2(t) dt.
-
-        The integral is approximated using the :func:`np.trapezoid()` function,
-        which computes:
-
-        .. math::
-
-            \int_{t_{\min}}^{t_{\max}} y(t)\,\mathrm{d}t
-            \;\approx\;
-            \sum_{i=0}^{n-2} \frac{t_{i+1}-t_i}{2}\,\bigl(y_i + y_{i+1}\bigr)
-            \;=\;
-            \Delta t\left[\tfrac{1}{2}y_0 + \sum_{i=1}^{n-2} y_i +
-            \tfrac{1}{2}y_{n-1}\right].
-
-    Examples:
-    ---------
-
-    .. jupyter-execute::
-
-        import numpy as np
-        from IPython.display import display, HTML
-
-        from symop_proto.envelopes.gaussian_envelope import GaussianEnvelope
-        from symop_proto.envelopes.base import _overlap_numeric
-
-        # Two similar envelopes (second is delayed and phase-shifted)
-        e1 = GaussianEnvelope(omega0=0.0, sigma=0.5, tau=0.0, phi0=0.0)
-        e2 = GaussianEnvelope(omega0=0.0, sigma=0.5, tau=0.30, phi0=0.20)
-
-        # Same window heuristic used by BaseEnvelope.overlap:
-        (c1, s1) = e1.center_and_scale()
-        (c2, s2) = e2.center_and_scale()
-        c  = 0.5 * (c1 + c2)
-        S  = max(s1, s2)
-        T  = 8.0 * S
-        tmin, tmax = c - T, c + T
-
-        ov = _overlap_numeric(
-            e1.time_eval,
-            e2.time_eval,
-            tmin=tmin,
-            tmax=tmax)
-        display(HTML(f"<p>overlap = <code>{ov}</code> "
-                f"( |overlap| = {abs(ov):.6g} )</p>"))
-
-    """
-    t: FloatArray = np.linspace(tmin, tmax, n, dtype=float)
-    y: RCArray = np.conjugate(f1(t)) * f2(t)
+    y: RCArray = np.conjugate(y1) * y2
     return complex(np.trapezoid(y, t))
 
 
@@ -141,51 +89,11 @@ class BaseEnvelope(EnvelopeProto, ABC):
         return 0.0, 1.0
 
     def overlap(self, other: EnvelopeProto) -> complex:
-        r"""Overlap with another envelope
-
-        This computes the inner products :math:`\langle\zeta_1,\zeta_2\rangle`
-        between this envelope and ``other``. The method tries the following in
-        order:
-
-        1) **Cross-family hook** - If ``other`` implements
-           :class:`SupportsOverlapWIthGeneric`, delegate via
-           ``other.overlap_with_generic``.
-
-        2) **Numeric fallback** - If ``other`` is :class:`TimeEvaluable`,
-           evaluate both envelopes on a shared uniform grid and integrate
-           using the trapezoidal rule. Thegrid is chose from the envelopes'
-           heuristic center/scale:
-
-           .. math::
-
-               c = \frac{1}{2} (c_1+c_2), \qquad
-               S = \text{max}(s_1, s_2), \qquad
-               T = 8S
-
-           and the integral is taken over :math:`[c-T, c+T]`.
-
-        Parameters
-        ----------
-        other: EnvelopeProto
-            The envelope to overlap with.
-
-        Returns
-        -------
-        complex:
-            The overlap value
-
-        Raises
-        ------
-        TypeError
-            If no implementation is available.
-
-        See Also
-        --------
-        :py:func:`~symop_proto.envelopes.base._overlap_numeric` :
-            Numerical helper used for the fallback.
-        """
         if isinstance(other, SupportsOverlapWithGeneric):
             return other.overlap_with_generic(self)
+
+        if isinstance(self, SupportsOverlapWithGeneric):
+            return self.overlap_with_generic(other)
 
         c1, s1 = self.center_and_scale()
         if isinstance(other, TimeEvaluable):
@@ -196,11 +104,10 @@ class BaseEnvelope(EnvelopeProto, ABC):
             return _overlap_numeric(
                 self.time_eval, other.time_eval, tmin=c - T, tmax=c + T
             )
-
         raise TypeError(
             "No overlap implementation between"
             f"{type(self).__name__} and {type(other).__name__}"
-            "(other is not TimeEvaluable and prodives no cross-family hook)"
+            "(other is not TimeEvaluable and provides no cross-family hook)"
         )
 
     @property
@@ -329,7 +236,7 @@ class BaseEnvelope(EnvelopeProto, ABC):
 
         # |zeta|
         r = 0
-        axs[r].plot(t, amp, label=rf"$|\zeta(t)|$ — {l}")
+        axs[r].plot(t, amp, label=rf"$|\zeta(t)|$ -- {l}")
         axs[r].set_ylabel("envelope")
         axs[r].legend()
         r += 1
@@ -337,9 +244,9 @@ class BaseEnvelope(EnvelopeProto, ABC):
         if show_real_imag:
             y_re: FloatArray = np.real(y)
             y_im: FloatArray = np.imag(y)
-            axs[r].plot(t, y_re, label=rf"$\Re\,\zeta(t)$ — {l}")
+            axs[r].plot(t, y_re, label=rf"$\Re\,\zeta(t)$ -- {l}")
             axs[r].plot(
-                t, y_im, label=rf"$\Im\,\zeta(t)$ — {l}", linestyle="--"
+                t, y_im, label=rf"$\Im\,\zeta(t)$ -- {l}", linestyle="--"
             )
             axs[r].set_ylabel("field")
             axs[r].legend()
@@ -347,7 +254,7 @@ class BaseEnvelope(EnvelopeProto, ABC):
 
         # Phase
         if show_phase:
-            axs[r].plot(t, np.unwrap(np.angle(y)), label=f"phase — {l}")
+            axs[r].plot(t, np.unwrap(np.angle(y)), label=f"phase -- {l}")
             axs[r].set_ylabel("[rad]")
             axs[r].legend()
             axs[r].set_xlabel("time t")

@@ -100,7 +100,7 @@ class LinearModeUnitary(RewriteDeviceProto):
         psi_state_out = bs.on_state(psi_state)          # returns KetPolyState
         display(psi_state_out)
 
-        # Density state ρ = |1_A><1_A|
+        # Density state rho = |1_A><1_A|
         rho_state = psi_state.to_density()
         rho_state_out = bs.on_state(rho_state)          # returns DensityPolyState
         display(rho_state_out)
@@ -135,7 +135,7 @@ class LinearModeUnitary(RewriteDeviceProto):
 
         T_H  = ModeOp(env=env, label=ModeLabel(PathLabel("T"),  PolarizationLabel.H()))
         R_V  = ModeOp(env=env, label=ModeLabel(PathLabel("R"),  PolarizationLabel.V()))
-        # Basis (In_H, In_V, T_H, R_V) with routing columns→rows
+        # Basis (In_H, In_V, T_H, R_V) with routing columns -> rows
         U_pbs = np.eye(4, dtype=np.complex128)
         U_pbs[2, 0] = 1.0   # In_H -> T_H
         U_pbs[3, 1] = 1.0   # In_V -> R_V
@@ -157,7 +157,7 @@ class LinearModeUnitary(RewriteDeviceProto):
         n = len(self.modes)
         if self.U.shape != (n, n):
             raise ValueError(
-                "LinearModeUnitary: U must be n×n with n=len(modes)"
+                "LinearModeUnitary: U must be nxn with n=len(modes)"
             )
         # Optional unitary check:
         # if not np.allclose(self.U.conj().T @ self.U, np.eye(n), atol=1e-10):
@@ -198,8 +198,8 @@ class LinearModeUnitary(RewriteDeviceProto):
         """
         Rewrite a state and return the same concrete type:
 
-        - KetPolyState → KetPolyState (label/index preserved)
-        - DensityPolyState → DensityPolyState (trace-normalized; label/index preserved)
+        - KetPolyState -> KetPolyState (label/index preserved)
+        - DensityPolyState -> DensityPolyState (trace-normalized; label/index preserved)
         """
         if isinstance(state, KetPolyState):
             new_ket = self.on_ketpoly(state.ket)

@@ -74,6 +74,15 @@ class _HasGetFigure(Protocol):
     def get_figure(self) -> FigureBase | None: ...
 
 
+@runtime_checkable
+class HasSpectralHints(Protocol):
+    @property
+    def omega0(self) -> float: ...
+
+    @property
+    def omega_sigma(self) -> float: ...
+
+
 def _coerce_axes_array(axes: AxesLike) -> tuple[FigureBase, np.ndarray]:
     """
     Normalize Axes-like inputs to (FigureBase, 1-D object array of Axes).

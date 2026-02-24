@@ -37,8 +37,8 @@ def ket_from_word(
     Returns:
         Tuple of resulting ket terms, each containing the combined complex
         coefficent and the corresponding monomial in normal order. Terms
-        with negligible coefficients (|c| < 1e-12) are discarded and the
-        output is sorted by monomial signature.
+        with negligible coefficients (:math:`|c| < 1e^{-12}`) are discarded
+        and the output is sorted by monomial signature.
 
     Mathematics:
     ------------
@@ -168,7 +168,7 @@ def ket_from_word(
                     if w != 0.0:
                         m_contract = Monomial(
                             m.creators,
-                            m.annihilators[:idx] + m.annihilators[idx + 1:],
+                            m.annihilators[:idx] + m.annihilators[idx + 1 :],
                         )
                         kc = m_contract.signature
                         new_coeffs[kc] = new_coeffs.get(kc, 0j) + c * w

@@ -20,7 +20,7 @@ class ModeLabel(ModeLabelProto):
     def with_pol(self, pol: PolraizationLabelProto) -> ModeLabel:
         return replace(self, pol=pol)
 
-    def overlap(self, other: ModeLabelProto) -> complex:
+    def overlap(self, other: ModeLabel) -> complex:
         return self.path.overlap(other.path) * self.pol.overlap(other.pol)
 
     @property

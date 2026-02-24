@@ -61,7 +61,6 @@ def complex_to_text(c: complex, *, tol: float = 1e-12) -> str:
         if _approx_int(b, tol) == -1:
             return "-i"
         return scalar_to_text(b, tol=tol) + "·i"
-    # a ± b i
     sgn = "+" if b > 0 else "-"
     b_abs = abs(b)
     b_txt = (

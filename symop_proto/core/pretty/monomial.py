@@ -50,7 +50,7 @@ def monomial_to_str(
         rep = next(
             op for op in m.creators if op.mode.signature == sig
         )  # creation op
-        sym = ladder_text(rep, base=base)  # † handled by rep.is_creation
+        sym = ladder_text(rep, base=base)
         c_parts.append(_pow_group_text(sym, n))
 
     a_parts: List[str] = []

@@ -1,4 +1,4 @@
-﻿symop\_proto.rewrites.functions
+symop\_proto.rewrites.functions
 ===============================
 
 .. automodule:: symop_proto.rewrites.functions

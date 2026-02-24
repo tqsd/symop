@@ -11,5 +11,7 @@
    :recursive:
 
    base
+   filtered_envelope
    gaussian_envelope
    protocols
+   spectral_filters

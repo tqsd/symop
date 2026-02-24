@@ -15,7 +15,7 @@ class HasSignature(Protocol):
 
 @runtime_checkable
 class EnvelopeLike(HasSignature, Protocol):
-    def overlap(self, other: EnvelopeLike) -> complex: ...
+    def overlap(self, other: Any) -> complex: ...
     def delayed(self, dt: float) -> EnvelopeLike: ...
     def phased(self, dphi: float) -> EnvelopeLike: ...
 
@@ -35,15 +35,30 @@ class SupportsOverlapWIthGeneric(Protocol):
 class LabelProto(HasSignature, Protocol):
     def overlap(self, other: Self) -> complex: ...
 
+
+@runtime_checkable
+class PathProto(HasSignature, Protocol):
+    def overlap(self, other: Self) -> complex: ...
+
+
+@runtime_checkable
+class PolarizationProto(HasSignature, Protocol):
+    def overlap(self, other: Self) -> complex: ...
+
+
 @runtime_checkable
 class ModeLabelLike(LabelProto, Protocol):
-    def with_pol(pol: LabelProto)-> ModeLabelLike: ...
+    path: PathProto
+    pol: PolarizationProto
+
+    def with_pol(self, pol: LabelProto) -> ModeLabelLike: ...
+    def with_path(self, path: LabelProto) -> ModeLabelLike: ...
 
 
 @runtime_checkable
 class ModeOpProto(HasSignature, Protocol):
     env: EnvelopeLike
-    label: ModeLabelLike 
+    label: ModeLabelLike
 
     user_label: Optional[str]
     display_index: Optional[int]

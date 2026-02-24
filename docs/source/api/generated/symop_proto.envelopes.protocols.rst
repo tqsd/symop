@@ -9,5 +9,6 @@ symop\_proto.envelopes.protocols
    .. autosummary::
    
       EnvelopeProto
+      HasSpectralHints
       SupportsOverlapWithGeneric
    

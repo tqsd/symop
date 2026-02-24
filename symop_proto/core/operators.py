@@ -56,17 +56,17 @@ class ModeOp(ModeOpProto):
     def with_index(self, idx: int) -> ModeOp:
         return replace(self, display_index=idx)
 
-    def with_env(self, env:EnvelopeLike) -> ModeOp:
+    def with_env(self, env: EnvelopeLike) -> ModeOp:
         return replace(self, env=env)
-    
+
     def with_label(self, label: LabelProto) -> ModeOp:
         return replace(self, label=label)
 
-    def with_pol(self, pol: LabelProto ) -> ModeOp:
+    def with_pol(self, pol: LabelProto) -> ModeOp:
         return replace(self, label=self.label.with_pol(pol))
 
     def with_path(self, path: LabelProto) -> ModeOp:
-        return replace(self, path=self.label.with_path(path))
+        return replace(self, label=self.label.with_path(path))
 
     @property
     def signature(self) -> SignatureProto:

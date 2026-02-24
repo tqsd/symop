@@ -203,6 +203,38 @@ class DensityPoly(DensityPolyProto):
     def pure(psi: KetPolyProto) -> DensityPoly:
         return DensityPoly(density_pure(psi.terms))
 
+    @staticmethod
+    def zero() -> "DensityPoly":
+        r"""
+        Return the zero density polynomial.
+
+        This is the additive identity: it has no terms and represents the
+        zero operator.
+        """
+        return DensityPoly(())
+
+    @staticmethod
+    def identity() -> "DensityPoly":
+        r"""
+        Return the identity operator as a density polynomial.
+
+        The identity is represented as a single term
+
+        .. math::
+
+            I = 1 \cdot |I\rangle\langle I|,
+
+        where both monomials are the empty monomial (the identity monomial).
+
+        Notes
+        -----
+        Do not confuse this with ``DensityPoly()`` (empty terms), which
+        represents the zero operator.
+        """
+        from symop_proto.core.terms import DensityTerm
+
+        return DensityPoly((DensityTerm.identity(),))
+
     def scaled(self, c: complex) -> DensityPoly:
         return DensityPoly(density_scale(self.terms, c))
 
@@ -306,4 +338,4 @@ class DensityPoly(DensityPolyProto):
     def _repr_latex_(self) -> str:
         from symop_proto.algebra.pretty.density import density_latex
 
-        return rf"${density_latex(self.terms, style="brackets")}$"
+        return rf"${density_latex(self.terms, style='brackets')}$"

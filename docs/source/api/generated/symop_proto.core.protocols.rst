@@ -1,4 +1,4 @@
-﻿symop\_proto.core.protocols
+symop\_proto.core.protocols
 ===========================
 
 .. automodule:: symop_proto.core.protocols
@@ -18,6 +18,8 @@
       ModeOpProto
       MonomialProto
       OperatorKindProto
+      PathProto
+      PolarizationProto
       SupportsOverlapWIthGeneric
       TimeEvaluable
    

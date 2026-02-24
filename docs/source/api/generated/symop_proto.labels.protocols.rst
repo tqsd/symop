@@ -1,4 +1,4 @@
-﻿symop\_proto.labels.protocols
+symop\_proto.labels.protocols
 =============================
 
 .. automodule:: symop_proto.labels.protocols
