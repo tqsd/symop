@@ -1,21 +1,17 @@
 from __future__ import annotations
+
+from collections.abc import Iterable
 from itertools import chain
-from typing import Iterable
 
-from symop_proto.core.pretty.monomial import monomial_to_latex
-from symop_proto.core.protocols import DensityTermProto
 from symop_proto.algebra.pretty.monomial import collect_mode_order
-from symop_proto.core.pretty.terms import (
-    densityterm_to_str,
-    densityterm_to_latex,
-)
-
-from symop_proto.core.pretty.terms import (
-    complex_to_latex,
-)
+from symop_proto.core.pretty.monomial import monomial_to_latex
 from symop_proto.core.pretty.terms import (
     _right_dagger_view,
+    complex_to_latex,
+    densityterm_to_latex,
+    densityterm_to_str,
 )
+from symop_proto.core.protocols import DensityTermProto
 
 
 def _shared_index(terms: Iterable[DensityTermProto]):

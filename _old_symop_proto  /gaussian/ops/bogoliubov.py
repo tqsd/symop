@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from typing import Sequence
+from collections.abc import Sequence
 
 import numpy as np
-
 from symop_proto.gaussian.core import GaussianCore
 from symop_proto.gaussian.ops.common import (
     check_ccr_preservation,
@@ -23,8 +22,7 @@ def apply_bogoliubov_subset(
     check_ccr: bool = False,
     atol: float = 1e-12,
 ) -> GaussianCore:
-    r"""
-    Apply a linear Bogoliubov transformation to a subset of modes.
+    r"""Apply a linear Bogoliubov transformation to a subset of modes.
 
     This implements the Heisenberg-picture map on annihilation operators
 
@@ -110,7 +108,6 @@ def apply_bogoliubov_subset(
 
     Examples
     --------
-
     Single-mode squeezing on vacuum (canonical single-mode basis):
 
     .. jupyter-execute::
@@ -187,6 +184,7 @@ def apply_bogoliubov_subset(
         print("expected ~ sinh(r)^2:", sh * sh)
         print("M offdiag:", core2.M[0, 1])
         print("expected ~ sinh(r) cosh(r):", sh * ch)
+
     """
     n = core.basis.n
 

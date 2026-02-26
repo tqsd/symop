@@ -1,13 +1,13 @@
 from __future__ import annotations
-from typing import Tuple
+
 from symop_proto.algebra.ket.from_word import ket_from_word
 from symop_proto.algebra.ket.identity_coeff import identity_coeff
 from symop_proto.core.protocols import KetTermProto
 
 
 def ket_inner(
-    a: Tuple[KetTermProto, ...],
-    b: Tuple[KetTermProto, ...],
+    a: tuple[KetTermProto, ...],
+    b: tuple[KetTermProto, ...],
     *,
     eps: float = 1e-12,
 ) -> complex:
@@ -44,6 +44,7 @@ def ket_inner(
         ``a`` and ``b``, and C(L) is the cost of a single call to
         :func:`ket_from_word`, typically scaling between O(L) and O(L^2)
         for short operator sequences.
+
     """
     total: complex = 0.0 + 0.0j
     for ti in a:

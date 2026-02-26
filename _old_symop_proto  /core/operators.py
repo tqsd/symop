@@ -2,16 +2,16 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
 from enum import Enum
-from typing import Any, Optional, Tuple
 from itertools import count
+from typing import Any
 
 from symop_proto.core.pretty.ladder import ladder_latex, ladder_text
 from symop_proto.core.protocols import (
     EnvelopeLike,
     LabelProto,
     LadderOpProto,
-    ModeOpProto,
     ModeLabelLike,
+    ModeOpProto,
     OperatorKindProto,
     SignatureProto,
 )
@@ -26,16 +26,15 @@ class OperatorKind(str, Enum):
 
 @dataclass(frozen=True)
 class ModeOp(ModeOpProto):
-    """
-    Logical Mode -> Envelope + label
+    """Logical Mode -> Envelope + label
     creates ladder-operators
     """
 
     env: EnvelopeLike
     label: ModeLabelLike
 
-    user_label: Optional[str] = None
-    display_index: Optional[int] = field(
+    user_label: str | None = None
+    display_index: int | None = field(
         default_factory=lambda: next(_mode_display_counter)
     )
 
@@ -70,7 +69,7 @@ class ModeOp(ModeOpProto):
     def signature(self) -> SignatureProto:
         return ("mode", self.env.signature, self.label.signature)
 
-    def approx_signature(self, **kw: Any) -> Tuple[Any, ...]:
+    def approx_signature(self, **kw: Any) -> tuple[Any, ...]:
         return (
             "mode_approx",
             self.env.approx_signature(**kw),

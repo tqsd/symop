@@ -1,12 +1,13 @@
 from __future__ import annotations
-from typing import List, Tuple
+
 from symop_proto.core.protocols import DensityTermProto, KetTermProto
+
 from .combine import combine_like_terms_density
 
 
 def density_pure(
-    ket_terms: Tuple[KetTermProto, ...],
-) -> Tuple[DensityTermProto, ...]:
+    ket_terms: tuple[KetTermProto, ...],
+) -> tuple[DensityTermProto, ...]:
     r"""Construct a pure-state density polynomial.
 
     Given a ket expansion
@@ -32,10 +33,11 @@ def density_pure(
     Tuple[DensityTermProto, ...]
         Density terms representing :math:`|\psi\rangle\langle\psi|`,
         combined with :func:`combine_like_terms_density`.
+
     """
     from symop_proto.core.terms import DensityTerm
 
-    out: List[DensityTermProto] = []
+    out: list[DensityTermProto] = []
     for ti in ket_terms:
         for tj in ket_terms:
             out.append(

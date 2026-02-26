@@ -1,6 +1,7 @@
 from __future__ import annotations
-from typing import Dict, Tuple, List, Iterable
+
 from collections import Counter
+from collections.abc import Iterable
 
 from symop_proto.core.pretty.ladder import ladder_latex, ladder_text
 from symop_proto.core.protocols import MonomialProto
@@ -9,8 +10,8 @@ IDENTITY_LATEX = r"\mathbb{I}"
 IDENTITY_TEXT = "I"
 
 
-def collect_mode_order(monomials: Iterable[MonomialProto]) -> Dict[Tuple, int]:
-    order: Dict[Tuple, int] = {}
+def collect_mode_order(monomials: Iterable[MonomialProto]) -> dict[tuple, int]:
+    order: dict[tuple, int] = {}
 
     next_idx = 1
     for m in monomials:
@@ -32,7 +33,7 @@ def _pow_group_latex(s: str, n: int) -> str:
 
 def monomial_to_str(
     m: MonomialProto,
-    mode_index: Dict[Tuple, int],
+    mode_index: dict[tuple, int],
     *,
     show_identity: bool = True,
     base: str = "m",
@@ -44,14 +45,14 @@ def monomial_to_str(
     def by_idx(sig):
         return mode_index[sig]
 
-    c_parts: List[str] = []
+    c_parts: list[str] = []
     for sig in sorted(c_count, key=by_idx):
         n = c_count[sig]
         rep = next(op for op in m.creators if op.mode.signature == sig)  # creation op
         sym = ladder_text(rep, base=base)
         c_parts.append(_pow_group_text(sym, n))
 
-    a_parts: List[str] = []
+    a_parts: list[str] = []
     for sig in sorted(a_count, key=by_idx):
         n = a_count[sig]
         rep = next(
@@ -70,7 +71,7 @@ def monomial_to_str(
 
 def monomial_to_latex(
     m: MonomialProto,
-    mode_index: Dict[Tuple, int],
+    mode_index: dict[tuple, int],
     *,
     show_identity: bool = True,
     base: str = "a",
@@ -81,14 +82,14 @@ def monomial_to_latex(
     def by_idx(sig):
         return mode_index[sig]
 
-    c_parts: List[str] = []
+    c_parts: list[str] = []
     for sig in sorted(c_count, key=by_idx):
         n = c_count[sig]
         rep = next(op for op in m.creators if op.mode.signature == sig)
         sym = ladder_latex(rep, base=base)
         c_parts.append(_pow_group_latex(sym, n))
 
-    a_parts: List[str] = []
+    a_parts: list[str] = []
     for sig in sorted(a_count, key=by_idx):
         n = a_count[sig]
         rep = next(op for op in m.annihilators if op.mode.signature == sig)

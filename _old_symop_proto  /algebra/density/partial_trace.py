@@ -1,17 +1,18 @@
 from __future__ import annotations
-from typing import Iterable, Tuple, Set, Any, Dict
 
+from collections.abc import Iterable
+from typing import Any
+
+from symop_proto.algebra.density.combine import combine_like_terms_density
+from symop_proto.algebra.ket.inner import ket_inner
 from symop_proto.core.protocols import (
     DensityTermProto,
     LadderOpProto,
     MonomialProto,
 )
 
-from symop_proto.algebra.ket.inner import ket_inner
-from symop_proto.algebra.density.combine import combine_like_terms_density
 
-
-def _to_mode_signatures(trace_over_modes: Iterable[object]) -> Set[Any]:
+def _to_mode_signatures(trace_over_modes: Iterable[object]) -> set[Any]:
     r"""Normalize a list of modes to a set of ``ModeOp.signature`` keys.
 
     Accepts a heterogeneous iterable containing any of:
@@ -23,11 +24,10 @@ def _to_mode_signatures(trace_over_modes: Iterable[object]) -> Set[Any]:
 
     Returns a set of signature-tuples suitable for membership checks.
     """
-
-    sigs: Set[Any] = set()
+    sigs: set[Any] = set()
     for obj in trace_over_modes:
         if hasattr(obj, "signature"):
-            sigs.add(getattr(obj, "signature"))
+            sigs.add(obj.signature)
         elif isinstance(obj, LadderOpProto):
             sigs.add(obj.mode.signature)
         elif isinstance(obj, MonomialProto):
@@ -40,7 +40,7 @@ def _to_mode_signatures(trace_over_modes: Iterable[object]) -> Set[Any]:
 
 
 def _split_monomial_by_modes(
-    m: MonomialProto, trace_sigs: Set[Any]
+    m: MonomialProto, trace_sigs: set[Any]
 ) -> tuple[MonomialProto, MonomialProto]:
     r"""Partition a monomial into kept vs traced parts.
 
@@ -58,9 +58,9 @@ def _split_monomial_by_modes(
 
 
 def density_partial_trace(
-    terms: Tuple[DensityTermProto, ...],
+    terms: tuple[DensityTermProto, ...],
     trace_over_modes: Iterable[object],
-) -> Tuple[DensityTermProto, ...]:
+) -> tuple[DensityTermProto, ...]:
     r"""Partial trace over a subset of modes for a symbolic density polynomial.
 
     Let the Hilbert space factor as :math:`\mathcal{H} = \mathcal{H}_K \otimes
@@ -112,8 +112,8 @@ def density_partial_trace(
       is :math:`\langle R^T \mid L^T \rangle = 1` and it passes through intact.
     - If the traced parts are incompatible (orthogonal), the contraction is
       zero and the term is removed.
-    """
 
+    """
     from symop_proto.core.terms import DensityTerm, KetTerm
 
     trace_sigs = _to_mode_signatures(trace_over_modes)

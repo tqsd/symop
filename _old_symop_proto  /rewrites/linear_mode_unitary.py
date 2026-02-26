@@ -1,28 +1,26 @@
 from __future__ import annotations
-from dataclasses import dataclass
-from typing import Tuple, Union
-import numpy as np
 
-from symop_proto.core.operators import ModeOp, OperatorKind
+from dataclasses import dataclass
+
+import numpy as np
 from symop_proto.algebra.protocols import (
-    KetPolyProto,
     DensityPolyProto,
+    KetPolyProto,
     OpPolyProto,
 )
-from symop_proto.rewrites.protocols import RewriteDeviceProto
+from symop_proto.core.operators import ModeOp, OperatorKind
 from symop_proto.rewrites.functions.substitution import (
-    rewrite_ketpoly,
     rewrite_densitypoly,
+    rewrite_ketpoly,
     rewrite_oppoly,
 )
-
-from symop_proto.state.polynomial_state import KetPolyState, DensityPolyState
+from symop_proto.rewrites.protocols import RewriteDeviceProto
+from symop_proto.state.polynomial_state import DensityPolyState, KetPolyState
 
 
 @dataclass(frozen=True)
 class LinearModeUnitary(RewriteDeviceProto):
-    r"""
-    Passive linear device acting as a unitary on an ordered tuple of modes.
+    r"""Passive linear device acting as a unitary on an ordered tuple of modes.
 
     Heisenberg map:
 
@@ -33,21 +31,21 @@ class LinearModeUnitary(RewriteDeviceProto):
 
     where ``modes[j]`` is the output basis (columns of :math:`U` encode input images).
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     modes
         Ordered tuple of :class:`~symop_proto.core.operators.ModeOp` forming the basis.
     U
         Complex matrix of shape ``(n, n)``. For passive devices, ``U`` is unitary.
 
-    Notes:
-    ------
+    Notes
+    -----
     - Works for ket polynomials, density polynomials, operator polynomials, **and states**
       via :meth:`on_ketpoly`, :meth:`on_density`, :meth:`on_oppoly`, and :meth:`on_state`.
     - Non-orthogonal modes are supported; normal ordering and overlaps are handled by the algebra.
 
-    Examples:
-    ---------
+    Examples
+    --------
     **Ket polynomial (50:50 BS on paths A,B)**
 
     .. jupyter-execute::
@@ -148,9 +146,10 @@ class LinearModeUnitary(RewriteDeviceProto):
             (KetPoly.from_word(ops=(A_H.create,)) + KetPoly.from_word(ops=(A_V.create,))).scaled(1/np.sqrt(2))
         )
         display(pbs.on_state(psiD))   # superposition on T_H and R_V paths
+
     """
 
-    modes: Tuple[ModeOp, ...]
+    modes: tuple[ModeOp, ...]
     U: np.ndarray
 
     def __post_init__(self):
@@ -190,10 +189,9 @@ class LinearModeUnitary(RewriteDeviceProto):
 
     # --- state API ------------------------------------------------------------
     def on_state(
-        self, state: Union[KetPolyState, DensityPolyState]
-    ) -> Union[KetPolyState, DensityPolyState]:
-        """
-        Rewrite a state and return the same concrete type:
+        self, state: KetPolyState | DensityPolyState
+    ) -> KetPolyState | DensityPolyState:
+        """Rewrite a state and return the same concrete type:
 
         - KetPolyState -> KetPolyState (label/index preserved)
         - DensityPolyState -> DensityPolyState (trace-normalized; label/index preserved)

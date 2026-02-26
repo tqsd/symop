@@ -1,6 +1,9 @@
 from __future__ import annotations
-from typing import Iterable, Tuple
-from symop_proto.core.protocols import LadderOpProto, KetTermProto
+
+from collections.abc import Iterable
+
+from symop_proto.core.protocols import KetTermProto, LadderOpProto
+
 from .combine import combine_like_terms_ket
 
 
@@ -11,7 +14,7 @@ def ket_from_ops(
     coeff: complex = 1.0,
     approx: bool = False,
     **env_kw,
-) -> Tuple[KetTermProto, ...]:
+) -> tuple[KetTermProto, ...]:
     """Construct a ket term from creation and annihilation operators
 
     Creates a single :class:`KetTerm` with the given coefficient and

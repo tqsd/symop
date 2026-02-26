@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Optional, Tuple
+from typing import Any
 
 import numpy as np
-
 from symop_proto.core.protocols import SignatureProto
 from symop_proto.envelopes.base import BaseEnvelope
 from symop_proto.envelopes.protocols import EnvelopeProto, FloatArray, RCArray
@@ -24,8 +23,7 @@ def _interp_complex_1d(x: FloatArray, xp: FloatArray, fp: RCArray) -> RCArray:
 def _fit_linear_phase_delay(
     w_rel: np.ndarray, Z: np.ndarray, *, frac: float = 0.2
 ) -> float:
-    """
-    Estimate delay t0 from the linear phase of Z(w_rel) around w_rel=0.
+    """Estimate delay t0 from the linear phase of Z(w_rel) around w_rel=0.
 
     If Z(w_rel) ~ A(w_rel) * exp(-i w_rel t0), then unwrap(angle(Z)) has slope -t0.
     """
@@ -100,8 +98,7 @@ def _estimate_spectral_window(
 
 @dataclass(frozen=True)
 class FilteredEnvelope(BaseEnvelope):
-    r"""
-    Envelope defined by spectral multiplication:
+    r"""Envelope defined by spectral multiplication:
 
     z_out(w) = H(w) * z_in(w)
 
@@ -117,6 +114,7 @@ class FilteredEnvelope(BaseEnvelope):
     - The absolute Fourier convention is not important as long as overlap and
       plots are internally consistent. If you later care about absolute scaling,
       you can unify the convention across all envelopes.
+
     """
 
     base: EnvelopeProto
@@ -147,7 +145,7 @@ class FilteredEnvelope(BaseEnvelope):
             float(self.w_span_sigma),
         )
 
-    def center_and_scale(self) -> Tuple[float, float]:
+    def center_and_scale(self) -> tuple[float, float]:
         w0 = float(getattr(self.base, "omega0", 0.0))
         sigma_w = float(getattr(self.base, "sigma", 1.0))
         sigma_w = max(sigma_w, 1e-12)
@@ -262,7 +260,7 @@ class FilteredEnvelope(BaseEnvelope):
 
         return _interp_complex_1d(t, t_grid, z)
 
-    def delayed(self, dt: float) -> "FilteredEnvelope":
+    def delayed(self, dt: float) -> FilteredEnvelope:
         base_delayed = (
             self.base.delayed(dt) if hasattr(self.base, "delayed") else self.base
         )
@@ -273,7 +271,7 @@ class FilteredEnvelope(BaseEnvelope):
             w_span_sigma=self.w_span_sigma,
         )
 
-    def phased(self, dphi: float) -> "FilteredEnvelope":
+    def phased(self, dphi: float) -> FilteredEnvelope:
         base_phased = (
             self.base.phased(dphi) if hasattr(self.base, "phased") else self.base
         )
@@ -285,7 +283,7 @@ class FilteredEnvelope(BaseEnvelope):
         )
 
     @property
-    def latex(self) -> Optional[str]:
+    def latex(self) -> str | None:
         return r"\zeta_{\mathrm{out}}(\omega)=H(\omega)\,\zeta_{\mathrm{in}}(\omega)"
 
     def overlap_with_generic(self, other: EnvelopeProto) -> complex:

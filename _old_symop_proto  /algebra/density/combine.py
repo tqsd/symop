@@ -1,7 +1,9 @@
 from __future__ import annotations
-from typing import Dict, Iterable, List, Tuple
-from symop_proto.core.protocols import DensityTermProto
+
+from collections.abc import Iterable
+
 from symop_proto.algebra.common.signatures import sig_density
+from symop_proto.core.protocols import DensityTermProto
 
 
 def combine_like_terms_density(
@@ -10,7 +12,7 @@ def combine_like_terms_density(
     *,
     approx: bool = False,
     **env_kw,
-) -> Tuple[DensityTermProto, ...]:
+) -> tuple[DensityTermProto, ...]:
     """Combine like density terms by summing coefficients and dropping zeros.
 
     This function groups :class:`DensityTerms` instances by their
@@ -39,16 +41,15 @@ def combine_like_terms_density(
         pass accumulation and O(K log K) for the final sort.
 
     """
-
     from symop_proto.core.terms import DensityTerm
 
-    acc_c: Dict[tuple, complex] = {}
-    acc_rep: Dict[tuple, tuple] = {}
+    acc_c: dict[tuple, complex] = {}
+    acc_rep: dict[tuple, tuple] = {}
     for t in terms:
         k = sig_density(t, approx=approx, **env_kw)
         acc_c[k] = acc_c.get(k, 0j) + t.coeff
         acc_rep.setdefault(k, (t.left, t.right))
-    out: List[DensityTerm] = []
+    out: list[DensityTerm] = []
     for k, c in acc_c.items():
         if abs(c.real) < eps and abs(c.imag) < eps:
             continue

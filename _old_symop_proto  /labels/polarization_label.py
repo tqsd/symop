@@ -1,8 +1,9 @@
 from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Any
-import numpy as np
 
+import numpy as np
 from symop_proto.core.protocols import SignatureProto
 from symop_proto.labels.protocols import PolraizationLabelProto
 
@@ -12,7 +13,6 @@ class PolarizationLabel(PolraizationLabelProto):
     jones: tuple[complex, complex]
 
     def __post_init__(self):
-
         a, b = self.jones
         v = np.array([a, b], dtype=complex)
 

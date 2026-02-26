@@ -1,12 +1,12 @@
 from __future__ import annotations
-from typing import Callable, Dict, Iterable, Optional, Tuple
+
+from collections.abc import Callable, Iterable
 
 from symop_proto.core.protocols import (
     KetTermProto,
     LadderOpProto,
     MonomialProto,
 )
-
 
 TermFactory = Callable[[complex, MonomialProto], KetTermProto]
 
@@ -16,8 +16,8 @@ def ket_from_word(
     ops: Iterable[LadderOpProto],
     apply_to_vacuum: bool = False,
     eps: float = 1e-12,
-    term_factory: Optional[TermFactory] = None,
-) -> Tuple[KetTermProto, ...]:
+    term_factory: TermFactory | None = None,
+) -> tuple[KetTermProto, ...]:
     r"""Construct ket terms from a sequence (*word*) of ladder operators.
 
     Expands an operator *word* into a linear combination of normally ordered
@@ -94,7 +94,7 @@ def ket_from_word(
           :math:`\langle m_i \mid m_j \rangle` in the commutator definitions.
 
     Examples:
-    ---------
+    --------
     **Operator normal ordering (single orthogonal mode):**
     For :math:`[\hat a, \hat a^\dagger]=1`,
 
@@ -134,8 +134,8 @@ def ket_from_word(
         ket = KetPoly(terms)
 
         display(Math(ket.latex))
-    """
 
+    """
     from symop_proto.core.monomial import Monomial
 
     if term_factory is None:
@@ -143,14 +143,14 @@ def ket_from_word(
 
         term_factory = _KetTerm
 
-    coeffs: Dict[tuple, complex] = {}
-    reps: Dict[tuple, Monomial] = {}
+    coeffs: dict[tuple, complex] = {}
+    reps: dict[tuple, Monomial] = {}
     k0 = Monomial((), ()).signature
     coeffs[k0] = 1.0 + 0.0j
     reps[k0] = Monomial((), ())
     for op in ops:
-        new_coeffs: Dict[tuple, complex] = {}
-        new_reps: Dict[tuple, Monomial] = {}
+        new_coeffs: dict[tuple, complex] = {}
+        new_reps: dict[tuple, Monomial] = {}
         for k, c in coeffs.items():
             m = reps[k]
             if op.is_annihilation:

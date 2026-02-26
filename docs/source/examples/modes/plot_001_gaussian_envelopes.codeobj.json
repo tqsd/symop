@@ -1,0 +1,240 @@
+{
+ "GaussianEnvelope": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.gaussian",
+   "module_short": "symop.modes.envelopes.gaussian",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.base",
+   "module_short": "symop.modes.envelopes.base",
+   "name": "BaseEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "BaseEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "BaseEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "BaseEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols",
+   "name": "HasLatex"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "HasLatex"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "HasLatex"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasLatex"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols",
+   "name": "EnvelopeProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "EnvelopeProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "EnvelopeProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "EnvelopeProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "abc",
+   "module_short": "abc",
+   "name": "ABC"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Protocol"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols.signature",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.gaussian",
+   "module_short": "symop.modes.envelopes.gaussian",
+   "name": "GaussianEnvelope"
+  }
+ ],
+ "GaussianEnvelope.plot_many": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.gaussian.GaussianEnvelope",
+   "module_short": "symop.modes.envelopes.gaussian.GaussianEnvelope",
+   "name": "plot_many"
+  }
+ ],
+ "__name__": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "str"
+  }
+ ],
+ "build": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  }
+ ],
+ "main": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  }
+ ],
+ "plt.show": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.pyplot",
+   "module_short": "matplotlib.pyplot",
+   "name": "show"
+  }
+ ],
+ "symop.modes.envelopes.gaussian.GaussianEnvelope": [
+  {
+   "is_class": false,
+   "is_explicit": true,
+   "module": "symop.modes.envelopes.gaussian",
+   "module_short": "symop.modes.envelopes.gaussian",
+   "name": "GaussianEnvelope"
+  }
+ ]
+}

@@ -17,8 +17,14 @@ help:
 
 livehtml:
 	sphinx-autobuild $(SOURCEDIR) $(BUILDDIR)/html \
-	  --watch ../symop_proto \
-	  --watch source/_static \
+	  --watch ../src/symop \
+	  --watch $(SOURCEDIR) \
+	  --ignore "$(BUILDDIR)/*" \
+	  --ignore "$(BUILDDIR)/**" \
+	  --ignore "**/__pycache__/**" \
+	  --ignore "**/*.pyc" \
+	  --ignore "**/.pytest_cache/**" \
+	  --ignore "**/.mypy_cache/**" \
 	  --port 8000
 
 # Catch-all target: route all unknown targets to Sphinx using the new

@@ -1,10 +1,9 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Optional, Sequence, Tuple
 
 import numpy as np
-
 from symop_proto.core.protocols import ModeOpProto
 from symop_proto.devices.base import BaseDevice, DeviceApplyOptions
 from symop_proto.devices.io import DeviceIO, DeviceResult
@@ -14,8 +13,7 @@ from symop_proto.gaussian.core import GaussianCore
 
 @dataclass(frozen=True)
 class GaussianDevice(BaseDevice[GaussianCore]):
-    """
-    Base class for Gaussian devices.
+    """Base class for Gaussian devices.
 
     A Gaussian device is a state transformer operating on
     :class:`symop_proto.gaussian.core.GaussianCore`.
@@ -27,10 +25,11 @@ class GaussianDevice(BaseDevice[GaussianCore]):
     - This base class is thin and avoid import cycles
     - Device-level logic (selecting modes, creating env modes, routing)
       belongs here, not in gaussian map kernels.
+
     """
 
     def _apply_gaussian(
-        self, state: GaussianCore, *, options: Optional[DeviceApplyOptions]
+        self, state: GaussianCore, *, options: DeviceApplyOptions | None
     ) -> DeviceResult[GaussianCore]:
         raise NotImplementedError
 
@@ -45,7 +44,7 @@ class GaussianDevice(BaseDevice[GaussianCore]):
     def _relabel(
         self,
         state: GaussianCore,
-        mode_map: Sequence[Tuple[ModeOpProto, ModeOpProto]],
+        mode_map: Sequence[tuple[ModeOpProto, ModeOpProto]],
         *,
         atol: float = 1e-12,
     ) -> GaussianCore:

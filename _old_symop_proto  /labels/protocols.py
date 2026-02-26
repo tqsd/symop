@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Protocol
 
 from symop_proto.core.protocols import LabelProto

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Protocol, Self, runtime_checkable
 
+from symop.core.protocols.envelope import EnvelopeLike
+
 from .signature import HasSignature
 
 
@@ -25,5 +27,6 @@ class ModeLabelLike(LabelProto, Protocol):
     path: PathProto
     pol: PolarizationProto
 
+    def with_envelope(self, envelope: EnvelopeLike) -> ModeLabelLike: ...
     def with_pol(self, pol: LabelProto) -> ModeLabelLike: ...
     def with_path(self, path: PathProto) -> ModeLabelLike: ...

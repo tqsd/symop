@@ -1,13 +1,15 @@
 from __future__ import annotations
+
 from typing import Protocol, Union
+
 from symop_proto.algebra.protocols import (
-    KetPolyProto,
     DensityPolyProto,
+    KetPolyProto,
     OpPolyProto,
 )
 from symop_proto.state.protocols import (
-    KetPolyStateProto,
     DensityPolyStateProto,
+    KetPolyStateProto,
 )
 
 StateLike = Union[KetPolyStateProto, DensityPolyStateProto]

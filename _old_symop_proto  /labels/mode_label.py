@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 from dataclasses import dataclass, replace
 from typing import Any
+
 from symop_proto.core.protocols import SignatureProto
 from symop_proto.labels.protocols import (
     ModeLabelProto,

@@ -1,11 +1,9 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Optional
 import uuid
+from dataclasses import dataclass
 
 import numpy as np
-
 from symop_proto.devices.base import DeviceApplyOptions
 from symop_proto.devices.io import DeviceIO, DeviceResult
 from symop_proto.gaussian.core import GaussianCore
@@ -25,8 +23,7 @@ def _default_out_path(in_path: object) -> PathLabel:
 
 @dataclass(frozen=True)
 class PathPhaseInsensitiveAmplifier(GaussianDevice):
-    r"""
-    Phase-insensitive (quantum-limited) amplifier acting on modes on a selected path.
+    r"""Phase-insensitive (quantum-limited) amplifier acting on modes on a selected path.
 
     Physical model
     --------------
@@ -85,7 +82,6 @@ class PathPhaseInsensitiveAmplifier(GaussianDevice):
 
     Examples
     --------
-
     Example 1: Coherent state amplification
     =======================================
 
@@ -178,8 +174,8 @@ class PathPhaseInsensitiveAmplifier(GaussianDevice):
 
     path: object
     gain: float
-    pol: Optional[object] = None
-    out_path: Optional[PathLabel] = None
+    pol: object | None = None
+    out_path: PathLabel | None = None
     allow_empty: bool = False
     tol: float = 0.0
 
@@ -266,7 +262,7 @@ class PathPhaseInsensitiveAmplifier(GaussianDevice):
         self,
         state: GaussianCore,
         *,
-        options: Optional[DeviceApplyOptions] = None,
+        options: DeviceApplyOptions | None = None,
     ) -> DeviceResult[GaussianCore]:
         io = self.resolve_io(state)
         out = self.do_apply(state, io)

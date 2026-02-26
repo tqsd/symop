@@ -1,13 +1,10 @@
 from __future__ import annotations
 
-from typing import Tuple
-
 import numpy as np
 
 
 def pack_centered_ladder_K(N0: np.ndarray, M0: np.ndarray, G: np.ndarray) -> np.ndarray:
-    """
-    Pack centered moments into K = <dr dr^T> for r = (a, a^dag).
+    """Pack centered moments into K = <dr dr^T> for r = (a, a^dag).
 
     Convention (k modes):
       K00 = <da da^T>              = M0
@@ -29,9 +26,8 @@ def pack_centered_ladder_K(N0: np.ndarray, M0: np.ndarray, G: np.ndarray) -> np.
 
 def unpack_centered_ladder_K(
     K: np.ndarray, G: np.ndarray
-) -> Tuple[np.ndarray, np.ndarray]:
-    """
-    Inverse of pack_centered_ladder_K.
+) -> tuple[np.ndarray, np.ndarray]:
+    """Inverse of pack_centered_ladder_K.
 
     Returns (N0, M0).
     """

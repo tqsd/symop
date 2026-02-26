@@ -1,18 +1,17 @@
-from typing import Callable, Iterable, Optional, Tuple
+from collections.abc import Callable, Iterable
 
 from symop_proto.algebra.protocols import OpTermProto
 from symop_proto.core.protocols import LadderOpProto
 
-
-TermFactory = Callable[[Tuple[LadderOpProto, ...], complex], OpTermProto]
+TermFactory = Callable[[tuple[LadderOpProto, ...], complex], OpTermProto]
 
 
 def op_from_words(
     words: Iterable[Iterable[LadderOpProto]],
-    coeffs: Optional[Iterable[complex]] = None,
+    coeffs: Iterable[complex] | None = None,
     *,
-    term_factory: Optional[TermFactory] = None,
-) -> Tuple[OpTermProto, ...]:
+    term_factory: TermFactory | None = None,
+) -> tuple[OpTermProto, ...]:
     """Build operator terms from raw operator words and coefficients
 
     Each input word is materialized to a tuple of ``LadderOp`` and
@@ -29,8 +28,8 @@ def op_from_words(
     Returns:
         Tuple[OpTermProto, ...]
             Tuple of constructed operator terms.
-    """
 
+    """
     if term_factory is None:
         from symop_proto.algebra.operator_polynomial import OpTerm as _OpTerm
 
@@ -38,4 +37,4 @@ def op_from_words(
     ws = [tuple(w) for w in words]
     if coeffs is None:
         coeffs = [1.0] * len(ws)
-    return tuple(term_factory(w, c) for w, c in zip(ws, coeffs))
+    return tuple(term_factory(w, c) for w, c in zip(ws, coeffs, strict=False))

@@ -1,10 +1,11 @@
 from __future__ import annotations
-from typing import Tuple
+
 from symop_proto.core.protocols import DensityTermProto
+
 from .overlap_right_left import overlap_right_left
 
 
-def density_trace(terms: Tuple[DensityTermProto, ...]) -> complex:
+def density_trace(terms: tuple[DensityTermProto, ...]) -> complex:
     r"""Compute the trace of a density polynomial.
 
     Evaluates
@@ -24,6 +25,7 @@ def density_trace(terms: Tuple[DensityTermProto, ...]) -> complex:
     -------
     complex
         Complex trace value.
+
     """
     total: complex = 0.0 + 0.0j
     for t in terms:

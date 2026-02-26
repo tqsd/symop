@@ -1,6 +1,7 @@
 from __future__ import annotations
-from math import isfinite, sqrt, fabs
+
 from fractions import Fraction
+from math import fabs, isfinite, sqrt
 
 
 def _approx_int(v: float, tol: float) -> int | None:
@@ -68,7 +69,6 @@ def complex_to_text(c: complex, *, tol: float = 1e-12) -> str:
 
 
 def scalar_to_latex(x: float, *, tol: float = 1e-12, use_tfrac: bool = False) -> str:
-
     if fabs(x) < tol:
         return "0"
     k = _approx_int(x, tol)

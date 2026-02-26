@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from typing import Optional, Sequence
+from collections.abc import Sequence
 
 import numpy as np
-
 from symop_proto.gaussian.basis import ModeBasis
 from symop_proto.gaussian.core import GaussianCore
 from symop_proto.gaussian.ops.ladder_moments import (
@@ -19,11 +18,10 @@ def apply_ladder_affine_between_bases(
     basis_out: ModeBasis,
     X: np.ndarray,
     Y: np.ndarray,
-    d0: Optional[np.ndarray] = None,
+    d0: np.ndarray | None = None,
     check_finite: bool = True,
 ) -> GaussianCore:
-    """
-    Apply a ladder-affine Gaussian channel from an input subset (old basis)
+    """Apply a ladder-affine Gaussian channel from an input subset (old basis)
     to a *new* output basis.
 
     Input uses the subset indices idx_in in core.basis.

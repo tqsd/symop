@@ -2,16 +2,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-import numpy as np
-
-from symop_proto.core.protocols import ModeOpProto
 from symop_proto.gaussian.maps.base import GaussianSubsetMap
 
 
 @dataclass(frozen=True)
 class LossChannel(GaussianSubsetMap):
-    r"""
-    Pure-loss (attenuator) channel on a single mode implemented
+    r"""Pure-loss (attenuator) channel on a single mode implemented
     by a beamsplitter with a vacuum environment mode.
 
     Dilation:

@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from typing import Sequence, Tuple
+from collections.abc import Sequence
 
 import numpy as np
-
 from symop_proto.core.protocols import ModeOpProto
 
 
@@ -13,8 +12,7 @@ def gram_block(
     *,
     tol: float = 0.0,
 ) -> np.ndarray:
-    """
-    Return the Gram block G_lr with entries [l_i, r_j^dag].
+    """Return the Gram block G_lr with entries [l_i, r_j^dag].
 
     Uses mi.ann.commutator(mj.create), consistent with ModeBasis.build().
     """
@@ -36,9 +34,8 @@ def projection_C_and_env_gram(
     *,
     rcond: float = 1e-12,
     tol: float = 0.0,
-) -> Tuple[np.ndarray, np.ndarray]:
-    """
-    Compute the commutator-consistent projection b ~= C a + e.
+) -> tuple[np.ndarray, np.ndarray]:
+    """Compute the commutator-consistent projection b ~= C a + e.
 
     Let:
       G_aa[i,j] = [a_i, a_j^dag]
@@ -65,9 +62,7 @@ def projection_C_and_env_gram(
 
 
 def validate_env_gram_psd(G_e: np.ndarray, *, atol: float = 1e-12) -> None:
-    """
-    Raise if G_e is not Hermitian PSD within tolerance.
-    """
+    """Raise if G_e is not Hermitian PSD within tolerance."""
     if not np.allclose(G_e, G_e.conj().T, atol=float(atol), rtol=0.0):
         raise ValueError("G_e is not Hermitian within tolerance")
     ev = np.linalg.eigvalsh(G_e)

@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Final
 
 import numpy as np
@@ -7,20 +8,18 @@ _COMPLEX: Final = np.complex128
 
 
 def identity_unitary(n: int) -> np.ndarray:
-    r"""
-    Return the :math:`n\times n` identity matrix (complex)
+    r"""Return the :math:`n\times n` identity matrix (complex)
 
-
-    Parameters:
-    -----------
+    Parameters
+    ----------
     - n: Dimension of the identity (must be >= 0)
 
-    Returns:
-    --------
+    Returns
+    -------
     - ``numpy.ndarray``: Array with shape ``(n,n)`` and type ``complex128``
 
-    Raises:
-    -------
+    Raises
+    ------
     ``ValueError``: if ``n`` is negative
 
     Mathematics:
@@ -36,15 +35,14 @@ def identity_unitary(n: int) -> np.ndarray:
 
 
 def phase_unitary(phi: float) -> np.ndarray:
-    r"""
-    Single-mode phase shifter.
+    r"""Single-mode phase shifter.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     - phi: Phase shift in radians.
 
-    Returns:
-    --------
+    Returns
+    -------
     numpy.ndarray: Array with shape ``(1,1)`` and dtype ``complex128``.
 
 
@@ -70,16 +68,15 @@ def phase_unitary(phi: float) -> np.ndarray:
 
 
 def beamsplitter_unitary(theta: float, phi: float = 0.0) -> np.ndarray:
-    r"""
-    Two-mode beamsplitter unitary (passive, number-conserving)
+    r"""Two-mode beamsplitter unitary (passive, number-conserving)
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     - theta: Mixing angleu (radians).
     - phi: Internal phase (radians). Defaults to ``0.0``.
 
-    Returns:
-    --------
+    Returns
+    -------
     numpy.ndarray: Array with shape ``(2,2)`` and dtype ``complex128``.
 
     Mathematics:
@@ -103,11 +100,12 @@ def beamsplitter_unitary(theta: float, phi: float = 0.0) -> np.ndarray:
             \qquad
             a_k \; \mapsto \; \sum_j U_{j k}^*\, a_j
 
-    Notes:
-    ------
+    Notes
+    -----
     - Transmissivity :math:`T=\cos^2\theta`, reflectivity
       :math:`R=\sin^2\theta`.
     - :math:`\phi` is the internal beamsplitter phase.
+
     """
     c = np.cos(theta)
     s = np.sin(theta)
@@ -117,8 +115,7 @@ def beamsplitter_unitary(theta: float, phi: float = 0.0) -> np.ndarray:
 
 
 def pol_rotation_unitary(theta: float, chi: float) -> np.ndarray:
-    r"""
-    Polarization rotation / general waveplate acting on the :math:`(H,V)` basis.
+    r"""Polarization rotation / general waveplate acting on the :math:`(H,V)` basis.
 
     Mathematics:
     ------------
@@ -153,6 +150,7 @@ def pol_rotation_unitary(theta: float, chi: float) -> np.ndarray:
     -------
     numpy.ndarray
         Array with shape ``(2, 2)`` and dtype ``complex128``.
+
     """
     c = np.cos(theta)
     s = np.sin(theta)

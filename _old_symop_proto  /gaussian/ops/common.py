@@ -1,17 +1,17 @@
 from __future__ import annotations
-from typing import List, Optional, Sequence, Tuple
+
+from collections.abc import Sequence
 
 import numpy as np
-
 from symop_proto.core.protocols import ModeOpProto
 from symop_proto.gaussian.core import GaussianCore
 
 
-def as_index_list(core: GaussianCore, modes: Sequence[ModeOpProto]) -> List[int]:
+def as_index_list(core: GaussianCore, modes: Sequence[ModeOpProto]) -> list[int]:
     return [core.basis.require_index_of(m) for m in modes]
 
 
-def check_is_square_matrix(X: np.ndarray, *, name: Optional[str] = None) -> None:
+def check_is_square_matrix(X: np.ndarray, *, name: str | None = None) -> None:
     X = np.asarray(X)
     if X.ndim != 2 or X.shape[0] != X.shape[1]:
         if name is not None:
@@ -46,9 +46,8 @@ def check_is_subset_indices(n: int, idx: Sequence[int]) -> None:
 
 def embed_subset_matrices(
     n: int, idx: Sequence[int], U: np.ndarray, V: np.ndarray
-) -> Tuple[np.ndarray, np.ndarray]:
-    """
-    Builds full (n,n) matrices `U_full` and `V_full` that act as (U,V) on idx
+) -> tuple[np.ndarray, np.ndarray]:
+    """Builds full (n,n) matrices `U_full` and `V_full` that act as (U,V) on idx
     and as (I,0) on the complement.
     """
     U_full = np.eye(n, dtype=complex)
@@ -62,8 +61,7 @@ def embed_subset_matrices(
 def check_ccr_preservation(
     G: np.ndarray, U_full: np.ndarray, V_full: np.ndarray, *, atol: float
 ) -> None:
-    r"""
-    Checks CCR preservation in a general (possibly non-orthogonal) basis.
+    r"""Checks CCR preservation in a general (possibly non-orthogonal) basis.
 
     For ladder operators with :math:`[a_i, a_j^\dagger] = G_{ij}`, a Bogoliubov
     map
@@ -108,9 +106,8 @@ def alpha_from_quadrature_mean(d: np.ndarray) -> np.ndarray:
     return (x + 1j * p) / np.sqrt(2.0)
 
 
-def ladder_indices(n: int, idx_list: List[int]) -> List[int]:
-    r"""
-    Ladder ordering indices for
+def ladder_indices(n: int, idx_list: list[int]) -> list[int]:
+    r"""Ladder ordering indices for
 
     .. math::
 
@@ -121,7 +118,7 @@ def ladder_indices(n: int, idx_list: List[int]) -> List[int]:
 
 
 def as_complex_matrix(
-    a: np.ndarray, *, shape: Tuple[int, int], name: str
+    a: np.ndarray, *, shape: tuple[int, int], name: str
 ) -> np.ndarray:
     out = np.asarray(a, dtype=complex)
     if out.shape != shape:
@@ -130,8 +127,8 @@ def as_complex_matrix(
 
 
 def as_optional_complex_vector(
-    a: Optional[np.ndarray], *, k2: int, name: str
-) -> Optional[np.ndarray]:
+    a: np.ndarray | None, *, k2: int, name: str
+) -> np.ndarray | None:
     if a is None:
         return None
     out = np.asarray(a, dtype=complex).reshape(-1)
@@ -140,7 +137,7 @@ def as_optional_complex_vector(
     return out
 
 
-def check_finite_all(X: np.ndarray, Y: np.ndarray, d0: Optional[np.ndarray]) -> None:
+def check_finite_all(X: np.ndarray, Y: np.ndarray, d0: np.ndarray | None) -> None:
     if not np.isfinite(X).all():
         raise ValueError("X contains NaN/Inf")
     if not np.isfinite(Y).all():
@@ -149,16 +146,14 @@ def check_finite_all(X: np.ndarray, Y: np.ndarray, d0: Optional[np.ndarray]) -> 
         raise ValueError("d0 contains NaN/Inf")
 
 
-def check_shape_mat(A: np.ndarray, shape: Tuple[int, int], name) -> np.ndarray:
+def check_shape_mat(A: np.ndarray, shape: tuple[int, int], name) -> np.ndarray:
     out = np.asarray(A)
     if out.shape != shape:
         raise ValueError(f"{name} must have shape {shape}, got {out.shape}")
     return out
 
 
-def check_shape_vec(
-    v: Optional[np.ndarray], k2: int, name: str
-) -> Optional[np.ndarray]:
+def check_shape_vec(v: np.ndarray | None, k2: int, name: str) -> np.ndarray | None:
     if v is None:
         return None
     out = np.asarray(v).reshape(-1)
@@ -167,7 +162,7 @@ def check_shape_vec(
     return out
 
 
-def quadrature_indices(n: int, idx_list: List[int], which: str) -> List[int]:
+def quadrature_indices(n: int, idx_list: list[int], which: str) -> list[int]:
     which = str(which)
     if which == "x":
         return list(idx_list)
@@ -185,7 +180,7 @@ def as_real_vec(y: np.ndarray, *, m: int, name: str) -> np.ndarray:
     return out
 
 
-def as_real_mat(A: np.ndarray, *, shape: Tuple[int, int], name: str) -> np.ndarray:
+def as_real_mat(A: np.ndarray, *, shape: tuple[int, int], name: str) -> np.ndarray:
     out = np.asarray(A, dtype=float)
     if out.shape != shape:
         raise ValueError(f"{name} must have shape {shape}, got {out.shape}")

@@ -1,13 +1,14 @@
 from __future__ import annotations
-from typing import Tuple
+
 from symop_proto.core.protocols import DensityTermProto
-from .trace import density_trace
+
 from .scale import density_scale
+from .trace import density_trace
 
 
 def density_normalize_trace(
-    terms: Tuple[DensityTermProto, ...], *, eps: float = 1e-14
-) -> Tuple[DensityTermProto, ...]:
+    terms: tuple[DensityTermProto, ...], *, eps: float = 1e-14
+) -> tuple[DensityTermProto, ...]:
     r"""Scale a density polynomial so that its trace equals 1.
 
     This function computes :math:`\mathrm{Tr}(\rho)` via
@@ -46,8 +47,8 @@ def density_normalize_trace(
     - Scaling is performed by :func:`density_scale` with factor
       :math:`1/\mathrm{Tr}(\rho)`.
     - Works with complex traces; no assumption of Hermiticity is required.
-    """
 
+    """
     tr = density_trace(terms)
     if abs(tr) < eps:
         raise ValueError(f"Cannot normalize trace: |Tr(rho)| < {eps}")

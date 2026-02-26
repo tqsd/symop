@@ -1,8 +1,6 @@
 from __future__ import annotations
-from typing import Optional, Tuple
 
 import numpy as np
-
 from symop_proto.gaussian.ops.common import (
     check_finite_all,
     check_is_square_matrix,
@@ -11,9 +9,8 @@ from symop_proto.gaussian.ops.common import (
 )
 
 
-def ladder_change_of_basis(k: int) -> Tuple[np.ndarray, np.ndarray]:
-    r"""
-    Return the linear maps between quadratures and ladder operators
+def ladder_change_of_basis(k: int) -> tuple[np.ndarray, np.ndarray]:
+    r"""Return the linear maps between quadratures and ladder operators
     (per k modes).
 
     Conventions
@@ -64,6 +61,7 @@ def ladder_change_of_basis(k: int) -> Tuple[np.ndarray, np.ndarray]:
     -------
     (T, Tinv):
         Complex matrices of shape ``(2k,2k)``.
+
     """
     if k <= 0:
         raise ValueError("k must be positive")
@@ -80,12 +78,11 @@ def ladder_change_of_basis(k: int) -> Tuple[np.ndarray, np.ndarray]:
 def quadrature_to_ladder_affine(
     Xq: np.ndarray,
     Yq: np.ndarray,
-    dq: Optional[np.ndarray] = None,
+    dq: np.ndarray | None = None,
     *,
     check_finite=True,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-    r"""
-    Converts an affine Gaussian map from quadratures to ladder-operator
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    r"""Converts an affine Gaussian map from quadratures to ladder-operator
     coortinates
 
 
@@ -231,12 +228,11 @@ def quadrature_to_ladder_affine(
 def ladder_to_quadrature_affine(
     Xl: np.ndarray,
     Yl: np.ndarray,
-    dl: Optional[np.ndarray] = None,
+    dl: np.ndarray | None = None,
     *,
     check_finite: bool = True,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-    r"""
-    Inverse of :func:`quadrature_to_ladder_affine`.
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    r"""Inverse of :func:`quadrature_to_ladder_affine`.
 
     Given an affine map in ladder coordinates,
 

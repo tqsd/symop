@@ -1,15 +1,18 @@
 from __future__ import annotations
-from typing import Iterable, List, Tuple
+
+from collections.abc import Iterable
+
 from symop_proto.algebra.expand.word_times_monomial import (
     expand_word_times_monomial,
 )
 from symop_proto.core.protocols import DensityTermProto, LadderOpProto
+
 from .combine import combine_like_terms_density
 
 
 def density_apply_left(
-    terms: Tuple[DensityTermProto, ...], word: Iterable[LadderOpProto]
-) -> Tuple[DensityTermProto, ...]:
+    terms: tuple[DensityTermProto, ...], word: Iterable[LadderOpProto]
+) -> tuple[DensityTermProto, ...]:
     """Apply Operator word on the left of a density polynomial
 
     For each density term, this function expands the product into
@@ -31,10 +34,11 @@ def density_apply_left(
 
     Notes:
         - This is purely symbolic: it uses commutators to normal order
+
     """
     from symop_proto.core.terms import DensityTerm
 
-    out: List[DensityTermProto] = []
+    out: list[DensityTermProto] = []
 
     for t in terms:
         for kt in expand_word_times_monomial(word, t.left):

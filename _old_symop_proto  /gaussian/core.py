@@ -1,18 +1,15 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional, Tuple
 
 import numpy as np
-
 from symop_proto.core.protocols import ModeOpProto
 from symop_proto.gaussian.basis import ModeBasis
 
 
 @dataclass(frozen=True)
 class GaussianCore:
-    r"""
-    Gaussian state moments in a (possibly non-orthogonal) mode basis.
+    r"""Gaussian state moments in a (possibly non-orthogonal) mode basis.
 
     A Gaussian state on a bosonic CCR algebra is fully characterized by its
     first and second moments. The mode operators are allowed to be
@@ -46,7 +43,6 @@ class GaussianCore:
 
     Examples
     --------
-
     Construct a simple orthogonal two-mode basis and initialize the vacuum:
 
     .. jupyter-execute::
@@ -199,8 +195,7 @@ class GaussianCore:
 
     @staticmethod
     def vacuum(basis: ModeBasis) -> GaussianCore:
-        r"""
-        Constructs a vaccum Gaussian core in the given basis.
+        r"""Constructs a vaccum Gaussian core in the given basis.
 
         The vacuum state is defined by
 
@@ -228,7 +223,6 @@ class GaussianCore:
 
         Examples
         --------
-
         Construct vacuum in a simple orthogonal two-mode basis:
 
         .. jupyter-execute::
@@ -262,6 +256,7 @@ class GaussianCore:
         -------
         GaussianCore
             Vacuum Gaussian state in the specified basis.
+
         """
         n = basis.n
         return GaussianCore(
@@ -275,12 +270,11 @@ class GaussianCore:
     def from_moments(
         basis: ModeBasis,
         *,
-        alpha: Optional[np.ndarray] = None,
-        N: Optional[np.ndarray] = None,
-        M: Optional[np.ndarray] = None,
+        alpha: np.ndarray | None = None,
+        N: np.ndarray | None = None,
+        M: np.ndarray | None = None,
     ) -> GaussianCore:
-        r"""
-            Constructs a Gaussian core from supplied first and second moments.
+        r"""Constructs a Gaussian core from supplied first and second moments.
 
             A Gaussian state is fully characterized by:
 
@@ -298,9 +292,8 @@ class GaussianCore:
 
             Any omitted moment is initialized to zero.
 
-            Examples
-            --------
-
+        Examples
+        --------
             Construct a Gaussian state directly from supplied moments:
 
         .. jupyter-execute::
@@ -368,6 +361,7 @@ class GaussianCore:
         No physicality checks (positivity/uncertainty relations)
         are enforced here. This constructor only enforces algebraic
         consistency of the moment tensors.
+
         """
         n = basis.n
         a = (
@@ -389,9 +383,8 @@ class GaussianCore:
         return GaussianCore(basis=basis, alpha=a, N=NN, M=MM)
 
     @staticmethod
-    def coherent(basis: ModeBasis, alpha: np.ndarray) -> "GaussianCore":
-        r"""
-        Constructs a coherent (displaced vacuum) Gaussian state.
+    def coherent(basis: ModeBasis, alpha: np.ndarray) -> GaussianCore:
+        r"""Constructs a coherent (displaced vacuum) Gaussian state.
 
         A coherent state is defined as displacement of vacuum:
 
@@ -432,7 +425,6 @@ class GaussianCore:
 
         Examples
         --------
-
         Construct a coherent (displaced vacuum) state:
 
         .. jupyter-execute::
@@ -486,20 +478,20 @@ class GaussianCore:
         -----
         This constructor guarantees internal consistency between first
         and second moments for a displaced vacuum.
+
         """
         a = np.asarray(alpha, dtype=complex).reshape(basis.n).copy()
         N = np.outer(np.conjugate(a), a)
         M = np.outer(a, a)
         return GaussianCore.from_moments(basis, alpha=a, N=N, M=M)
 
-    def centered_moments(self) -> Tuple[np.ndarray, np.ndarray]:
+    def centered_moments(self) -> tuple[np.ndarray, np.ndarray]:
         N0 = self.N - np.outer(np.conjugate(self.alpha), self.alpha)
         M0 = self.M - np.outer(self.alpha, self.alpha)
         return N0, M0
 
     def quadrature_mean(self) -> np.ndarray:
-        r"""
-        Return the mean vector in the quadrature representation
+        r"""Return the mean vector in the quadrature representation
 
         Define canonical quadratures for each mode:
 
@@ -554,6 +546,7 @@ class GaussianCore:
         If the basis is non-orthogonal, the canonical commutation structure
         is encoded in the Gram matrix :math:`G`, but the quadrature definitions
         above remain algebraically valid.
+
         """
         a = self.alpha
         x = (a + np.conjugate(a)) / np.sqrt(2.0)
@@ -562,8 +555,7 @@ class GaussianCore:
         return np.concatenate([x.real, p.real], axis=0)
 
     def quadrature_covariance(self) -> np.ndarray:
-        r"""
-        Return the symmetrized quadrature covariance matrix.
+        r"""Return the symmetrized quadrature covariance matrix.
 
         Let
 
@@ -658,6 +650,7 @@ class GaussianCore:
           this reduces to the standard covariance matrix used in
           continuous-variable quantum optics.
         * Physicality (uncertainty relation) is not enforced here.
+
         """
         n = self.basis.n
         G = self.basis.gram
@@ -692,8 +685,7 @@ class GaussianCore:
         return V
 
     def symplectic_form(self) -> np.ndarray:
-        r"""
-        Returns the commutation (symplectic) form for the quadratures
+        r"""Returns the commutation (symplectic) form for the quadratures
 
         With Gram matrix :math:`G` defined by
 
@@ -740,6 +732,7 @@ class GaussianCore:
         -------
         np.ndarray
             Complex matrix of shape ``(2n, 2n)``
+
         """
         n = self.basis.n
         G = self.basis.gram
@@ -750,8 +743,7 @@ class GaussianCore:
         return Omega
 
     def uncertainty_matrix(self) -> np.ndarray:
-        r"""
-        Return the Hermitian uncertainty matrix
+        r"""Return the Hermitian uncertainty matrix
 
         .. math::
 
@@ -765,8 +757,7 @@ class GaussianCore:
         return V + 0.5j * Omega
 
     def is_physical(self, *, atol: float = 1e-12) -> bool:
-        r"""
-        Checks the Robertson-Schrödinger uncertainty relation.
+        r"""Checks the Robertson-Schrödinger uncertainty relation.
 
         A gaussian state is physical iff
 
@@ -783,6 +774,7 @@ class GaussianCore:
         -------
         bool
             True if physical within tolerance
+
         """
         H = self.uncertainty_matrix()
         eigvals = np.linalg.eigvalsh(H)
@@ -792,9 +784,8 @@ class GaussianCore:
         if not self.is_physical(atol=atol):
             raise ValueError("Gaussian state violates uncertainty relation")
 
-    def keep(self, modes: Tuple[ModeOpProto, ...]) -> GaussianCore:
-        r"""
-        Restricts this Gaussian core to a subset of modes (partial subsystem).
+    def keep(self, modes: tuple[ModeOpProto, ...]) -> GaussianCore:
+        r"""Restricts this Gaussian core to a subset of modes (partial subsystem).
 
         Thi operation keeps only the selected modes and discards the rest,
         producing a reduced Gaussian core on the smaller basis.
@@ -833,7 +824,6 @@ class GaussianCore:
 
         Examples
         --------
-
         Keep only one mode of a two-mode coherent state:
 
         .. jupyter-execute::
@@ -860,7 +850,6 @@ class GaussianCore:
             print("kept gram:", core1.basis.gram)
 
         """
-
         idx = [self.basis.require_index_of(m) for m in modes]
         idx_arr = np.asarray(idx, dtype=int)
 
@@ -875,9 +864,8 @@ class GaussianCore:
 
         return GaussianCore(basis=basis2, alpha=alpha2, N=N2, M=M2)
 
-    def trace_out(self, modes: Tuple[ModeOpProto, ...]) -> GaussianCore:
-        r"""
-        Traces out (discard) a subset of modes.
+    def trace_out(self, modes: tuple[ModeOpProto, ...]) -> GaussianCore:
+        r"""Traces out (discard) a subset of modes.
 
         If ``D`` is the ordered index list corresponding to the discarded modes,
         and ``K`` is its complement, then this returns the reduced Gaussian core
@@ -903,7 +891,6 @@ class GaussianCore:
 
         Examples
         --------
-
         Discard one mode from a two-mode squeezed vacuum:
 
         .. jupyter-execute::
@@ -930,24 +917,24 @@ class GaussianCore:
             red = core.trace_out((m2,))
             print("reduced basis n:", red.basis.n)
             print("reduced N:", red.N)
+
         """
         drop = {self.basis.require_index_of(m) for m in modes}
         keep_idx: list[int] = [i for i in range(self.basis.n) if i not in drop]
-        keep_modes: Tuple[ModeOpProto, ...] = tuple(
+        keep_modes: tuple[ModeOpProto, ...] = tuple(
             self.basis.modes[i] for i in keep_idx
         )
         return self.keep(keep_modes)
 
     def extend_with_vacuum(
         self,
-        modes: Tuple[ModeOpProto, ...],
+        modes: tuple[ModeOpProto, ...],
         *,
         merge_approx: bool = False,
-        env_kw: Optional[dict] = None,
+        env_kw: dict | None = None,
         tol: float = 0.0,
     ) -> GaussianCore:
-        r"""
-        Extends this Gaussian core by appending new modes initialized in vacuum.
+        r"""Extends this Gaussian core by appending new modes initialized in vacuum.
 
         This is a structural operation used to build Stinespring dilations for
         Gaussian channels (loss, thermal loss, amplification, etc.). It enlarges
@@ -986,7 +973,6 @@ class GaussianCore:
 
         Examples
         --------
-
         Add an environment vacuum mode to a single-mode coherent state:
 
         .. jupyter-execute::
@@ -1012,6 +998,7 @@ class GaussianCore:
             print("n old:", core.basis.n, "n new:", core2.basis.n)
             print("alpha:", core2.alpha)
             print("N block:", core2.N)
+
         """
         env_kw = env_kw or {}
 

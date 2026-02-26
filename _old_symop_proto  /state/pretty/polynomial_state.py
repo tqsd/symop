@@ -1,4 +1,3 @@
-from typing import Optional, Tuple
 from symop_proto.algebra.pretty.density import density_latex as _density_latex
 from symop_proto.core.protocols import DensityTermProto, KetTermProto
 
@@ -8,10 +7,10 @@ def _escape_text_for_latex(s: str) -> str:
 
 
 def state_latex_from_terms(
-    terms: Tuple[KetTermProto, ...],
+    terms: tuple[KetTermProto, ...],
     *,
-    label: Optional[str] = None,
-    index: Optional[int] = None,
+    label: str | None = None,
+    index: int | None = None,
 ) -> str:
     if label is not None:
         tlabel = _escape_text_for_latex(label)
@@ -30,10 +29,10 @@ def state_latex_from_terms(
 
 
 def density_state_latex_from_terms(
-    terms: Tuple[DensityTermProto, ...],
+    terms: tuple[DensityTermProto, ...],
     *,
-    label: Optional[str] = None,
-    index: Optional[int] = None,
+    label: str | None = None,
+    index: int | None = None,
     style: str = "braket",
 ) -> str:
     if label is not None:

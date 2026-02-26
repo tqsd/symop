@@ -1,11 +1,9 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Optional
 import uuid
+from dataclasses import dataclass
 
 import numpy as np
-
 from symop_proto.devices.base import DeviceApplyOptions
 from symop_proto.devices.io import DeviceIO, DeviceResult
 from symop_proto.envelopes.filtered_envelope import FilteredEnvelope
@@ -34,8 +32,7 @@ def _default_out_path(in_path: object) -> PathLabel:
 def _gauss_times_gauss_lowpass(
     env: GaussianEnvelope, H: GaussianLowpass
 ) -> GaussianEnvelope:
-    r"""
-    Fast path for Gaussian input envelope and Gaussian lowpass transfer.
+    r"""Fast path for Gaussian input envelope and Gaussian lowpass transfer.
 
     We model filtering in frequency space as
 
@@ -110,6 +107,7 @@ def _gauss_times_gauss_lowpass(
     Gram blocks are computed from overlaps and the resulting
     channel completion accounts for loss via :math:`C` and
     :math:`G_e`.
+
     """
     w0_in = float(env.omega0)
     s_in = float(env.sigma)
@@ -141,8 +139,7 @@ def _make_output_envelope(env_in: object, transfer: SpectralTransfer) -> object:
 
 @dataclass(frozen=True)
 class PathSpectralFilter(GaussianDevice):
-    r"""
-    Spectral filter acting on modes on a selected optical path.
+    r"""Spectral filter acting on modes on a selected optical path.
 
     Physical model
     --------------
@@ -239,7 +236,6 @@ class PathSpectralFilter(GaussianDevice):
 
     Examples
     --------
-
     Example 1: Coherent state through a Gaussian lowpass
     ====================================================
 
@@ -317,7 +313,6 @@ class PathSpectralFilter(GaussianDevice):
 
     Examples
     --------
-
     Example 1: Coherent state through GaussianLowpass (fast path)
     =============================================================
 
@@ -694,12 +689,13 @@ class PathSpectralFilter(GaussianDevice):
         plt.title("Example 3: spectral magnitude before/after")
         plt.legend()
         plt.tight_layout()
+
     """
 
     path: object
     transfer: SpectralTransfer
-    pol: Optional[object] = None
-    out_path: Optional[PathLabel] = None
+    pol: object | None = None
+    out_path: PathLabel | None = None
     allow_empty: bool = False
     rcond: float = 1e-12
     tol: float = 0.0
@@ -710,8 +706,7 @@ class PathSpectralFilter(GaussianDevice):
         self._init_base()
 
     def resolve_io(self, state: GaussianCore) -> DeviceIO:
-        """
-        Resolve concrete input modes and construct output modes.
+        """Resolve concrete input modes and construct output modes.
 
         Key rule:
         - During do_apply we keep the physical path labels unchanged so that
@@ -771,8 +766,7 @@ class PathSpectralFilter(GaussianDevice):
         )
 
     def do_apply(self, state: GaussianCore, io: DeviceIO) -> GaussianCore:
-        """
-        Apply the CCR-consistent Gaussian map.
+        """Apply the CCR-consistent Gaussian map.
 
         Note: io.output_modes use the *physical* label (same path as input) so
         that G_ba captures envelope overlap rather than being forced to zero by
@@ -833,7 +827,7 @@ class PathSpectralFilter(GaussianDevice):
         self,
         state: GaussianCore,
         *,
-        options: Optional[DeviceApplyOptions] = None,
+        options: DeviceApplyOptions | None = None,
     ) -> DeviceResult[GaussianCore]:
         io = self.resolve_io(state)
         out = self.do_apply(state, io)

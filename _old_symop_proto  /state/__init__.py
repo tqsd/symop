@@ -1,4 +1,3 @@
-from .polynomial_state import KetPolyState, DensityPolyState
-
+from .polynomial_state import DensityPolyState, KetPolyState
 
 __all__ = ["KetPolyState", "DensityPolyState"]

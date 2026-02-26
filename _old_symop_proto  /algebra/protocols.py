@@ -1,15 +1,11 @@
 from __future__ import annotations
+
+from collections.abc import Iterable
 from typing import (
     Any,
-    Dict,
-    Iterable,
-    Optional,
-    Tuple,
-    Union,
     Protocol,
     runtime_checkable,
 )
-from typing_extensions import runtime
 
 from symop_proto.core.protocols import (
     DensityTermProto,
@@ -22,7 +18,7 @@ from symop_proto.core.protocols import (
 
 @runtime_checkable
 class KetPolyProto(Protocol):
-    terms: Tuple[KetTermProto, ...]
+    terms: tuple[KetTermProto, ...]
 
     # ---- Constructors -------------------------------------------------------
     @staticmethod
@@ -46,13 +42,13 @@ class KetPolyProto(Protocol):
     def apply_word(self, word: Iterable[LadderOpProto]) -> KetPolyProto: ...
 
     def apply_words(
-        self, terms: Iterable[Tuple[complex, Iterable[LadderOpProto]]]
+        self, terms: Iterable[tuple[complex, Iterable[LadderOpProto]]]
     ) -> KetPolyProto: ...
 
     # ---- Operators ----------------------------------------------------------
     def __add__(self, other: KetPolyProto) -> KetPolyProto: ...
 
-    def __mul__(self, other: Union[KetPolyProto, complex]) -> KetPolyProto: ...
+    def __mul__(self, other: KetPolyProto | complex) -> KetPolyProto: ...
 
     def __rmul__(self, other: complex) -> KetPolyProto: ...
 
@@ -71,7 +67,7 @@ class KetPolyProto(Protocol):
     @property
     def total_degree(self) -> int: ...
     @property
-    def unique_modes(self) -> Tuple[ModeOpProto, ...]: ...
+    def unique_modes(self) -> tuple[ModeOpProto, ...]: ...
     @property
     def mode_count(self) -> int: ...
 
@@ -81,7 +77,7 @@ class KetPolyProto(Protocol):
 
 @runtime_checkable
 class DensityPolyProto(Protocol):
-    terms: Tuple[DensityTermProto, ...]
+    terms: tuple[DensityTermProto, ...]
 
     # ---- Constructors -------------------------------------------------------
     @staticmethod
@@ -119,7 +115,7 @@ class DensityPolyProto(Protocol):
     @property
     def is_diagonal_in_monomials(self) -> bool: ...
     @property
-    def unique_modes(self) -> Tuple[ModeOpProto, ...]: ...
+    def unique_modes(self) -> tuple[ModeOpProto, ...]: ...
     @property
     def mode_count(self) -> int: ...
 
@@ -132,7 +128,7 @@ class DensityPolyProto(Protocol):
 
 @runtime_checkable
 class OpTermProto(HasSignature, Protocol):
-    ops: Tuple[LadderOpProto, ...]
+    ops: tuple[LadderOpProto, ...]
     coeff: complex
 
     @staticmethod
@@ -143,12 +139,12 @@ class OpTermProto(HasSignature, Protocol):
 
 @runtime_checkable
 class OpPolyProto(Protocol):
-    terms: Tuple[OpTermProto, ...]
+    terms: tuple[OpTermProto, ...]
 
     @staticmethod
     def from_words(
         words: Iterable[Iterable[LadderOpProto]],
-        coeffs: Optional[Iterable[complex]] = ...,
+        coeffs: Iterable[complex] | None = ...,
     ) -> OpPolyProto: ...
 
     @staticmethod
@@ -183,5 +179,5 @@ class OpPolyProto(Protocol):
     @property
     def is_identity(self) -> bool: ...
     def __add__(self, other: OpPolyProto) -> OpPolyProto: ...
-    def __mul__(self, other: Union[OpPolyProto, complex]) -> OpPolyProto: ...
+    def __mul__(self, other: OpPolyProto | complex) -> OpPolyProto: ...
     def __rmul__(self, other: complex) -> OpPolyProto: ...

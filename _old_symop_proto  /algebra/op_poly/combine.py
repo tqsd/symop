@@ -1,19 +1,18 @@
-from typing import Callable, Dict, Optional, Tuple
+from collections.abc import Callable
 
 from symop_proto.algebra.protocols import OpTermProto
 from symop_proto.core.protocols import LadderOpProto
 
-
-TermFactory = Callable[[Tuple[LadderOpProto, ...], complex], OpTermProto]
+TermFactory = Callable[[tuple[LadderOpProto, ...], complex], OpTermProto]
 
 
 def op_combine_like_terms(
-    terms: Tuple[OpTermProto, ...],
+    terms: tuple[OpTermProto, ...],
     *,
     approx: bool = False,
-    term_factory: Optional[TermFactory] = None,
+    term_factory: TermFactory | None = None,
     **env_kw,
-) -> Tuple[OpTermProto, ...]:
+) -> tuple[OpTermProto, ...]:
     """Combine like operator-word terms
 
     This function buckets input terms by either their exact signatures
@@ -41,8 +40,8 @@ def op_combine_like_terms(
     key = (
         (lambda t: t.approx_signature(**env_kw)) if approx else (lambda t: t.signature)
     )
-    buckets: Dict[tuple, complex] = {}
-    reps: Dict[tuple, Tuple[LadderOpProto, ...]] = {}
+    buckets: dict[tuple, complex] = {}
+    reps: dict[tuple, tuple[LadderOpProto, ...]] = {}
     for t in terms:
         k = key(t)
         buckets[k] = buckets.get(k, 0.0j) + t.coeff

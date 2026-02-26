@@ -14,3 +14,28 @@ contracts:
 
 check: format lint contracts typecheck
 
+.PHONY: docs docs-html docs-live docs-clean
+
+docs: docs-html
+
+docs-html:
+	$(MAKE) -C docs html
+
+docs-live:
+	$(MAKE) -C docs livehtml
+
+docs-clean:
+	$(MAKE) -C docs clean
+
+.PHONY: coverage docs-coverage
+
+coverage:
+	python -m coverage run -m pytest
+	python -m coverage html
+	python -m coverage xml
+
+docs-coverage: coverage
+	rm -rf docs/source/_static/coverage
+	mkdir -p docs/source/_static
+	cp -r htmlcov docs/source/_static/coverage
+	$(MAKE) -C docs html

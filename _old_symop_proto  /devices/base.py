@@ -1,14 +1,11 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from typing import (
-    Callable,
     Generic,
-    Optional,
     Protocol,
-    Sequence,
-    Tuple,
     TypeVar,
 )
 
@@ -17,22 +14,19 @@ from symop_proto.devices.io import DeviceIO, DeviceResult, DeviceReturnMode
 
 
 class BasisLike(Protocol):
-    """
-    Minimal basis interface needed by devices.
+    """Minimal basis interface needed by devices.
 
     This is intentionally small to avoid importing gaussian/hybrid modules.
     """
 
     @property
-    def modes(self) -> Tuple[ModeOpProto, ...]: ...
+    def modes(self) -> tuple[ModeOpProto, ...]: ...
 
     def require_index_of(self, mode: ModeOpProto) -> int: ...
 
 
 class HasBasis(Protocol):
-    """
-    Minimal state interface: the state must expose a basis.
-    """
+    """Minimal state interface: the state must expose a basis."""
 
     @property
     def basis(self) -> BasisLike: ...
@@ -44,8 +38,7 @@ ModeSelector = Callable[[ModeOpProto], bool]
 
 @dataclass(frozen=True)
 class DeviceApplyOptions:
-    """
-    Per-application policies that are state-agnostic.
+    """Per-application policies that are state-agnostic.
 
     return_mode:
         KEEP_ALL: keep the full basis after applying the device.
@@ -60,8 +53,7 @@ class DeviceApplyOptions:
 
 
 class BaseDevice(ABC, Generic[TState]):
-    """
-    State-agnostic device base class.
+    """State-agnostic device base class.
 
     Structure
     ---------
@@ -81,14 +73,15 @@ class BaseDevice(ABC, Generic[TState]):
     This file intentionally avoids importing GaussianCore or HybridState to
     prevent recursive imports. Concrete device implementations live in
     state-specific packages and implement the hooks.
+
     """
 
     def __init__(
         self,
         *,
-        modes: Optional[Tuple[ModeOpProto, ...]] = None,
-        selector: Optional[ModeSelector] = None,
-        default_options: Optional[DeviceApplyOptions] = None,
+        modes: tuple[ModeOpProto, ...] | None = None,
+        selector: ModeSelector | None = None,
+        default_options: DeviceApplyOptions | None = None,
     ) -> None:
         if modes is not None and selector is not None:
             raise ValueError("Provide either modes or selector, not both.")
@@ -99,9 +92,9 @@ class BaseDevice(ABC, Generic[TState]):
     def _init_base(
         self,
         *,
-        modes: Optional[Tuple[ModeOpProto, ...]] = None,
-        selector: Optional[ModeSelector] = None,
-        default_options: Optional[DeviceApplyOptions] = None,
+        modes: tuple[ModeOpProto, ...] | None = None,
+        selector: ModeSelector | None = None,
+        default_options: DeviceApplyOptions | None = None,
     ) -> None:
         if modes is not None and selector is not None:
             raise ValueError("Provide either modes or selector, not both.")
@@ -114,9 +107,8 @@ class BaseDevice(ABC, Generic[TState]):
             (default_options if default_options is not None else DeviceApplyOptions()),
         )
 
-    def resolve_inputs(self, state: TState) -> Tuple[ModeOpProto, ...]:
-        """
-        Default input resolution helper.
+    def resolve_inputs(self, state: TState) -> tuple[ModeOpProto, ...]:
+        """Default input resolution helper.
 
         - If modes were provided, return them (in that order).
         - If selector was provided, pick matching modes in basis order.
@@ -149,10 +141,9 @@ class BaseDevice(ABC, Generic[TState]):
         self,
         state: TState,
         *,
-        options: Optional[DeviceApplyOptions] = None,
+        options: DeviceApplyOptions | None = None,
     ) -> DeviceResult[TState]:
-        """
-        Apply the device.
+        """Apply the device.
 
         Parameters
         ----------
@@ -161,6 +152,7 @@ class BaseDevice(ABC, Generic[TState]):
         options:
             Post-processing policies (trace env, return mode). If omitted,
             the device default is used.
+
         """
         opts = options or self._default_options
 
@@ -180,28 +172,23 @@ class BaseDevice(ABC, Generic[TState]):
 
     @abstractmethod
     def resolve_io(self, state: TState) -> DeviceIO:
-        """
-        Decide concrete input/output/env mode bindings for this application.
+        """Decide concrete input/output/env mode bindings for this application.
         Must validate that input modes exist in the incoming basis.
         """
 
     @abstractmethod
     def do_apply(self, state: TState, io: DeviceIO) -> TState:
-        """
-        Apply device dynamics to the state. No tracing/keeping here.
-        """
+        """Apply device dynamics to the state. No tracing/keeping here."""
 
     @abstractmethod
     def _trace_out(self, state: TState, modes: Sequence[ModeOpProto]) -> TState:
-        """
-        Trace out (discard) modes from the state.
+        """Trace out (discard) modes from the state.
         Implemented by GaussianCore/HybridState adapters.
         """
 
     @abstractmethod
     def _keep(self, state: TState, modes: Sequence[ModeOpProto]) -> TState:
-        """
-        Keep only selected modes (reduce state).
+        """Keep only selected modes (reduce state).
         Implemented by GaussianCore/HybridState adapters.
         """
 
@@ -209,8 +196,6 @@ class BaseDevice(ABC, Generic[TState]):
     def _relabel(
         self,
         state: TState,
-        mode_map: Sequence[Tuple[ModeOpProto, ModeOpProto]],
+        mode_map: Sequence[tuple[ModeOpProto, ModeOpProto]],
     ) -> TState:
-        """
-        Relabel the modes and updates the GaussianCore basis
-        """
+        """Relabel the modes and updates the GaussianCore basis"""

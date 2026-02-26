@@ -1,11 +1,10 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Optional, Sequence
 
 import numpy as np
 from numpy.typing import NDArray
-
 from symop_proto.core.protocols import ModeOpProto
 from symop_proto.gaussian.core import GaussianCore
 from symop_proto.gaussian.ops.common import (
@@ -19,8 +18,7 @@ from symop_proto.gaussian.ops.common import (
 
 @dataclass(frozen=True)
 class QuadratureConditioningResult:
-    r"""
-    Result of conditioning a Gaussian state on a Gaussian quadrature measurement.
+    r"""Result of conditioning a Gaussian state on a Gaussian quadrature measurement.
 
     This is an "ops-level" result that stays in the quadrature-moment domain.
     A higher-level wrapper can convert ``(d_post, V_post)`` back into a
@@ -42,6 +40,7 @@ class QuadratureConditioningResult:
     V_post:
         Posterior quadrature covariance on the kept subsystem, shape
         ``(2*n_keep, 2*n_keep)``.
+
     """
 
     outcome: np.ndarray
@@ -55,8 +54,7 @@ class QuadratureConditioningResult:
 def quadrature_indices(
     core: GaussianCore, modes: Sequence[ModeOpProto], *, which: str
 ) -> np.ndarray:
-    r"""
-    Build quadrature indices for a mode subset.
+    r"""Build quadrature indices for a mode subset.
 
     Quadrature ordering is the one used by :meth:`GaussianCore.quadrature_mean`
     and :meth:`GaussianCore.quadrature_covariance`:
@@ -109,6 +107,7 @@ def quadrature_indices(
         print(quadrature_indices(core, (m2,), which="x"))
         print(quadrature_indices(core, (m2,), which="p"))
         print(quadrature_indices(core, (m2,), which="xp"))
+
     """
     which_s = str(which)
     idx_list = as_index_list(core, modes)
@@ -123,8 +122,7 @@ def quadrature_indices(
 
 
 def gaussian_logpdf(y: np.ndarray, mean: np.ndarray, cov: np.ndarray) -> float:
-    r"""
-    Log-density of a multivariate normal distribution.
+    r"""Log-density of a multivariate normal distribution.
 
     Computes
 
@@ -151,6 +149,7 @@ def gaussian_logpdf(y: np.ndarray, mean: np.ndarray, cov: np.ndarray) -> float:
     -------
     float
         The log probability density.
+
     """
     yv = np.asarray(y, dtype=float).reshape(-1)
     mv = np.asarray(mean, dtype=float).reshape(-1)
@@ -178,8 +177,7 @@ def gaussian_logpdf(y: np.ndarray, mean: np.ndarray, cov: np.ndarray) -> float:
 def gaussian_sample(
     mean: np.ndarray, cov: np.ndarray, *, rng: np.random.Generator
 ) -> np.ndarray:
-    r"""
-    Sample from a multivariate normal distribution.
+    r"""Sample from a multivariate normal distribution.
 
     Uses
 
@@ -202,6 +200,7 @@ def gaussian_sample(
     -------
     np.ndarray
         Real sample of shape ``(m,)``.
+
     """
     mv = np.asarray(mean, dtype=float).reshape(-1)
     S = np.asarray(cov, dtype=float)
@@ -217,12 +216,11 @@ def condition_on_quadratures(
     core: GaussianCore,
     *,
     meas_q_idx: NDArray[np.int_],
-    outcome: Optional[np.ndarray] = None,
-    Vm: Optional[np.ndarray] = None,
-    rng: Optional[np.random.Generator] = None,
+    outcome: np.ndarray | None = None,
+    Vm: np.ndarray | None = None,
+    rng: np.random.Generator | None = None,
 ) -> QuadratureConditioningResult:
-    r"""
-    Condition a Gaussian state on a (noisy) quadrature measurement.
+    r"""Condition a Gaussian state on a (noisy) quadrature measurement.
 
     Let the full quadrature vector be
 
@@ -316,6 +314,7 @@ def condition_on_quadratures(
         res = condition_on_quadratures(core, meas_q_idx=q_idx, Vm=Vm, outcome=np.array([0.1]))
         print("log_prob:", res.log_prob)
         print("kept dim:", res.d_post.shape[0], res.V_post.shape)
+
     """
     d = np.asarray(core.quadrature_mean(), dtype=float).reshape(-1)
     V = np.asarray(core.quadrature_covariance(), dtype=float)
@@ -383,12 +382,11 @@ def condition_on_modes(
     *,
     modes: Sequence[ModeOpProto],
     which: str,
-    outcome: Optional[np.ndarray] = None,
+    outcome: np.ndarray | None = None,
     meas_var: float = 0.0,
-    rng: Optional[np.random.Generator] = None,
+    rng: np.random.Generator | None = None,
 ) -> QuadratureConditioningResult:
-    r"""
-    Convenience wrapper: condition on measuring quadratures of given modes.
+    r"""Convenience wrapper: condition on measuring quadratures of given modes.
 
     This is a thin wrapper around :func:`condition_on_quadratures` that converts
     ``modes`` into quadrature indices using the core's basis ordering.
@@ -443,6 +441,7 @@ def condition_on_modes(
         print("outcome:", res.outcome)
         print("log_prob:", res.log_prob)
         print("kept dim:", res.d_post.shape[0])
+
     """
     idx = as_index_list(core, modes)
     check_is_subset_indices(core.basis.n, idx)

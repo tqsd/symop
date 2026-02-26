@@ -1,6 +1,7 @@
 from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Any, Tuple
+from typing import Any
 
 from symop_proto.labels.protocols import PathLabelProto
 
@@ -13,8 +14,8 @@ class PathLabel(PathLabelProto):
         return 1.0 + 0.0j if self.name == other.name else 0.0 + 0.0j
 
     @property
-    def signature(self) -> Tuple[Any, ...]:
+    def signature(self) -> tuple[Any, ...]:
         return ("path", self.name)
 
-    def approx_signature(self, **kw: Any) -> Tuple[Any, ...]:
+    def approx_signature(self, **kw: Any) -> tuple[Any, ...]:
         return self.signature

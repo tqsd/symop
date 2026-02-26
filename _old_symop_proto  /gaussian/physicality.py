@@ -1,16 +1,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Literal, Tuple
+from typing import Literal
 
 import numpy as np
-
 from symop_proto.gaussian.core import GaussianCore
 
 
 def _project_to_affine_fixed_imag(X: np.ndarray, imag_target: np.ndarray) -> np.ndarray:
-    """
-    Project a complex matrix onto the affine set of Hermitian matrices
+    """Project a complex matrix onto the affine set of Hermitian matrices
     with fixed imaginary part imag_target.
 
     Returns a Hermitian matrix: Re(X) + 1j * imag_target, symmetrized.
@@ -31,8 +29,7 @@ def _project_psd_fixed_imag(
     max_iter: int = 200,
     tol: float = 1e-12,
 ) -> np.ndarray:
-    """
-    Alternating projections to find a PSD matrix with the same imaginary part
+    """Alternating projections to find a PSD matrix with the same imaginary part
     as H (i.e. stay on the uncertainty-matrix affine slice).
 
     Returns H_star approximately in:
@@ -64,8 +61,7 @@ def _project_psd_fixed_imag(
 
 
 def _project_psd_hermitian(H: np.ndarray, *, atol: float) -> np.ndarray:
-    """
-    Frobenius-closest projection of a Hermitian matrix onto the PSD cone
+    """Frobenius-closest projection of a Hermitian matrix onto the PSD cone
     by eigenvalue clipping.
     """
     Hh = 0.5 * (H + H.conj().T)
@@ -76,9 +72,8 @@ def _project_psd_hermitian(H: np.ndarray, *, atol: float) -> np.ndarray:
 
 def _centered_from_cov_canonical(
     V: np.ndarray,
-) -> Tuple[np.ndarray, np.ndarray]:
-    """
-    Invert (canonical) mapping from centered moments (N0, M0) to
+) -> tuple[np.ndarray, np.ndarray]:
+    """Invert (canonical) mapping from centered moments (N0, M0) to
     quadrature covariance V.
 
     Assumes canonical basis (G=I) and your quadrature conventions.
@@ -123,9 +118,8 @@ def project_to_physical_gaussian(
     method: Literal["psd_uncertainty", "add_isotropic_noise"] = "psd_uncertainty",
     atol: float = 1e-12,
     canonical_eps: float = 1e-10,
-) -> Tuple[GaussianCore, ProjectionReport]:
-    """
-    Project a Gaussian core to a physical Gaussian core.
+) -> tuple[GaussianCore, ProjectionReport]:
+    """Project a Gaussian core to a physical Gaussian core.
 
     Two methods:
 
@@ -144,6 +138,7 @@ def project_to_physical_gaussian(
     Returns
     -------
     (GaussianCore, ProjectionReport)
+
     """
     if core.is_physical(atol=atol):
         return core, ProjectionReport(added_noise=0.0, method="noop")

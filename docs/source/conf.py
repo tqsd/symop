@@ -1,15 +1,27 @@
 from __future__ import annotations
+
+import os
+import sys
 from datetime import date
 from pathlib import Path
-import sys
 
+os.environ.setdefault("MPLBACKEND", "Agg")
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
+# For examples
+sys.path.insert(0, str(ROOT / "examples"))
 
-project = "symop_proto"
+project = "symop"
 author = "Simon Sekavčnik"
 copyright = f"{date.today().year}, {author}"
 release = ""
+
+sphinx_gallery_conf = {
+    "examples_dirs": str(ROOT / "examples"),
+    "gallery_dirs": "examples",
+    "filename_pattern": r"plot_.*\.py$",
+    "ignore_pattern": r"(^|/)_",
+}
 
 extensions = [
     "sphinx.ext.autodoc",
@@ -21,14 +33,17 @@ extensions = [
     "sphinx_autodoc_typehints",
     "jupyter_sphinx",
 ]
-extensions += ["sphinx_autodoc_typehints"]
+extensions += ["sphinx_gallery.gen_gallery"]
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
+    "matplotlib": ("https://matplotlib.org/stable", None),
 }
+
 
 autosummary_generate = True
 
+autodoc_typehints = "description"
 autodoc_typehints_format = "short"
 autodoc_default_options = {
     "members": True,
@@ -70,7 +85,10 @@ napoleon_google_docstring = True
 napoleon_numpy_docstring = True
 napoleon_use_param = True
 napoleon_use_rtype = True
-napoleon_custom_sections = [("Mathematics", "Admonition")]
+napoleon_custom_sections = [
+    ("Mathematics", "Admonition"),
+    ("Numerical Note", "Admonition"),
+]
 
 pygments_style = "sphinx"
 pygments_dark_style = "native"
@@ -82,6 +100,11 @@ html_theme = "furo"
 html_static_path = ["_static"]
 
 nitpicky = True
-nitpick_ignore = []
+nitpick_ignore = [
+    ("py:class", "SignatureProto"),
+    ("py:class", "RCArray"),
+    ("py:class", "ndarray"),
+    ("py:class", "numpy.ndarray"),
+]
 
 html_css_files = ["custom.css"]

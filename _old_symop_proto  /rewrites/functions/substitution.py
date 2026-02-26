@@ -1,6 +1,7 @@
 from __future__ import annotations
+
+from collections.abc import Callable, Sequence
 from itertools import product
-from typing import Callable, List, Sequence, Tuple, Optional
 
 from symop_proto.algebra.protocols import (
     DensityPolyProto,
@@ -10,38 +11,36 @@ from symop_proto.algebra.protocols import (
 )
 from symop_proto.core.protocols import (
     DensityTermProto,
-    LadderOpProto,
     KetTermProto,
+    LadderOpProto,
     MonomialProto,
 )
 
-
 KetTermFactory = Callable[[complex, MonomialProto], KetTermProto]
 
-KetPolyFactory = Callable[[Tuple[KetTermProto, ...]], KetPolyProto]
+KetPolyFactory = Callable[[tuple[KetTermProto, ...]], KetPolyProto]
 DensityTermFactory = Callable[[complex, MonomialProto, MonomialProto], DensityTermProto]
 
-DensityPolyFactory = Callable[[Tuple[DensityTermProto, ...]], DensityPolyProto]
+DensityPolyFactory = Callable[[tuple[DensityTermProto, ...]], DensityPolyProto]
 
-OpTermFactory = Callable[[complex, Tuple[LadderOpProto, ...]], OpTermProto]
-OpPolyFactory = Callable[[Tuple[OpTermProto, ...]], OpPolyProto]
+OpTermFactory = Callable[[complex, tuple[LadderOpProto, ...]], OpTermProto]
+OpPolyFactory = Callable[[tuple[OpTermProto, ...]], OpPolyProto]
 
 
 def expand_word_substitution(
     word: Sequence[LadderOpProto],
-    subst_fn: Callable[[LadderOpProto], Sequence[Tuple[complex, LadderOpProto]]],
+    subst_fn: Callable[[LadderOpProto], Sequence[tuple[complex, LadderOpProto]]],
 ):
-    """
-    Expand a single operator word by substituting each operator via `subst_fn`
+    """Expand a single operator word by substituting each operator via `subst_fn`
     and taking the cartesian product of all choices.
 
     Returns a list of (coeff, new_word).
     """
-    lists: List[Sequence[Tuple[complex, LadderOpProto]]] = [subst_fn(op) for op in word]
-    out: List[Tuple[complex, Tuple[LadderOpProto, ...]]] = []
+    lists: list[Sequence[tuple[complex, LadderOpProto]]] = [subst_fn(op) for op in word]
+    out: list[tuple[complex, tuple[LadderOpProto, ...]]] = []
     for choices in product(*lists):
         c = 1.0 + 0.0j
-        ops: List[LadderOpProto] = []
+        ops: list[LadderOpProto] = []
         for coeff, new_op in choices:
             c *= coeff
             ops.append(new_op)
@@ -51,15 +50,14 @@ def expand_word_substitution(
 
 def rewrite_ketpoly(
     poly: KetPolyProto,
-    subst_fn: Callable[[LadderOpProto], Sequence[Tuple[complex, LadderOpProto]]],
+    subst_fn: Callable[[LadderOpProto], Sequence[tuple[complex, LadderOpProto]]],
     *,
-    term_factory: Optional[KetTermFactory] = None,
-    poly_factory: Optional[KetPolyFactory] = None,
+    term_factory: KetTermFactory | None = None,
+    poly_factory: KetPolyFactory | None = None,
     apply_to_vacuum: bool = False,
     eps: float = 1e-12,
 ) -> KetPolyProto:
-    r"""
-    Rewrite every operator in a :class:`KetPoly` by substituting each ladder
+    r"""Rewrite every operator in a :class:`KetPoly` by substituting each ladder
     operator with a linear combination given by ``subst_fn`` and re-expanding
     symbolically (normal ordering preserved via :func:`ket_from_word`).
 
@@ -151,6 +149,7 @@ def rewrite_ketpoly(
         psi_out = rewrite_ketpoly(psi_in, subst, apply_to_vacuum=True)
 
         display(psi_out)
+
     """
     # lazy defaults
     if term_factory is None:
@@ -167,7 +166,7 @@ def rewrite_ketpoly(
         ket_from_word as _ket_from_word,
     )
 
-    out_terms: List[KetTermProto] = []
+    out_terms: list[KetTermProto] = []
     for t in poly.terms:
         word = (*t.monomial.creators, *t.monomial.annihilators)
         for c2, w2 in expand_word_substitution(word, subst_fn):
@@ -191,9 +190,8 @@ def _normalize_word_to_monomials(
     *,
     ket_term_factory: KetTermFactory,
     eps: float,
-) -> List[Tuple[complex, MonomialProto]]:
-    """
-    Use ket_from_word to normal order a raw word and extract monomials.
+) -> list[tuple[complex, MonomialProto]]:
+    """Use ket_from_word to normal order a raw word and extract monomials.
     Returns a list of (coeff, monomial).
     """
     from symop_proto.algebra.ket.from_word import (
@@ -206,7 +204,7 @@ def _normalize_word_to_monomials(
         eps=eps,
         term_factory=ket_term_factory,
     )
-    out: List[Tuple[complex, MonomialProto]] = []
+    out: list[tuple[complex, MonomialProto]] = []
     for kt in terms:
         out.append((kt.coeff, kt.monomial))
     return out
@@ -214,18 +212,16 @@ def _normalize_word_to_monomials(
 
 def rewrite_densitypoly(
     rho: DensityPolyProto,
-    left_subst_fn: Callable[[LadderOpProto], Sequence[Tuple[complex, LadderOpProto]]],
-    right_subst_fn: Optional[
-        Callable[[LadderOpProto], Sequence[Tuple[complex, LadderOpProto]]]
-    ] = None,
+    left_subst_fn: Callable[[LadderOpProto], Sequence[tuple[complex, LadderOpProto]]],
+    right_subst_fn: Callable[[LadderOpProto], Sequence[tuple[complex, LadderOpProto]]]
+    | None = None,
     *,
-    ket_term_factory: Optional[KetTermFactory] = None,
-    density_term_factory: Optional[DensityTermFactory] = None,
-    density_poly_factory: Optional[DensityPolyFactory] = None,
+    ket_term_factory: KetTermFactory | None = None,
+    density_term_factory: DensityTermFactory | None = None,
+    density_poly_factory: DensityPolyFactory | None = None,
     eps: float = 1e-12,
 ) -> DensityPolyProto:
-    r"""
-    Rewrite a symbolic density operator :math:`\rho` by substituting every
+    r"""Rewrite a symbolic density operator :math:`\rho` by substituting every
     ladder operator on the **left** and **right** monomials and re-expanding
     symbolically (with proper normal ordering).
 
@@ -313,6 +309,7 @@ def rewrite_densitypoly(
 
         rho_bs = rewrite_densitypoly(rho, subst)  # same map on both sides
         display(rho_bs)
+
     """
     # defaults
     if ket_term_factory is None:
@@ -332,7 +329,7 @@ def rewrite_densitypoly(
     if right_subst_fn is None:
         right_subst_fn = left_subst_fn
 
-    out_terms: List[DensityTermProto] = []
+    out_terms: list[DensityTermProto] = []
 
     for t in rho.terms:
         # Build raw words (creators followed by annihilators) for each side
@@ -344,8 +341,8 @@ def rewrite_densitypoly(
         right_expanded = expand_word_substitution(right_word, right_subst_fn)
 
         # Normalize to monomials via ket_from_word (do NOT drop annihilators)
-        left_monos: List[Tuple[complex, MonomialProto]] = []
-        right_monos: List[Tuple[complex, MonomialProto]] = []
+        left_monos: list[tuple[complex, MonomialProto]] = []
+        right_monos: list[tuple[complex, MonomialProto]] = []
 
         for cL, wL in left_expanded:
             for kcoeff, mono in _normalize_word_to_monomials(
@@ -368,13 +365,12 @@ def rewrite_densitypoly(
 
 def rewrite_oppoly(
     op: OpPolyProto,
-    subst_fn: Callable[[LadderOpProto], Sequence[Tuple[complex, LadderOpProto]]],
+    subst_fn: Callable[[LadderOpProto], Sequence[tuple[complex, LadderOpProto]]],
     *,
-    op_term_factory: Optional[OpTermFactory] = None,
-    op_poly_factory: Optional[OpPolyFactory] = None,
+    op_term_factory: OpTermFactory | None = None,
+    op_poly_factory: OpPolyFactory | None = None,
 ) -> OpPolyProto:
-    """
-    Substitute every ladder operator in each OpTerm's word via `subst_fn`,
+    """Substitute every ladder operator in each OpTerm's word via `subst_fn`,
     expand by cartesian products, then combine like terms with your factory.
     """
     if op_term_factory is None:
@@ -389,7 +385,7 @@ def rewrite_oppoly(
         def op_poly_factory(terms):
             return _OpPoly(terms).combine_like_terms()
 
-    out: List[OpTermProto] = []
+    out: list[OpTermProto] = []
     for t in op.terms:
         for c2, new_word in expand_word_substitution(t.ops, subst_fn):
             out.append(op_term_factory(t.coeff * c2, new_word))

@@ -1,12 +1,12 @@
 from __future__ import annotations
-from typing import Tuple
 
 from symop_proto.core.protocols import DensityTermProto
+
 from .overlap_right_left import overlap_right_left
 
 
 def density_inner(
-    a: Tuple[DensityTermProto, ...], b: Tuple[DensityTermProto, ...]
+    a: tuple[DensityTermProto, ...], b: tuple[DensityTermProto, ...]
 ) -> complex:
     r"""Compute the Hilbert--Schmidt inner product between two density
     polynomials.
@@ -55,6 +55,7 @@ def density_inner(
       commutation rules, without explicit matrix representations.
     * This inner product is Hermitian:
       :math:`\langle A, B \rangle = \langle B, A \rangle^*`.
+
     """
     total: complex = 0.0 + 0.0j
     for ti in a:

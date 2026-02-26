@@ -1,10 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Optional, Tuple
-
 import numpy as np
-
 from symop_proto.core.protocols import ModeOpProto
 from symop_proto.gaussian.basis import ModeBasis
 from symop_proto.gaussian.core import GaussianCore
@@ -17,13 +13,12 @@ from symop_proto.gaussian.ops.common import (
 def apply_passive_basis_change(
     core: GaussianCore,
     *,
-    new_modes: Tuple[ModeOpProto, ...],
+    new_modes: tuple[ModeOpProto, ...],
     T: np.ndarray,
     check_unitary: bool = False,
     atol: float = 1e-12,
 ) -> GaussianCore:
-    r"""
-    Re-express a GaussianCore in a new (passively related) mode basis.
+    r"""Re-express a GaussianCore in a new (passively related) mode basis.
 
     This operation changes the operator basis but does not represent
     physical evolution. It is the Gaussian analogue of a "rewrite":
@@ -122,6 +117,7 @@ def apply_passive_basis_change(
         print("old alpha:", core.alpha)
         print("new alpha:", core_new.alpha)
         print("expected:", T @ core.alpha)
+
     """
     T = np.asarray(T, dtype=complex)
     n_old = core.basis.n

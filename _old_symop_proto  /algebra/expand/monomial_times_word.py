@@ -1,13 +1,15 @@
 from __future__ import annotations
-from typing import Iterable, List
+
+from collections.abc import Iterable
+
+from symop_proto.algebra.ket.from_word import ket_from_word
 from symop_proto.core.monomial import Monomial
 from symop_proto.core.protocols import KetTermProto, LadderOpProto
-from symop_proto.algebra.ket.from_word import ket_from_word
 
 
 def expand_monomial_times_word(
     M: Monomial, word: Iterable[LadderOpProto]
-) -> List[KetTermProto]:
+) -> list[KetTermProto]:
     r"""Expand a monomial multiplied by an operator word.
 
     Produces all normally ordered :class:`KetTerm` instances resulting from
@@ -32,5 +34,6 @@ def expand_monomial_times_word(
     -------
     List[KetTermProto]
         Expanded ket terms in normal order.
+
     """
     return list(ket_from_word(ops=(*M.creators, *M.annihilators, *tuple(word))))

@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-from typing import List, Sequence
+from collections.abc import Sequence
 
 import numpy as np
 
 
 def permutation_matrix(p: Sequence[int]) -> np.ndarray:
-    """
-    Return permutation matrix P such that (P v)[i] = v[p[i]].
+    """Return permutation matrix P such that (P v)[i] = v[p[i]].
 
     Parameters
     ----------
@@ -18,6 +17,7 @@ def permutation_matrix(p: Sequence[int]) -> np.ndarray:
     -------
     np.ndarray
         Complex matrix of shape (n, n).
+
     """
     p_list = list(int(i) for i in p)
     n = len(p_list)
@@ -30,9 +30,8 @@ def permutation_matrix(p: Sequence[int]) -> np.ndarray:
     return P
 
 
-def invert_permutation(p: Sequence[int]) -> List[int]:
-    """
-    Invert a permutation p where (P v)[i] = v[p[i]].
+def invert_permutation(p: Sequence[int]) -> list[int]:
+    """Invert a permutation p where (P v)[i] = v[p[i]].
 
     Returns p_inv such that p_inv[p[i]] = i.
     """
@@ -48,9 +47,7 @@ def invert_permutation(p: Sequence[int]) -> List[int]:
 
 
 def swap_matrix(n: int, i: int, j: int) -> np.ndarray:
-    """
-    Return n x n permutation matrix that swaps indices i and j.
-    """
+    """Return n x n permutation matrix that swaps indices i and j."""
     if not (0 <= i < n and 0 <= j < n):
         raise ValueError(f"swap indices out of range: i={i}, j={j}, n={n}")
     p = list(range(n))

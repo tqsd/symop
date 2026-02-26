@@ -1,6 +1,6 @@
 from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import List, Set, Tuple
 
 from symop_proto.core.protocols import (
     LadderOpProto,
@@ -49,8 +49,8 @@ class Monomial(MonomialProto):
 
     """
 
-    creators: Tuple[LadderOpProto, ...] = ()
-    annihilators: Tuple[LadderOpProto, ...] = ()
+    creators: tuple[LadderOpProto, ...] = ()
+    annihilators: tuple[LadderOpProto, ...] = ()
 
     def __post_init__(self):
         if not isinstance(self.creators, tuple):
@@ -59,9 +59,9 @@ class Monomial(MonomialProto):
             object.__setattr__(self, "annihilators", tuple(self.annihilators))
 
     @property
-    def mode_ops(self) -> Tuple[ModeOpProto, ...]:
-        seen: Set[Tuple] = set()
-        out: List[ModeOpProto] = []
+    def mode_ops(self) -> tuple[ModeOpProto, ...]:
+        seen: set[tuple] = set()
+        out: list[ModeOpProto] = []
         for op in (*self.creators, *self.annihilators):
             sig = op.mode.signature
             if sig not in seen:

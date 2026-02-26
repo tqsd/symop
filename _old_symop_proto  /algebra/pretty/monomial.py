@@ -1,8 +1,9 @@
 from __future__ import annotations
-from math import isfinite, sqrt, fabs, gcd
-from fractions import Fraction
-from typing import Dict, Iterable, List, Tuple
+
 from collections import Counter
+from collections.abc import Iterable
+from fractions import Fraction
+from math import fabs, gcd, isfinite, sqrt
 
 from symop_proto.core.monomial import MonomialProto
 from symop_proto.core.protocols import LadderOpProto
@@ -15,12 +16,11 @@ def _is_identity_monomial(m) -> bool:
     return (len(m.creators) == 0) and (len(m.annihilators) == 0)
 
 
-def collect_mode_order(terms: Iterable) -> Dict[Tuple, int]:
-    """
-    Build a stable index for modes across a set of terms,
+def collect_mode_order(terms: Iterable) -> dict[tuple, int]:
+    """Build a stable index for modes across a set of terms,
     deduped by content (mode.signature).
     """
-    order: Dict[Tuple, int] = {}
+    order: dict[tuple, int] = {}
     next_idx = 1
     for t in terms:
         mono = t.monomial if hasattr(t, "monomial") else t
@@ -37,20 +37,20 @@ def _op_symbol(op: LadderOpProto, idx: int, dagger: bool) -> str:
     return f"{base}{idx}†" if dagger else f"{base}{idx}"
 
 
-def monomial_to_str(m: MonomialProto, mode_index: Dict[Tuple, int]) -> str:
+def monomial_to_str(m: MonomialProto, mode_index: dict[tuple, int]) -> str:
     c_count = Counter(op.mode.signature for op in m.creators)
     a_count = Counter(op.mode.signature for op in m.annihilators)
 
     def by_idx(sig):
         return mode_index[sig]
 
-    c_parts: List[str] = []
+    c_parts: list[str] = []
     for sig in sorted(c_count, key=by_idx):
         n = c_count[sig]
         rep = next(op for op in m.creators if op.mode.signature == sig)
         sym = _op_symbol(rep, mode_index[sig], dagger=True)
         c_parts.append(sym if n == 1 else f"{sym}^{n}")
-    a_parts: List[str] = []
+    a_parts: list[str] = []
     for sig in sorted(a_count, key=by_idx):
         n = a_count[sig]
         rep = next(op for op in m.annihilators if op.mode.signature == sig)
@@ -140,8 +140,7 @@ def _scalar_to_latex(x: float, *, tol: float = 1e-12, use_tfrac: bool = False) -
 
 
 def complex_to_latex(c: complex, eps: float = 1e-15, *, use_tfrac: bool = False) -> str:
-    r"""
-    Render a complex a+ib without $...$.
+    r"""Render a complex a+ib without $...$.
     Examples: '1', '\frac{1}{\sqrt{2}}', 'i', '-i', '1 \pm i', '1 \pm \tfrac{1}{\sqrt{2}}\,i'
     """
     a = 0.0 if abs(c.real) < eps else c.real
@@ -171,8 +170,7 @@ def complex_to_latex(c: complex, eps: float = 1e-15, *, use_tfrac: bool = False)
 
 
 def _op_symbol_latex(op: LadderOpProto, idx: int, dagger: bool) -> str:
-    r"""
-    \hat{a}_idx  or  \hat{a}_idx^{\dagger}
+    r"""\hat{a}_idx  or  \hat{a}_idx^{\dagger}
     (no $...$, no displaystyle)
     """
     base = "a"
@@ -184,17 +182,15 @@ def _op_symbol_latex(op: LadderOpProto, idx: int, dagger: bool) -> str:
 
 
 def _pow_group(s: str, n: int) -> str:
-    r"""
-    Wrap the entire operator BEFORE raising to a power:
+    r"""Wrap the entire operator BEFORE raising to a power:
         (\hat a_i^\dagger)^n
     not   \hat a_i^{\dagger^n}
     """
     return s if n == 1 else rf"\left({s}\right)^{{{n}}}"
 
 
-def monomial_to_latex(m: MonomialProto, mode_index: Dict[Tuple, int]) -> str:
-    r"""
-    Build a LaTeX string for a normally-ordered monomial:
+def monomial_to_latex(m: MonomialProto, mode_index: dict[tuple, int]) -> str:
+    r"""Build a LaTeX string for a normally-ordered monomial:
       (a_i^\dagger)^r ... (a_j)^{s}
     Identity is \mathbf{1} for MathJax safety.
     """
@@ -205,7 +201,7 @@ def monomial_to_latex(m: MonomialProto, mode_index: Dict[Tuple, int]) -> str:
         return mode_index[sig]
 
     # creators (left)
-    c_parts: List[str] = []
+    c_parts: list[str] = []
     for sig in sorted(c_count, key=by_idx):
         n = c_count[sig]
         rep = next(op for op in m.creators if op.mode.signature == sig)
@@ -213,7 +209,7 @@ def monomial_to_latex(m: MonomialProto, mode_index: Dict[Tuple, int]) -> str:
         c_parts.append(_pow_group(sym, n))
 
     # annihilators (right)
-    a_parts: List[str] = []
+    a_parts: list[str] = []
     for sig in sorted(a_count, key=by_idx):
         n = a_count[sig]
         rep = next(op for op in m.annihilators if op.mode.signature == sig)

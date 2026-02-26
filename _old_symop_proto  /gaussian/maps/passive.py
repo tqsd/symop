@@ -1,10 +1,8 @@
 from __future__ import annotations
-from typing import Tuple
 
 from dataclasses import dataclass
 
 import numpy as np
-
 from symop_proto.core.protocols import ModeOpProto
 from symop_proto.gaussian.core import GaussianCore
 from symop_proto.gaussian.maps.base import GaussianSubsetMap
@@ -13,8 +11,7 @@ from symop_proto.gaussian.ops.passive import apply_passive_unitary_subset
 
 @dataclass(frozen=True)
 class PassiveUnitary(GaussianSubsetMap):
-    r"""
-    Passive linear map on chosen mode subset.
+    r"""Passive linear map on chosen mode subset.
 
     This map represent a passive (photon-number preserving) linear
     optical transformation acting on a selected subspace of the
@@ -72,7 +69,6 @@ class PassiveUnitary(GaussianSubsetMap):
 
     Examples
     --------
-
     Rotate two modes (a simple real mixing):
 
     .. jupyter-execute::
@@ -107,9 +103,10 @@ class PassiveUnitary(GaussianSubsetMap):
         print("alpha_in:", core.alpha)
         print("alpha_out:", core2.alpha)
         print("expected:", U @ core.alpha)
+
     """
 
-    modes: Tuple[ModeOpProto, ...]
+    modes: tuple[ModeOpProto, ...]
     U: np.ndarray
     check_unitary: bool = False
     atol: float = 1e-12
@@ -127,8 +124,7 @@ class PassiveUnitary(GaussianSubsetMap):
 
 @dataclass(frozen=True)
 class PhaseShift(GaussianSubsetMap):
-    r"""
-    Single-mode phase shift.
+    r"""Single-mode phase shift.
 
     This map represents the passive transformation
 
@@ -172,7 +168,6 @@ class PhaseShift(GaussianSubsetMap):
 
     Examples
     --------
-
     Apply a phase shift to one mode of a two-mode squeezed state:
 
     .. jupyter-execute::
@@ -220,7 +215,7 @@ class PhaseShift(GaussianSubsetMap):
     atol: float = 1e-12
 
     @property
-    def modes(self) -> Tuple[ModeOpProto, ...]:
+    def modes(self) -> tuple[ModeOpProto, ...]:
         return (self.mode,)
 
     @property
@@ -240,8 +235,7 @@ class PhaseShift(GaussianSubsetMap):
 
 @dataclass(frozen=True)
 class BeamSplitter(GaussianSubsetMap):
-    r"""
-    Two-mode beam splitter.
+    r"""Two-mode beam splitter.
 
     This map mixes two selected modes by a passive unitary transformation.
 
@@ -285,7 +279,6 @@ class BeamSplitter(GaussianSubsetMap):
 
     Examples
     --------
-
     50/50 beam splitter acting on a coherent input in mode 1:
 
     .. jupyter-execute::
@@ -324,7 +317,7 @@ class BeamSplitter(GaussianSubsetMap):
     atol: float = 1e-12
 
     @property
-    def modes(self) -> Tuple[ModeOpProto, ...]:
+    def modes(self) -> tuple[ModeOpProto, ...]:
         return (self.mode1, self.mode2)
 
     @property

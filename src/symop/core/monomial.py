@@ -69,7 +69,7 @@ class Monomial(MonomialProto):
     @property
     def mode_ops(self) -> tuple[ModeOpProto, ...]:
         """Return all unique ``ModeOps`` from creators and annihilators."""
-        seen: set[tuple[ModeOpProto, ...]] = set()
+        seen: set[tuple[SignatureProto, ...]] = set()
         out: list[ModeOpProto] = []
         for op in (*self.creators, *self.annihilators):
             sig = op.mode.signature

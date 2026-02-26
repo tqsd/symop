@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from typing import Sequence
+from collections.abc import Sequence
 
 import numpy as np
-
 from symop_proto.gaussian.core import GaussianCore
 from symop_proto.gaussian.ops.common import (
     check_is_square_matrix,
@@ -20,8 +19,7 @@ def apply_passive_unitary_subset(
     check_gram_unitary: bool = False,
     atol: float = 1e-12,
 ) -> GaussianCore:
-    r"""
-    Apply a passive (photon-number preserving) linear optical map on a subset of modes.
+    r"""Apply a passive (photon-number preserving) linear optical map on a subset of modes.
 
     This is the low-level kernel used by passive Gaussian map objects
     (beam splitters, phase shifters, interferometers).
@@ -169,7 +167,6 @@ def apply_passive_unitary_subset(
 
     Examples
     --------
-
     Vacuum is invariant under any passive map:
 
     .. jupyter-execute::

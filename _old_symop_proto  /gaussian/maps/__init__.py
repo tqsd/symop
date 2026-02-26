@@ -1,5 +1,5 @@
-from .passive import PassiveUnitary, BeamSplitter, PhaseShift
 from .channel import LadderAffineChannel
+from .passive import BeamSplitter, PassiveUnitary, PhaseShift
 
 __all__ = [
     "PassiveUnitary",

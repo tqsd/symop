@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
 import uuid
+from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
-
 from symop_proto.core.protocols import HasSignature, ModeOpProto
 from symop_proto.devices.base import DeviceApplyOptions
 from symop_proto.devices.io import DeviceIO, DeviceResult
@@ -17,7 +16,7 @@ from symop_proto.labels.mode_label import ModeLabel
 from symop_proto.labels.path_label import PathLabel
 
 
-def _env_key(env: Any, *, approx: bool, approx_kw: Dict[str, Any]) -> Tuple[Any, ...]:
+def _env_key(env: Any, *, approx: bool, approx_kw: dict[str, Any]) -> tuple[Any, ...]:
     if not approx:
         return ("sig", env.signature)
     # In your codebase approx_signature accepts **kw (see ModeLabel),
@@ -26,8 +25,8 @@ def _env_key(env: Any, *, approx: bool, approx_kw: Dict[str, Any]) -> Tuple[Any,
 
 
 def _mode_key(
-    mode: ModeOpProto, *, approx: bool, approx_kw: Dict[str, Any]
-) -> Tuple[Any, ...]:
+    mode: ModeOpProto, *, approx: bool, approx_kw: dict[str, Any]
+) -> tuple[Any, ...]:
     return (
         mode.label.pol.signature,
         _env_key(mode.env, approx=approx, approx_kw=approx_kw),
@@ -36,8 +35,7 @@ def _mode_key(
 
 @dataclass(frozen=True)
 class PathBeamSplitter(GaussianDevice):
-    r"""
-    Ideal (frequency-flat) beamsplitter mixing two disjoint mode subsets.
+    r"""Ideal (frequency-flat) beamsplitter mixing two disjoint mode subsets.
 
     Overview
     --------
@@ -142,7 +140,6 @@ class PathBeamSplitter(GaussianDevice):
 
     Examples
     --------
-
     Example 1: Balanced beamsplitter on two coherent modes
     ======================================================
 
@@ -218,14 +215,14 @@ class PathBeamSplitter(GaussianDevice):
     port2: HasSignature
     theta: float = np.pi / 4.0
     phi: float = 0.0
-    pol: Optional[HasSignature] = None
+    pol: HasSignature | None = None
 
     approx: bool = False
-    approx_kw: Optional[Dict[str, Any]] = None
+    approx_kw: dict[str, Any] | None = None
     vacuum_fill: bool = False
 
-    out_path1: Optional[PathLabel] = None
-    out_path2: Optional[PathLabel] = None
+    out_path1: PathLabel | None = None
+    out_path2: PathLabel | None = None
 
     allow_empty: bool = False
     tol: float = 0.0
@@ -272,8 +269,8 @@ class PathBeamSplitter(GaussianDevice):
 
         approx_kw = dict(self.approx_kw or {})
 
-        buckets1: Dict[Tuple[Any, ...], List[ModeOpProto]] = {}
-        buckets2: Dict[Tuple[Any, ...], List[ModeOpProto]] = {}
+        buckets1: dict[tuple[Any, ...], list[ModeOpProto]] = {}
+        buckets2: dict[tuple[Any, ...], list[ModeOpProto]] = {}
 
         for m in modes1:
             buckets1.setdefault(
@@ -287,7 +284,7 @@ class PathBeamSplitter(GaussianDevice):
         all_keys = set(buckets1.keys()).union(buckets2.keys())
 
         # Pair indices into current basis. If vacuum_fill=True, allow None partner.
-        pairs: List[Tuple[Optional[int], Optional[int], Tuple[Any, ...]]] = []
+        pairs: list[tuple[int | None, int | None, tuple[Any, ...]]] = []
         for k in sorted(all_keys, key=repr):
             a = buckets1.get(k, [])
             b = buckets2.get(k, [])
@@ -340,7 +337,7 @@ class PathBeamSplitter(GaussianDevice):
 
         # Determine relabel map for the actually present selected modes.
         # This is applied after do_apply by GaussianDevice._relabel and must preserve Gram.
-        mode_map: List[Tuple[ModeOpProto, ModeOpProto]] = []
+        mode_map: list[tuple[ModeOpProto, ModeOpProto]] = []
         for m in modes1:
             mode_map.append((m, m.with_label(ModeLabel(out1, m.label.pol))))
         for m in modes2:
@@ -366,7 +363,7 @@ class PathBeamSplitter(GaussianDevice):
         if not isinstance(pairs_raw, list):
             raise ValueError("Invalid io.meta['pairs']")
 
-        pairs: List[Tuple[Optional[int], Optional[int]]] = []
+        pairs: list[tuple[int | None, int | None]] = []
         for t in pairs_raw:
             if not isinstance(t, (tuple, list)) or len(t) < 2:
                 raise ValueError("Invalid pair entry in io.meta['pairs']")
@@ -391,10 +388,10 @@ class PathBeamSplitter(GaussianDevice):
         # These become environment modes that remain in the basis unless traced later.
         # The base device can trace io.env_modes if return_mode/trace_env policies require it.
         core = state
-        env_modes: List[ModeOpProto] = []
+        env_modes: list[ModeOpProto] = []
 
-        acted: List[ModeOpProto] = []
-        U_blocks: List[np.ndarray] = []
+        acted: list[ModeOpProto] = []
+        U_blocks: list[np.ndarray] = []
 
         # Deterministic internal vacuum paths per device instance to avoid basis bloat.
         # These are not exposed via mode_map (only used internally).
@@ -489,7 +486,7 @@ class PathBeamSplitter(GaussianDevice):
         self,
         state: GaussianCore,
         *,
-        options: Optional[DeviceApplyOptions] = None,
+        options: DeviceApplyOptions | None = None,
     ) -> DeviceResult[GaussianCore]:
         io = self.resolve_io(state)
         out = self.do_apply(state, io)

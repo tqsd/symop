@@ -1,16 +1,13 @@
 from __future__ import annotations
+
+from collections.abc import Iterable, Sequence
+from collections.abc import Iterable as IterableABC
 from typing import (
     Any,
     Protocol,
-    runtime_checkable,
-    Iterable,
-    Sequence,
-    Optional,
-    Tuple,
-    Union,
     overload,
+    runtime_checkable,
 )
-from collections.abc import Iterable as IterableABC
 
 from symop_proto.algebra.protocols import (
     DensityPolyProto,
@@ -59,19 +56,18 @@ class PartialTraceable(Protocol):
 @runtime_checkable
 class HasUniqueModes(Protocol):
     @property
-    def unique_modes(self) -> Tuple[ModeOpProto, ...]: ...
+    def unique_modes(self) -> tuple[ModeOpProto, ...]: ...
 
 
 # --- Operator application protocol (left-action) --------------
 @runtime_checkable
 class LeftActionable(Protocol):
-    """
-    Supports left actions:
-      OpPoly   @ state
-      KetPoly  @ state
-      LadderOp @ state
-      Iterable[LadderOp] @ state
-      ModeOp   @ state (as ModeOp.create by convention)
+    """Supports left actions:
+    OpPoly   @ state
+    KetPoly  @ state
+    LadderOp @ state
+    Iterable[LadderOp] @ state
+    ModeOp   @ state (as ModeOp.create by convention)
     """
 
     @overload
@@ -99,32 +95,31 @@ class KetPolyStateProto(
     PrettyPrintable,
     Protocol,
 ):
-    """
-    Protocol for your KetPolyState-like objects.
+    """Protocol for your KetPolyState-like objects.
     Designed to be satisfied by your current KetPolyState and any wrappers.
     """
 
     ket: KetPolyProto
-    label: Optional[str]
-    index: Optional[int]
+    label: str | None
+    index: int | None
 
     @staticmethod
-    def vacuum() -> "KetPolyStateProto": ...
+    def vacuum() -> KetPolyStateProto: ...
 
     @staticmethod
     def from_creators(
         creators: Iterable[LadderOpProto], coeff: complex = 1.0
-    ) -> "KetPolyStateProto": ...
+    ) -> KetPolyStateProto: ...
     @staticmethod
-    def from_ketpoly(ket: KetPolyProto) -> "KetPolyStateProto": ...
+    def from_ketpoly(ket: KetPolyProto) -> KetPolyStateProto: ...
 
-    def with_label(self, label: Optional[str]) -> "KetPolyStateProto": ...
-    def with_index(self, index: Optional[int]) -> "KetPolyStateProto": ...
+    def with_label(self, label: str | None) -> KetPolyStateProto: ...
+    def with_index(self, index: int | None) -> KetPolyStateProto: ...
 
     @property
     def norm2(self) -> float: ...
 
-    def to_density(self) -> "DensityPolyStateProto": ...
+    def to_density(self) -> DensityPolyStateProto: ...
 
 
 @runtime_checkable
@@ -137,16 +132,14 @@ class DensityPolyStateProto(
     PrettyPrintable,
     Protocol,
 ):
-    """
-    Protocol for your DensityPolyState-like objects.
-    """
+    """Protocol for your DensityPolyState-like objects."""
 
     rho: DensityPolyProto
 
     @staticmethod
     def pure(
-        psi: Union[KetPolyProto, KetPolyStateProto],
-    ) -> "DensityPolyStateProto": ...
+        psi: KetPolyProto | KetPolyStateProto,
+    ) -> DensityPolyStateProto: ...
 
     @staticmethod
     def from_densitypoly(
@@ -154,14 +147,14 @@ class DensityPolyStateProto(
         *,
         normalize_trace: bool = False,
         eps: float = 1e-14,
-    ) -> "DensityPolyStateProto": ...
+    ) -> DensityPolyStateProto: ...
 
     @staticmethod
     def mix(
-        states: Sequence["DensityPolyStateProto"],
+        states: Sequence[DensityPolyStateProto],
         weights: Sequence[float],
         *,
         normalize_weights: bool = True,
-    ) -> "DensityPolyStateProto": ...
+    ) -> DensityPolyStateProto: ...
 
-    def normalized(self, *, eps: float = 1e-14) -> "DensityPolyStateProto": ...
+    def normalized(self, *, eps: float = 1e-14) -> DensityPolyStateProto: ...

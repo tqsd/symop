@@ -1,7 +1,8 @@
 from __future__ import annotations
-from typing import Optional, Sequence, Tuple
-import numpy as np
 
+from collections.abc import Sequence
+
+import numpy as np
 from symop_proto.gaussian.core import GaussianCore
 from symop_proto.gaussian.ops.common import (
     as_complex_matrix,
@@ -17,12 +18,11 @@ def embed_subset_affine(
     idx: Sequence[int],
     X: np.ndarray,
     Y: np.ndarray,
-    d0: Optional[np.ndarray] = None,
+    d0: np.ndarray | None = None,
     *,
     check_finite: bool = True,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-    r"""
-    Embeds a subsystem affine Gaussian map into the global ladder-operator
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    r"""Embeds a subsystem affine Gaussian map into the global ladder-operator
     space.
 
     This is a *basis-agnostic embedding* utility in the ladder ordering
@@ -114,6 +114,7 @@ def embed_subset_affine(
         print(Y_full)
         print("d0_full:")
         print(d0_full)
+
     """
     check_is_subset_indices(n, idx)
     idx_list = list(idx)
@@ -158,7 +159,7 @@ def _pack_centered_K(core: GaussianCore) -> np.ndarray:
 
 def _unpack_centered_K(
     core: GaussianCore, K: np.ndarray
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     n = core.basis.n
     M0 = K[0:n, 0:n]
     N0 = K[n : 2 * n, 0:n]
@@ -171,11 +172,10 @@ def apply_ladder_affine_subset(
     idx: Sequence[int],
     X: np.ndarray,
     Y: np.ndarray,
-    d0: Optional[np.ndarray] = None,
+    d0: np.ndarray | None = None,
     check_finite: bool = True,
 ) -> GaussianCore:
-    """
-    Apply a ladder-affine Gaussian channel on a subset of modes.
+    """Apply a ladder-affine Gaussian channel on a subset of modes.
 
     The channel is specified in ladder ordering r=(a, a^dag) as:
         r' = X r + d0

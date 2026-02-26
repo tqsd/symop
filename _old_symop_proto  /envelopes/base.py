@@ -1,17 +1,19 @@
 from __future__ import annotations
+
 from abc import ABC, abstractmethod
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Any, Optional, Sequence, Tuple, cast
+from typing import Any, cast
 
 import numpy as np
 
 try:
     import matplotlib.pyplot as plt  # type: ignore
-    from matplotlib.figure import FigureBase
-    from matplotlib.figure import Figure
+    from matplotlib.figure import Figure, FigureBase
 except Exception:
     plt = None  # type: ignore
-    from typing import Any as FigureBase, Any as Figure
+    from typing import Any as Figure
+    from typing import Any as FigureBase
 
 from symop_proto.core.protocols import (
     SignatureProto,
@@ -75,9 +77,9 @@ class BaseEnvelope(EnvelopeProto, ABC):
     def signature(self) -> SignatureProto: ...
 
     @abstractmethod
-    def approx_signature(self, **kw: Any) -> Tuple[Any, ...]: ...
+    def approx_signature(self, **kw: Any) -> tuple[Any, ...]: ...
 
-    def center_and_scale(self) -> Tuple[float, float]:
+    def center_and_scale(self) -> tuple[float, float]:
         """Default Center and scale
 
         Returns
@@ -111,9 +113,8 @@ class BaseEnvelope(EnvelopeProto, ABC):
         )
 
     @property
-    def latex(self) -> Optional[str]:
-        """
-        Return a LaTeX (mathtext) string for this envelope, or None if
+    def latex(self) -> str | None:
+        """Return a LaTeX (mathtext) string for this envelope, or None if
         no closed-form is available. The string must be valid inside
         ``$ ... $`` (no surrounding dollar signs).
         """
@@ -122,21 +123,20 @@ class BaseEnvelope(EnvelopeProto, ABC):
     def plot(
         self,
         *,
-        t: Optional[FloatArray] = None,
-        tmin: Optional[float] = None,
-        tmax: Optional[float] = None,
+        t: FloatArray | None = None,
+        tmin: float | None = None,
+        tmax: float | None = None,
         n: int = 2000,
         show_real_imag: bool = True,
         show_phase: bool = False,
         show_formula: bool = True,
-        title: Optional[str] = None,
-        axes: Optional[AxesLike] = None,
-        label: Optional[str] = None,
+        title: str | None = None,
+        axes: AxesLike | None = None,
+        label: str | None = None,
         normalize_envelope: bool = False,
         show_parts: bool = False,
     ) -> PlotReturn:
-        """
-        Quick visualization of this envelope.
+        """Quick visualization of this envelope.
 
         If no grid is provided, a symmetric window is chosen from
         :meth:`center_and_scale` as ``[c-6S, c+6S]`` and sampled with ``n``
@@ -158,7 +158,7 @@ class BaseEnvelope(EnvelopeProto, ABC):
             Matplotlib figure and axes array (data).
 
         Examples:
-        ---------
+        --------
 
         .. jupyter-execute::
 
@@ -265,20 +265,19 @@ class BaseEnvelope(EnvelopeProto, ABC):
     def plot_many(
         envelopes: Sequence[EnvelopeProto],
         *,
-        t: Optional[FloatArray] = None,
+        t: FloatArray | None = None,
         n: int = 2000,
         show_real_imag: bool = True,
         show_phase: bool = False,
         show_formula: bool = True,
-        title: Optional[str] = None,
-        labels: Optional[Sequence[Optional[str]]] = None,
+        title: str | None = None,
+        labels: Sequence[str | None] | None = None,
         normalize_envelope: bool = False,
         share_window: bool = True,
         span_sigma: float = 6.0,
-        axes: Optional[AxesLike] = None,
+        axes: AxesLike | None = None,
     ) -> PlotReturn:
-        r"""
-        Plot multiple envelopes on the **same** axes.
+        r"""Plot multiple envelopes on the **same** axes.
 
         This is a convenience wrapper that calls :meth:`BaseEnvelope.plot` for the
         first envelope (creating the figure/axes unless ``axes=`` is provided) and
@@ -364,12 +363,15 @@ class BaseEnvelope(EnvelopeProto, ABC):
                 normalize_envelope=True,
                 title="Three Gaussian envelopes on a shared grid"
             )
+
         """
         if not envelopes:
             raise ValueError("No envelopes provided to plot_many().")
 
         if t is None and share_window:
-            centers, scales = zip(*(e.center_and_scale() for e in envelopes))
+            centers, scales = zip(
+                *(e.center_and_scale() for e in envelopes), strict=False
+            )
             c = float(np.mean(centers))
             S = float(np.max(scales))
             T = span_sigma * S

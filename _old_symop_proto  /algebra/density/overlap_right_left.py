@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from symop_proto.algebra.ket.from_word import ket_from_word
 from symop_proto.algebra.ket.identity_coeff import identity_coeff
 from symop_proto.core.protocols import MonomialProto
@@ -48,6 +49,7 @@ def overlap_right_left(R: MonomialProto, L: MonomialProto) -> complex:
       normal ordering; no matrix representations are used.
     - Orthogonal modes (zero label overlap) lead to vanishing contraction
       terms and thus zero overlap unless the word is already the identity.
+
     """
     ops = (
         *R.adjoint().creators,

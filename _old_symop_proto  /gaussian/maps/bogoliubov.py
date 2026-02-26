@@ -1,10 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Tuple
 
 import numpy as np
-
 from symop_proto.core.protocols import ModeOpProto
 from symop_proto.gaussian.core import GaussianCore
 from symop_proto.gaussian.maps.base import GaussianSubsetMap
@@ -13,8 +11,7 @@ from symop_proto.gaussian.ops.bogoliubov import apply_bogoliubov_subset
 
 @dataclass(frozen=True)
 class Bogoliubov(GaussianSubsetMap):
-    r"""
-    Linear Bogoliubov map on a chosen mode subset.
+    r"""Linear Bogoliubov map on a chosen mode subset.
 
     This map represents the most general linear CCR-preserving transformation
     on ladder operators (Gaussian-preserving in the Schrödinger picture):
@@ -61,7 +58,6 @@ class Bogoliubov(GaussianSubsetMap):
 
     Examples
     --------
-
     Single-mode squeezing on vacuum (canonical single-mode basis):
 
     .. jupyter-execute::
@@ -131,9 +127,10 @@ class Bogoliubov(GaussianSubsetMap):
 
         print("N diag:", np.diag(core2.N).real)
         print("M offdiag:", core2.M[0, 1])
+
     """
 
-    modes: Tuple[ModeOpProto, ...]
+    modes: tuple[ModeOpProto, ...]
     U: np.ndarray
     V: np.ndarray
     check_ccr: bool = True
@@ -153,8 +150,7 @@ class Bogoliubov(GaussianSubsetMap):
 
 @dataclass(frozen=True)
 class SingleModeSqueezer(GaussianSubsetMap):
-    r"""
-    Canonical single-mode squeezing map.
+    r"""Canonical single-mode squeezing map.
 
     Convention
     ----------
@@ -179,7 +175,6 @@ class SingleModeSqueezer(GaussianSubsetMap):
 
     Examples
     --------
-
     Squeeze vacuum and compare moments:
 
     .. jupyter-execute::
@@ -210,6 +205,7 @@ class SingleModeSqueezer(GaussianSubsetMap):
 
         print("N_out:", core2.N[0, 0].real, "expected:", sh * sh)
         print("M_out:", core2.M[0, 0], "expected:", np.exp(1j * phi) * sh * ch)
+
     """
 
     mode: ModeOpProto
@@ -219,7 +215,7 @@ class SingleModeSqueezer(GaussianSubsetMap):
     atol: float = 1e-12
 
     @property
-    def modes(self) -> Tuple[ModeOpProto, ...]:
+    def modes(self) -> tuple[ModeOpProto, ...]:
         return (self.mode,)
 
     @property
@@ -245,8 +241,7 @@ class SingleModeSqueezer(GaussianSubsetMap):
 
 @dataclass(frozen=True)
 class TwoModeSqueezer(GaussianSubsetMap):
-    r"""
-    Canonical two-mode squeezing map.
+    r"""Canonical two-mode squeezing map.
 
     Convention
     ----------
@@ -275,7 +270,6 @@ class TwoModeSqueezer(GaussianSubsetMap):
 
     Examples
     --------
-
     Apply two-mode squeezing to vacuum:
 
     .. jupyter-execute::
@@ -306,6 +300,7 @@ class TwoModeSqueezer(GaussianSubsetMap):
         ch = np.cosh(r)
         print("N diag:", np.diag(core2.N).real, "expected:", sh * sh)
         print("M12:", core2.M[0, 1], "expected:", np.exp(1j * phi) * sh * ch)
+
     """
 
     mode1: ModeOpProto
@@ -316,7 +311,7 @@ class TwoModeSqueezer(GaussianSubsetMap):
     atol: float = 1e-12
 
     @property
-    def modes(self) -> Tuple[ModeOpProto, ...]:
+    def modes(self) -> tuple[ModeOpProto, ...]:
         return (self.mode1, self.mode2)
 
     @property
@@ -343,8 +338,7 @@ class TwoModeSqueezer(GaussianSubsetMap):
 
 @dataclass(frozen=True)
 class TwoModeAmplifierUnitary(GaussianSubsetMap):
-    r"""
-    Two-mode Bogoliubov unitary for a phase-insensitive amplifier.
+    r"""Two-mode Bogoliubov unitary for a phase-insensitive amplifier.
 
     This is the canonical "signal + idler" unitary that realizes a quantum-limited
     phase-insensitive amplifier when the idler starts in vacuum.
@@ -381,7 +375,6 @@ class TwoModeAmplifierUnitary(GaussianSubsetMap):
 
     Examples
     --------
-
     Amplify a coherent signal by coupling to vacuum idler:
 
     .. jupyter-execute::
@@ -415,6 +408,7 @@ class TwoModeAmplifierUnitary(GaussianSubsetMap):
         print("signal mean out:", core2.alpha[0])
         print("expected scaling ~ cosh(r):", np.cosh(r) * core.alpha[0])
         print("power gain g:", g)
+
     """
 
     signal: ModeOpProto
@@ -425,7 +419,7 @@ class TwoModeAmplifierUnitary(GaussianSubsetMap):
     atol: float = 1e-12
 
     @property
-    def modes(self) -> Tuple[ModeOpProto, ...]:
+    def modes(self) -> tuple[ModeOpProto, ...]:
         return (self.signal, self.idler)
 
     @property

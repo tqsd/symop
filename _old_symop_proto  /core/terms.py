@@ -1,8 +1,7 @@
 from __future__ import annotations
-from dataclasses import dataclass, replace
-from typing import Tuple
 
-from symop_proto.core.pretty.monomial import collect_mode_order
+from dataclasses import dataclass, replace
+
 from symop_proto.core.pretty.terms import (
     densityterm_latex,
     densityterm_text,
@@ -34,9 +33,8 @@ class KetTerm(KetTermProto):
     def adjoint(self) -> KetTermProto:
         return KetTerm(coeff=self.coeff.conjugate(), monomial=self.monomial.adjoint())
 
-    def scaled(self, s: complex) -> "KetTerm":
-        """
-        Return a new KetTerm with the coefficient multiplied by `s`.
+    def scaled(self, s: complex) -> KetTerm:
+        """Return a new KetTerm with the coefficient multiplied by `s`.
         Does not touch the monomial.
         """
         return replace(self, coeff=self.coeff * s)
@@ -73,7 +71,7 @@ class KetTerm(KetTermProto):
         return self.creation_count + self.annihilation_count
 
     @property
-    def mode_ops(self) -> Tuple[ModeOpProto, ...]:
+    def mode_ops(self) -> tuple[ModeOpProto, ...]:
         return self.monomial.mode_ops
 
     def __repr__(self) -> str:

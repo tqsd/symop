@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from typing import Protocol
 
 import numpy as np
-
 from symop_proto.core.protocols import SignatureProto
 from symop_proto.envelopes.protocols import FloatArray, RCArray
 
@@ -18,8 +17,7 @@ class SpectralTransfer(Protocol):
 
 @dataclass(frozen=True)
 class GaussianLowpass:
-    r"""
-    Gaussian spectral amplitude transfer:
+    r"""Gaussian spectral amplitude transfer:
 
     H(w) = exp(- (w - w0)^2 / (2 * sigma_w^2)) * exp(i * phi(w))
 

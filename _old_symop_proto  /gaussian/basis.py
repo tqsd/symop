@@ -1,20 +1,17 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Any, Dict, Iterable, List, Optional, Tuple
+from typing import Any
 
 import numpy as np
-
 from symop_proto.core.protocols import ModeOpProto, SignatureProto
 
 
 @dataclass(frozen=True)
 class ModeBasis:
-    r"""
-
-    Examples
+    r"""Examples
     --------
-
     Orthogonal polarization labels lead to a diagonal Gram matrix:
 
     .. jupyter-execute::
@@ -56,11 +53,12 @@ class ModeBasis:
 
         print("Gram matrix:")
         print(B.gram)
+
     """
 
-    modes: Tuple[ModeOpProto, ...]
+    modes: tuple[ModeOpProto, ...]
     gram: np.ndarray
-    index_by_sig: Dict[Tuple, int]
+    index_by_sig: dict[tuple, int]
 
     def __post_init__(self) -> None:
         n = len(self.modes)
@@ -93,15 +91,13 @@ class ModeBasis:
         modes: Iterable[ModeOpProto],
         *,
         merge_approx: bool = False,
-        env_kw: Optional[Dict[str, Any]] = None,
+        env_kw: dict[str, Any] | None = None,
         tol: float = 0.0,
     ) -> ModeBasis:
-        """
-        Construct a basis from an iterable of modes
-        """
+        """Construct a basis from an iterable of modes"""
         env_kw = env_kw or {}
-        unique_modes: List[ModeOpProto] = []
-        seen_modes: Dict[Tuple[Any, ...], int] = {}
+        unique_modes: list[ModeOpProto] = []
+        seen_modes: dict[tuple[Any, ...], int] = {}
 
         for m in modes:
             key = m.signature if not merge_approx else m.approx_signature(**env_kw)
@@ -132,11 +128,10 @@ class ModeBasis:
         modes: Iterable[ModeOpProto],
         *,
         merge_approx: bool = False,
-        env_kw: Optional[Dict[str, Any]] = None,
+        env_kw: dict[str, Any] | None = None,
         tol: float = 0.0,
     ) -> ModeBasis:
-        """
-        Return a new basis that extends this basis with additional modes.
+        """Return a new basis that extends this basis with additional modes.
 
         Preserves the current ordering; new unique modes are appended
         """
@@ -148,9 +143,7 @@ class ModeBasis:
         )
 
     def index_of(self, mode: ModeOpProto) -> int:
-        """
-        Return the basis index for a mode (by exact signature)
-        """
+        """Return the basis index for a mode (by exact signature)"""
         return self.index_by_sig[mode.signature]
 
     def index_of_sig(self, sig: SignatureProto) -> int:
@@ -170,9 +163,7 @@ class ModeBasis:
         return self.index_by_sig[sig]
 
     def is_canonical(self, eps: float = 1e-12) -> bool:
-        """
-        Checks whether basis is approximately orthonormal
-        """
+        """Checks whether basis is approximately orthonormal"""
         if self.n == 0:
             return True
         Id = np.eye(self.n, dtype=complex)

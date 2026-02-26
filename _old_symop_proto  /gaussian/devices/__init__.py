@@ -1,7 +1,7 @@
-from .loss import PathPureLoss
-from .filters import PathSpectralFilter
 from .amplifiers import PathPhaseInsensitiveAmplifier
 from .beam_splitters import PathBeamSplitter
+from .filters import PathSpectralFilter
+from .loss import PathPureLoss
 
 __all__ = [
     "PathPureLoss",

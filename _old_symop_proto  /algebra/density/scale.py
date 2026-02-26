@@ -1,11 +1,11 @@
 from __future__ import annotations
-from typing import Tuple
+
 from symop_proto.core.protocols import DensityTermProto
 
 
 def density_scale(
-    terms: Tuple[DensityTermProto, ...], c: complex
-) -> Tuple[DensityTermProto, ...]:
+    terms: tuple[DensityTermProto, ...], c: complex
+) -> tuple[DensityTermProto, ...]:
     r"""Scale all density terms by a complex coefficient.
 
     Multiplies each term's coefficient by :math:`c` and returns a new tuple.
@@ -21,6 +21,7 @@ def density_scale(
     -------
     Tuple[DensityTermProto, ...]
         New density terms with coefficients scaled by :math:`c`.
+
     """
     from symop_proto.core.terms import DensityTerm
 

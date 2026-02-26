@@ -1,7 +1,7 @@
 Gaussian Logic
 ==============
 
-Gaussian logic in ``symop_proto`` refers to the representation and
+Gaussian logic in ``symop`` refers to the representation and
 manipulation of quantum optical states that are completely determined
 by their first and second moments.
 
@@ -39,7 +39,7 @@ Gram Matrix and Commutation Structure
 --------------------------------------
 
 Unlike textbook presentations that assume orthonormal modes,
-``symop_proto`` allows non-orthogonal mode bases.
+``symop`` allows non-orthogonal mode bases.
 
 The commutation relations are encoded via a Gram matrix:
 
@@ -61,7 +61,7 @@ Internal State Representation
 
 The core Gaussian state container is:
 
-:class:`symop_proto.gaussian.core.GaussianCore`
+:class:`symop.gaussian.core.GaussianCore`
 
 It stores:
 
@@ -111,7 +111,7 @@ This structure underlies:
 - Thermal noise
 - Linear Gaussian devices
 
-In ``symop_proto``, such transformations are embedded into
+In ``symop``, such transformations are embedded into
 the full mode space using explicit mode-index mappings.
 
 Devices vs Maps

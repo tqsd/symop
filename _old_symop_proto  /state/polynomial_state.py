@@ -1,12 +1,13 @@
 from __future__ import annotations
-from dataclasses import dataclass, field, replace
-from typing import Iterable, Tuple, Union, Sequence, Optional
+
+from collections.abc import Iterable, Sequence
 from collections.abc import Iterable as IterableABC
+from dataclasses import dataclass, field, replace
 from itertools import count
 
 from symop_proto.algebra.operator_polynomial import OpPoly
 from symop_proto.algebra.polynomial import DensityPoly, KetPoly
-from symop_proto.algebra.pretty.density import density_latex, density_repr
+from symop_proto.algebra.pretty.density import density_repr
 from symop_proto.algebra.pretty.ket import ket_latex, ket_repr
 from symop_proto.algebra.protocols import (
     DensityPolyProto,
@@ -18,7 +19,6 @@ from symop_proto.core.protocols import LadderOpProto, ModeOpProto
 from symop_proto.core.terms import KetTerm
 from symop_proto.state.pretty.polynomial_state import (
     density_state_latex_from_terms,
-    state_latex_from_terms,
 )
 from symop_proto.state.protocols import (
     DensityPolyStateProto,
@@ -30,28 +30,26 @@ _state_counter = count(1)
 
 @dataclass(frozen=True)
 class KetPolyState(KetPolyStateProto):
-    r"""
-
-    Physical ket state consisting of a **creators-only** polynomial
+    r"""Physical ket state consisting of a **creators-only** polynomial
     acting on vacuum :math:`\lvert 0\rangle`.
 
     This wrapper guarantees that the underlying ket polynomial contains only
     the creation operators (and optiona identity terms), making it a valid
     physical state vector up to normalization.
 
-    Notes:
-    ------
+    Notes
+    -----
     - Use :meth:`normalized` or :py:attr:`norm2` to manage the normalization
     - Convert to a density operator via :meth:`to_density`.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     - ket: A creators-only :class:`~symop_proto.algebra.polynomial.KetPoly`
     - label: Optional label used in pretty/LaTeX rendering
     - index: Optional (automatically assigned) index used in rendering
 
-    Examples:
-    ---------
+    Examples
+    --------
 
     .. jupyter-execute::
 
@@ -74,32 +72,30 @@ class KetPolyState(KetPolyStateProto):
     """
 
     ket: KetPolyProto
-    label: Optional[str] = None
-    index: Optional[int] = field(default_factory=lambda: next(_state_counter))
+    label: str | None = None
+    index: int | None = field(default_factory=lambda: next(_state_counter))
 
     def __post_init__(self):
-        """
-        Validate the creators-only invariant.
+        """Validate the creators-only invariant.
 
-        Raises:
-        -------
-
+        Raises
+        ------
         ValueError: If ``ket`` contains annihilators
+
         """
         if not self.ket.is_creator_only:
             raise ValueError("State must be creators-only (plus identity terms).")
 
     @staticmethod
     def vacuum() -> KetPolyState:
-        r"""
-        Construct the vacuum state :math:`\lvert 0\rangle`.
+        r"""Construct the vacuum state :math:`\lvert 0\rangle`.
 
-        Returns:
-        --------
+        Returns
+        -------
         ``KetPolyState``: A state whose underlying polynomial is the identity term only.
 
-        Examples:
-        ---------
+        Examples
+        --------
 
         .. jupyter-execute::
 
@@ -117,16 +113,15 @@ class KetPolyState(KetPolyStateProto):
     def from_creators(
         creators: Iterable[LadderOpProto], coeff: complex = 1.0
     ) -> KetPolyState:
-        r"""
-        Build a state from a word of **creation** operators.
+        r"""Build a state from a word of **creation** operators.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         - creators: Iterable of creators
         - coeff: Global complex cofficient
 
-        Returns:
-        --------
+        Returns
+        -------
         ``KetPolyState``: The resulting physical state.
 
 
@@ -150,6 +145,7 @@ class KetPolyState(KetPolyStateProto):
 
             psi = KetPolyState.from_creators([m2.create, m1.create])
             display(psi)
+
         """
         creators = tuple(creators)
         if any(getattr(op, "kind", None) != OperatorKind.CREATE for op in creators):
@@ -160,10 +156,10 @@ class KetPolyState(KetPolyStateProto):
             ).combine_like_terms()
         )
 
-    def with_label(self, label: Optional[str]) -> KetPolyState:
+    def with_label(self, label: str | None) -> KetPolyState:
         return replace(self, label=label)
 
-    def with_index(self, index: Optional[int]) -> KetPolyState:
+    def with_index(self, index: int | None) -> KetPolyState:
         return replace(self, index=index)
 
     def _with_ket(self, new_ket: KetPolyProto) -> KetPolyState:
@@ -192,7 +188,7 @@ class KetPolyState(KetPolyStateProto):
         return self.ket.norm2()
 
     @property
-    def unique_modes(self) -> Tuple[ModeOpProto, ...]:
+    def unique_modes(self) -> tuple[ModeOpProto, ...]:
         return self.ket.unique_modes
 
     def __repr__(self) -> str:
@@ -207,13 +203,12 @@ class KetPolyState(KetPolyStateProto):
         return NotImplemented
 
     def __rmatmul__(self, other) -> KetPolyState:
-        """
-        Supports:
-          OpPoly   @ KetPolyState  -> KetPolyState
-          KetPoly  @ KetPolyState  -> KetPolyState
-          LadderOp @ KetPolyState  -> KetPolyState
-          Iterable[LadderOp] @ KetPolyState -> KetPolyState
-          ModeOp   @ KetPolyState  -> interpreted as ModeOp.create @ state (optional)
+        """Supports:
+        OpPoly   @ KetPolyState  -> KetPolyState
+        KetPoly  @ KetPolyState  -> KetPolyState
+        LadderOp @ KetPolyState  -> KetPolyState
+        Iterable[LadderOp] @ KetPolyState -> KetPolyState
+        ModeOp   @ KetPolyState  -> interpreted as ModeOp.create @ state (optional)
         """
         # 1) OpPoly @ state
         if isinstance(other, OpPoly):
@@ -252,17 +247,17 @@ class DensityPolyState(DensityPolyStateProto):
     """Physical density operator rho with nice ergonomics."""
 
     rho: DensityPolyProto
-    label: Optional[str] = None
-    index: Optional[int] = field(default_factory=lambda: next(_state_counter))
+    label: str | None = None
+    index: int | None = field(default_factory=lambda: next(_state_counter))
 
-    def with_label(self, label: Optional[str]) -> DensityPolyState:
+    def with_label(self, label: str | None) -> DensityPolyState:
         return replace(self, label=label)
 
-    def with_index(self, index: Optional[int]) -> DensityPolyState:
+    def with_index(self, index: int | None) -> DensityPolyState:
         return replace(self, index=index)
 
     @staticmethod
-    def pure(psi: Union[KetPolyProto, KetPolyStateProto]) -> DensityPolyState:
+    def pure(psi: KetPolyProto | KetPolyStateProto) -> DensityPolyState:
         if isinstance(psi, KetPolyStateProto):
             ket = psi.ket
         else:
@@ -294,7 +289,7 @@ class DensityPolyState(DensityPolyStateProto):
             raise ValueError("weights must sum to a positive value")
         scale = 1.0 / wsum if normalize_weights else 1.0
         combined = DensityPoly(())  # start empty
-        for s, w in zip(states, weights):
+        for s, w in zip(states, weights, strict=False):
             if w == 0:
                 continue
             combined = DensityPoly(

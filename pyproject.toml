@@ -29,6 +29,7 @@ exclude = ["tests*", "examples*"]
 dev = [
   "mypy>=1.10",
   "pytest",
+  "pre-commit"
 ]
 
 [tool.black]
@@ -44,6 +45,13 @@ max-line-length = 79
 target-version = "py311"
 line-length = 88
 fix = true
+force-exclude = true
+exclude = [
+  "_old_symop_proto",
+  "_old_examples",
+  "_tst_old_",
+  "docs",
+]
 
 # Keep the rule set tight and useful during refactors.
 [tool.ruff.lint]
@@ -66,6 +74,11 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
 "src/symop/core/protocols/*.py" = ["D"]
+"src/symop/**/protocols/**" = ["D"]
+"tests/**/*.py" = ["D"]
+"_old_examples/**" = ["D"]
+"_old_symop_proto/**" = ["D"]
+"_tst_old_" = ["D"]
 
 [tool.ruff.format]
 quote-style = "double"
@@ -104,3 +117,24 @@ module = [
 ]
 ignore_missing_imports = true
 
+[tool.pytest.ini_options]
+testpaths = [
+  "tests",
+]
+
+addopts = "-ra"
+
+[tool.coverage.run]
+source = ["symop"]
+omit = [
+  "*/tests/*",
+  "*/_tst_old/*",
+  "*/protocols/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]

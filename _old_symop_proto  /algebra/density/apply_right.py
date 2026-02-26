@@ -1,15 +1,18 @@
 from __future__ import annotations
-from typing import Iterable, List, Tuple
+
+from collections.abc import Iterable
+
 from symop_proto.algebra.expand.word_times_monomial import (
     expand_word_times_monomial,
 )
 from symop_proto.core.protocols import DensityTermProto, LadderOpProto
+
 from .combine import combine_like_terms_density
 
 
 def density_apply_right(
-    terms: Tuple[DensityTermProto, ...], word: Iterable[LadderOpProto]
-) -> Tuple[DensityTermProto, ...]:
+    terms: tuple[DensityTermProto, ...], word: Iterable[LadderOpProto]
+) -> tuple[DensityTermProto, ...]:
     """Apply an operator word on the right of density polynomial
 
     For each density term, this computes the right action. Operationaly
@@ -36,7 +39,7 @@ def density_apply_right(
     w = tuple(word)
     dag_word = tuple(op.dagger() for op in reversed(w))
 
-    out: List[DensityTermProto] = []
+    out: list[DensityTermProto] = []
     for t in terms:
         for kt in expand_word_times_monomial(dag_word, t.right):
             out.append(

@@ -1,10 +1,9 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Dict, List, Sequence, Tuple
 
 import numpy as np
-
 from symop_proto.core.protocols import (
     LadderOpProto,
     ModeOpProto,
@@ -15,8 +14,7 @@ from symop_proto.gaussian.core import GaussianCore
 
 @dataclass(frozen=True)
 class GaussianEvaluator:
-    r"""
-    Evaluate Gaussian expectation values from a
+    r"""Evaluate Gaussian expectation values from a
     :class:`symop_proto.gaussian.core.GaussianCore`
 
     This evaluator computes expectation values of *normally ordered*
@@ -96,7 +94,6 @@ class GaussianEvaluator:
 
     Examples
     --------
-
     Example 1: Vacuum state sanity checks.
     ======================================
     Demonstrates that all first and normal-ordered second moments vanish,
@@ -338,6 +335,7 @@ class GaussianEvaluator:
 
         print("<a^dag a> =", ev.expect_monomial(mon_n), "expected", nbar)
         print("<a^dag a^dag a a> =", ev.expect_monomial(mon_adag2_a2), "expected", 2.0 * nbar * nbar)
+
     """
 
     core: GaussianCore
@@ -346,8 +344,7 @@ class GaussianEvaluator:
         return self.core.basis.require_index_of(mode)
 
     def _mean_of_op(self, op: LadderOpProto) -> complex:
-        r"""
-        Mean value of a ladder operator
+        r"""Mean value of a ladder operator
 
         .. math::
 
@@ -363,8 +360,7 @@ class GaussianEvaluator:
         return 0.0 + 0.0j
 
     def _centered_contraction(self, op1: LadderOpProto, op2: LadderOpProto) -> complex:
-        r"""
-        Returns <delta(op1) delta(op2)> expressed in terms of centered moments.
+        r"""Returns <delta(op1) delta(op2)> expressed in terms of centered moments.
 
         Mathematics
         -----------
@@ -382,7 +378,6 @@ class GaussianEvaluator:
             \langle \delta a_i^\dagger \delta a_j^\dagger \rangle = M_{0,ij}^*
 
         """
-
         i = self._require_index_of_mode(op1.mode)
         j = self._require_index_of_mode(op2.mode)
 
@@ -421,16 +416,15 @@ class GaussianEvaluator:
             return G[i, j] + N0[j, i]
         return 0.0 + 0.0j
 
-    def _ops_key(self, ops: Sequence[LadderOpProto]) -> Tuple[Tuple[Tuple, int], ...]:
-        out: List[Tuple[Tuple, int]] = []
+    def _ops_key(self, ops: Sequence[LadderOpProto]) -> tuple[tuple[tuple, int], ...]:
+        out: list[tuple[tuple, int]] = []
         for op in ops:
             typ = 1 if op.is_creation else 0
             out.append((op.mode.signature, typ))
         return tuple(out)
 
     def _expect_ops(self, ops: Sequence[LadderOpProto]) -> complex:
-        r"""
-        Evaluates a Gaussian Expectation value fo an explicid operator sequence
+        r"""Evaluates a Gaussian Expectation value fo an explicid operator sequence
 
         This is the core engine behind :meth:`expect_monomial`. It takes an
         explicit sequence of ladder operators (annihilation/creation) and
@@ -526,7 +520,7 @@ class GaussianEvaluator:
         N0, M0 = self.core.centered_moments()
         G = self.core.basis.gram
 
-        cache: Dict[Tuple[Tuple[Tuple, int], ...], complex] = {}
+        cache: dict[tuple[tuple[tuple, int], ...], complex] = {}
 
         def rec(seq: Sequence[LadderOpProto]) -> complex:
             if len(seq) == 0:
@@ -552,8 +546,7 @@ class GaussianEvaluator:
         return rec(ops)
 
     def expect_monomial(self, monomial: MonomialProto) -> complex:
-        r"""
-        Evaluates the expectation value of a normally ordered monomial
+        r"""Evaluates the expectation value of a normally ordered monomial
         :class:`symop_proto.core.protocols.MonomialProto` is normally
         ordered by construction.
 
@@ -574,7 +567,6 @@ class GaussianEvaluator:
 
         Examples
         --------
-
         Vacuum expectations in a two-mode orthogonal basis:
 
         .. jupyter-execute::
@@ -654,15 +646,13 @@ class GaussianEvaluator:
             print("Expected =", M[0, 1])
 
         """
-
-        ops: List[LadderOpProto] = []
+        ops: list[LadderOpProto] = []
         ops.extend(list(monomial.creators))
         ops.extend(list(monomial.annihilators))
         return self._expect_ops(ops)
 
     def expect_ops(self, ops: Sequence[LadderOpProto]) -> complex:
-        r"""
-        Evaluates a Gaussian expectation value for an explicit ladder-operator word.
+        r"""Evaluates a Gaussian expectation value for an explicit ladder-operator word.
 
         This is a thin public wrapper around the internal recursion engine used by
         :meth:`expect_monomial`.
@@ -715,6 +705,7 @@ class GaussianEvaluator:
             val = ev.expect_ops([m.ann, m.create])
             print("value:", val)
             print("expected:", B.gram[0, 0])
+
         """
         return self._expect_ops(list(ops))
 
@@ -724,8 +715,7 @@ class GaussianEvaluator:
         creators: Sequence[LadderOpProto] = (),
         annihilators: Sequence[LadderOpProto] = (),
     ) -> complex:
-        r"""
-        Evaluate the expectation value of a normally ordered word.
+        r"""Evaluate the expectation value of a normally ordered word.
 
         This helper builds the operator list as
 
@@ -777,15 +767,15 @@ class GaussianEvaluator:
 
             n = ev.expect_word(creators=(m.create,), annihilators=(m.ann,))
             print("<n> =", n, "expected:", abs(core.alpha[0])**2)
+
         """
-        ops: List[LadderOpProto] = []
+        ops: list[LadderOpProto] = []
         ops.extend(list(creators))
         ops.extend(list(annihilators))
         return self._expect_ops(ops)
 
     def expect_monomials(self, monomials: Sequence[MonomialProto]) -> np.ndarray:
-        r"""
-        Evaluate multiple normally ordered monomials.
+        r"""Evaluate multiple normally ordered monomials.
 
         Parameters
         ----------
@@ -833,6 +823,7 @@ class GaussianEvaluator:
             ]
             vals = ev.expect_monomials(mons)
             print(vals)
+
         """
         out = np.empty((len(monomials),), dtype=complex)
         for i, m in enumerate(monomials):
@@ -840,8 +831,7 @@ class GaussianEvaluator:
         return out
 
     def mean(self, mode: ModeOpProto) -> complex:
-        r"""
-        Mean field amplitude for a mode.
+        r"""Mean field amplitude for a mode.
 
         .. math::
 
@@ -883,13 +873,13 @@ class GaussianEvaluator:
 
             ev = GaussianEvaluator(core)
             print(ev.mean(m), "expected:", beta[0])
+
         """
         i = self._require_index_of_mode(mode)
         return complex(self.core.alpha[i])
 
     def number(self, mode: ModeOpProto) -> float:
-        r"""
-        Mean photon number of a mode.
+        r"""Mean photon number of a mode.
 
         .. math::
 
@@ -936,13 +926,13 @@ class GaussianEvaluator:
 
             ev = GaussianEvaluator(core)
             print("n:", ev.number(m), "expected:", float(np.sinh(r)**2))
+
         """
         i = self._require_index_of_mode(mode)
         return float(np.real(self.core.N[i, i]))
 
     def pairing(self, mode1: ModeOpProto, mode2: ModeOpProto) -> complex:
-        r"""
-        Pairing (anomalous) correlator between two modes.
+        r"""Pairing (anomalous) correlator between two modes.
 
         .. math::
 
@@ -988,14 +978,14 @@ class GaussianEvaluator:
             sh = np.sinh(r)
             ch = np.cosh(r)
             print("M12:", ev.pairing(m1, m2), "expected:", np.exp(1j * phi) * sh * ch)
+
         """
         i = self._require_index_of_mode(mode1)
         j = self._require_index_of_mode(mode2)
         return complex(self.core.M[i, j])
 
     def g2(self, mode: ModeOpProto, *, eps: float = 1e-14) -> float:
-        r"""
-        Second-order intensity correlation :math:`g^{(2)}(0)` for a single mode.
+        r"""Second-order intensity correlation :math:`g^{(2)}(0)` for a single mode.
 
         Defined as
 
@@ -1054,6 +1044,7 @@ class GaussianEvaluator:
 
             ev = GaussianEvaluator(core)
             print("g2:", ev.g2(m), "expected ~ 2.0")
+
         """
         n = self.expect_word(creators=(mode.create,), annihilators=(mode.ann,))
         den = float(np.real(n))
@@ -1067,8 +1058,7 @@ class GaussianEvaluator:
         return float(np.real(num) / (den * den))
 
     def expect_quadrature_mean(self) -> np.ndarray:
-        r"""
-        Convenience wrapper returning the quadrature mean vector.
+        r"""Convenience wrapper returning the quadrature mean vector.
 
         See :meth:`symop_proto.gaussian.core.GaussianCore.quadrature_mean`.
 
@@ -1102,12 +1092,12 @@ class GaussianEvaluator:
 
             ev = GaussianEvaluator(core)
             print(ev.expect_quadrature_mean())
+
         """
         return self.core.quadrature_mean()
 
     def expect_quadrature_covariance(self) -> np.ndarray:
-        r"""
-        Convenience wrapper returning the symmetrized quadrature covariance.
+        r"""Convenience wrapper returning the symmetrized quadrature covariance.
 
         See :meth:`symop_proto.gaussian.core.GaussianCore.quadrature_covariance`.
 
@@ -1143,5 +1133,6 @@ class GaussianEvaluator:
             V = ev.expect_quadrature_covariance()
             print("V shape:", V.shape)
             print(V)
+
         """
         return self.core.quadrature_covariance()

@@ -1,11 +1,10 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Optional, Sequence, Tuple
 
 import numpy as np
 from numpy.typing import NDArray
-
 from symop_proto.core.protocols import ModeOpProto
 from symop_proto.gaussian.core import GaussianCore
 from symop_proto.gaussian.ops.common import (
@@ -14,16 +13,18 @@ from symop_proto.gaussian.ops.common import (
 )
 from symop_proto.gaussian.ops.measurement import (
     QuadratureConditioningResult,
+)
+from symop_proto.gaussian.ops.measurement import (
     condition_on_quadratures as _condition_on_quadratures_ops,
-    condition_on_modes as _condition_on_modes_ops,
+)
+from symop_proto.gaussian.ops.measurement import (
     quadrature_indices as _quadrature_indices_ops,
 )
 
 
 @dataclass(frozen=True)
 class GaussianMeasurementResult:
-    r"""
-    High-level Gaussian measurement result.
+    r"""High-level Gaussian measurement result.
 
     This wraps the ops-level quadrature conditioning result and additionally
     provides a posterior :class:`~symop_proto.gaussian.core.GaussianCore`
@@ -43,6 +44,7 @@ class GaussianMeasurementResult:
     Notes
     -----
     ``log_prob`` is a log *density*, and is therefore often negative.
+
     """
 
     outcome: np.ndarray
@@ -74,7 +76,7 @@ def _mode_quadrature_indices(
     raise ValueError("which must be one of: 'x', 'p', 'xp'")
 
 
-def _complement_modes(n: int, measured: Sequence[int]) -> Tuple[int, ...]:
+def _complement_modes(n: int, measured: Sequence[int]) -> tuple[int, ...]:
     mset = {int(i) for i in measured}
     return tuple(i for i in range(n) if i not in mset)
 
@@ -83,9 +85,8 @@ def _extract_subposterior(
     res: QuadratureConditioningResult,
     *,
     want_q_idx_global: NDArray[np.int_],
-) -> Tuple[np.ndarray, np.ndarray]:
-    r"""
-    Extract (d,V) for a desired subset of global quadrature indices from an ops
+) -> tuple[np.ndarray, np.ndarray]:
+    r"""Extract (d,V) for a desired subset of global quadrature indices from an ops
     posterior.
 
     The ops result stores posterior moments on ``keep_q_idx`` (global indices).
@@ -116,9 +117,8 @@ def _uncentered_moments_from_quadratures(
     basis_gram: np.ndarray,
     d: np.ndarray,
     V: np.ndarray,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-    r"""
-    Convert quadrature moments to ladder moments (alpha, N, M) on the same basis.
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    r"""Convert quadrature moments to ladder moments (alpha, N, M) on the same basis.
 
     Quadrature ordering is
 
@@ -195,6 +195,7 @@ def _uncentered_moments_from_quadratures(
     -------
     alpha, N, M
         Arrays of shapes ``(n,)``, ``(n,n)``, ``(n,n)``.
+
     """
     d = np.asarray(d, dtype=float).reshape(-1)
     V = np.asarray(V, dtype=float)
@@ -236,7 +237,7 @@ def _uncentered_moments_from_quadratures(
 def _core_from_quadrature_moments(
     core_ref: GaussianCore,
     *,
-    keep_modes: Tuple[ModeOpProto, ...],
+    keep_modes: tuple[ModeOpProto, ...],
     d: np.ndarray,
     V: np.ndarray,
 ) -> GaussianCore:
@@ -253,12 +254,11 @@ def condition_quadratures(
     core: GaussianCore,
     *,
     meas_q_idx: NDArray[np.int_],
-    outcome: Optional[np.ndarray] = None,
-    Vm: Optional[np.ndarray] = None,
-    rng: Optional[np.random.Generator] = None,
+    outcome: np.ndarray | None = None,
+    Vm: np.ndarray | None = None,
+    rng: np.random.Generator | None = None,
 ) -> GaussianMeasurementResult:
-    r"""
-    Condition on an arbitrary quadrature measurement and return a mode-valid core
+    r"""Condition on an arbitrary quadrature measurement and return a mode-valid core
     if possible.
 
     This is a higher-level wrapper around
@@ -329,6 +329,7 @@ def condition_quadratures(
         res = condition_quadratures(core, meas_q_idx=q_idx, Vm=0.5 * np.eye(2))
         print("outcome:", res.outcome)
         print("kept modes:", res.core_post.basis.n)
+
     """
     res_ops = _condition_on_quadratures_ops(
         core,
@@ -357,7 +358,7 @@ def condition_quadratures(
             "Use homodyne_x/homodyne_p if you are measuring a single quadrature and discarding a mode."
         )
 
-    keep_modes: Tuple[ModeOpProto, ...] = tuple(
+    keep_modes: tuple[ModeOpProto, ...] = tuple(
         core.basis.modes[i] for i in keep_modes_idx
     )
     core_post = _core_from_quadrature_moments(
@@ -379,12 +380,11 @@ def heterodyne(
     core: GaussianCore,
     *,
     modes: Sequence[ModeOpProto],
-    outcome: Optional[np.ndarray] = None,
+    outcome: np.ndarray | None = None,
     meas_var: float = 0.5,
-    rng: Optional[np.random.Generator] = None,
+    rng: np.random.Generator | None = None,
 ) -> GaussianMeasurementResult:
-    r"""
-    Heterodyne measurement on modes (measure both quadratures and discard them).
+    r"""Heterodyne measurement on modes (measure both quadratures and discard them).
 
     This is implemented as a noisy measurement of ``(x,p)`` with isotropic noise
 
@@ -443,6 +443,7 @@ def heterodyne(
         print("outcome:", res.outcome)
         print("kept modes:", res.core_post.basis.n)
         print("kept alpha:", res.core_post.alpha)
+
     """
     mv = float(meas_var)
     if mv < 0.0:
@@ -464,12 +465,11 @@ def homodyne_x(
     core: GaussianCore,
     *,
     modes: Sequence[ModeOpProto],
-    outcome: Optional[np.ndarray] = None,
+    outcome: np.ndarray | None = None,
     meas_var: float = 1e-9,
-    rng: Optional[np.random.Generator] = None,
+    rng: np.random.Generator | None = None,
 ) -> GaussianMeasurementResult:
-    r"""
-    Homodyne-x measurement on modes (measure x quadrature and discard the modes).
+    r"""Homodyne-x measurement on modes (measure x quadrature and discard the modes).
 
     Implementation strategy
     -----------------------
@@ -534,6 +534,7 @@ def homodyne_x(
         print("log_prob:", res.log_prob)
         print("kept modes:", res.core_post.basis.n)
         print("kept V shape:", res.core_post.quadrature_covariance().shape)
+
     """
     mv = float(meas_var)
     if mv < 0.0:
@@ -559,7 +560,7 @@ def homodyne_x(
 
     d2, V2 = _extract_subposterior(res_ops, want_q_idx_global=want_keep_q)
 
-    keep_modes: Tuple[ModeOpProto, ...] = tuple(
+    keep_modes: tuple[ModeOpProto, ...] = tuple(
         core.basis.modes[i] for i in keep_mode_idx
     )
     core_post = _core_from_quadrature_moments(
@@ -591,12 +592,11 @@ def homodyne_p(
     core: GaussianCore,
     *,
     modes: Sequence[ModeOpProto],
-    outcome: Optional[np.ndarray] = None,
+    outcome: np.ndarray | None = None,
     meas_var: float = 1e-9,
-    rng: Optional[np.random.Generator] = None,
+    rng: np.random.Generator | None = None,
 ) -> GaussianMeasurementResult:
-    r"""
-    Homodyne-p measurement on modes (measure p quadrature and discard the modes).
+    r"""Homodyne-p measurement on modes (measure p quadrature and discard the modes).
 
     This is analogous to :func:`homodyne_x` but measures :math:`p` instead of :math:`x`.
     """
@@ -623,7 +623,7 @@ def homodyne_p(
 
     d2, V2 = _extract_subposterior(res_ops, want_q_idx_global=want_keep_q)
 
-    keep_modes: Tuple[ModeOpProto, ...] = tuple(
+    keep_modes: tuple[ModeOpProto, ...] = tuple(
         core.basis.modes[i] for i in keep_mode_idx
     )
     core_post = _core_from_quadrature_moments(
@@ -655,12 +655,11 @@ def condition_on_modes(
     *,
     modes: Sequence[ModeOpProto],
     which: str,
-    outcome: Optional[np.ndarray] = None,
+    outcome: np.ndarray | None = None,
     meas_var: float = 0.0,
-    rng: Optional[np.random.Generator] = None,
+    rng: np.random.Generator | None = None,
 ) -> GaussianMeasurementResult:
-    r"""
-    Convenience wrapper matching the older ops-style API.
+    r"""Convenience wrapper matching the older ops-style API.
 
     If ``which="xp"``, this is equivalent to :func:`heterodyne` (up to the chosen
     ``meas_var``). If ``which="x"`` or ``which="p"``, this keeps the *unmeasured*
@@ -679,6 +678,7 @@ def condition_on_modes(
     Returns
     -------
     GaussianMeasurementResult
+
     """
     w = str(which)
     if w == "xp":

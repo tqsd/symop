@@ -1,19 +1,17 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
 
 from symop_proto.devices.io import DeviceIO, DeviceResult
 from symop_proto.gaussian.core import GaussianCore
+from symop_proto.gaussian.devices._utils import require_nonempty, select_modes
 from symop_proto.gaussian.devices.base import GaussianDevice
-from symop_proto.gaussian.devices._utils import select_modes, require_nonempty
 from symop_proto.gaussian.maps.channel import PureLoss
 
 
 @dataclass(frozen=True)
 class PathPureLoss(GaussianDevice):
-    r"""
-    Apply the same pure-loss channel to all modes whose PathLabel matches ``path``.
+    r"""Apply the same pure-loss channel to all modes whose PathLabel matches ``path``.
 
     Mathematical model
     ------------------
@@ -39,7 +37,6 @@ class PathPureLoss(GaussianDevice):
 
     Examples
     --------
-
     Example 1: Photon number on a path scales by ``eta``.
     ====================================================
 
@@ -181,7 +178,7 @@ class PathPureLoss(GaussianDevice):
 
     path: object
     eta: float
-    pol: Optional[object] = None
+    pol: object | None = None
     allow_empty: bool = False
 
     def __post_init__(self) -> None:

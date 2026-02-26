@@ -1,18 +1,19 @@
 from __future__ import annotations
-from typing import List, Tuple
-from symop_proto.core.protocols import KetTermProto
+
 from symop_proto.algebra.ket.from_word import ket_from_word
+from symop_proto.core.protocols import KetTermProto
+
 from .combine import combine_like_terms_ket
 
 
 def ket_multiply(
-    a: Tuple[KetTermProto, ...],
-    b: Tuple[KetTermProto, ...],
+    a: tuple[KetTermProto, ...],
+    b: tuple[KetTermProto, ...],
     *,
     eps: float = 1e-12,
     approx: bool = False,
     **env_kw,
-) -> Tuple[KetTermProto, ...]:
+) -> tuple[KetTermProto, ...]:
     """Multiply two symbolic ket expansions
 
     Forms the product of two tuples of :class:`KetTerm` objects by
@@ -34,10 +35,11 @@ def ket_multiply(
         O(N_a * N_b * C(L)), where N_a and N_b are the numbers of terms
         in ``a`` and ``b``, and C(L) is the cost of expanding a single
         operator word of length L via :func:`ket_from_word`.
+
     """
     from symop_proto.core.terms import KetTerm
 
-    out: List[KetTermProto] = []
+    out: list[KetTermProto] = []
     for ti in a:
         if abs(ti.coeff) <= eps:
             continue

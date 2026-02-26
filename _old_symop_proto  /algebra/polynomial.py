@@ -1,6 +1,7 @@
 from __future__ import annotations
+
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Iterable, Tuple, Union
 
 from symop_proto.algebra.density.inner import density_inner
 from symop_proto.algebra.density.normalize_trace import density_normalize_trace
@@ -21,17 +22,16 @@ from symop_proto.core.protocols import (
     ModeOpProto,
 )
 
-from .ket.from_ops import ket_from_ops
-from .ket.from_word import ket_from_word
-from .ket.combine import combine_like_terms_ket
-from .ket.scale import ket_scale
-from .ket.multiply import ket_multiply
-from .ket.inner import ket_inner
-
-from .density.pure import density_pure
-from .density.combine import combine_like_terms_density
 from .density.apply_left import density_apply_left
 from .density.apply_right import density_apply_right
+from .density.combine import combine_like_terms_density
+from .density.pure import density_pure
+from .ket.combine import combine_like_terms_ket
+from .ket.from_ops import ket_from_ops
+from .ket.from_word import ket_from_word
+from .ket.inner import ket_inner
+from .ket.multiply import ket_multiply
+from .ket.scale import ket_scale
 
 
 @dataclass(frozen=True)
@@ -53,7 +53,7 @@ class KetPoly(KetPolyProto):
     commutator contractions) and do not rely on matrix representations.
     """
 
-    terms: Tuple[KetTermProto, ...] = ()
+    terms: tuple[KetTermProto, ...] = ()
 
     @staticmethod
     def from_ops(
@@ -61,7 +61,7 @@ class KetPoly(KetPolyProto):
         creators: Iterable[LadderOpProto] = (),
         annihilators: Iterable[LadderOpProto] = (),
         coeff: complex = 1.0,
-    ) -> "KetPoly":
+    ) -> KetPoly:
         return KetPoly(
             ket_from_ops(creators=creators, annihilators=annihilators, coeff=coeff)
         )
@@ -95,14 +95,14 @@ class KetPoly(KetPolyProto):
         return KetPoly(ket_apply_word(self.terms, word))
 
     def apply_words(
-        self, terms: Iterable[Tuple[complex, Iterable[LadderOpProto]]]
+        self, terms: Iterable[tuple[complex, Iterable[LadderOpProto]]]
     ) -> KetPoly:
         return KetPoly(ket_apply_words_linear(self.terms, terms))
 
     def __add__(self, other: KetPolyProto) -> KetPoly:
         return KetPoly(combine_like_terms_ket((*self.terms, *other.terms)))
 
-    def __mul__(self, other: Union[KetPolyProto, complex]) -> KetPoly:
+    def __mul__(self, other: KetPolyProto | complex) -> KetPoly:
         return (
             self.scaled(other)
             if isinstance(other, (int, float, complex))
@@ -155,7 +155,7 @@ class KetPoly(KetPolyProto):
         return self.creation_count + self.annihilation_count
 
     @property
-    def unique_modes(self) -> Tuple[ModeOpProto, ...]:
+    def unique_modes(self) -> tuple[ModeOpProto, ...]:
         seen: dict[tuple, ModeOpProto] = {}
         for t in self.terms:
             for m in t.monomial.mode_ops:
@@ -193,16 +193,15 @@ class DensityPoly(DensityPolyProto):
     relations; no matrix representations are required.
     """
 
-    terms: Tuple[DensityTermProto, ...] = ()
+    terms: tuple[DensityTermProto, ...] = ()
 
     @staticmethod
     def pure(psi: KetPolyProto) -> DensityPoly:
         return DensityPoly(density_pure(psi.terms))
 
     @staticmethod
-    def zero() -> "DensityPoly":
-        r"""
-        Return the zero density polynomial.
+    def zero() -> DensityPoly:
+        r"""Return the zero density polynomial.
 
         This is the additive identity: it has no terms and represents the
         zero operator.
@@ -210,9 +209,8 @@ class DensityPoly(DensityPolyProto):
         return DensityPoly(())
 
     @staticmethod
-    def identity() -> "DensityPoly":
-        r"""
-        Return the identity operator as a density polynomial.
+    def identity() -> DensityPoly:
+        r"""Return the identity operator as a density polynomial.
 
         The identity is represented as a single term
 
@@ -226,6 +224,7 @@ class DensityPoly(DensityPolyProto):
         -----
         Do not confuse this with ``DensityPoly()`` (empty terms), which
         represents the zero operator.
+
         """
         from symop_proto.core.terms import DensityTerm
 
@@ -255,7 +254,7 @@ class DensityPoly(DensityPolyProto):
     def purity(self) -> float:
         return density_purity(self.terms)
 
-    def normalize_trace(self, *, eps: float = 1e-14) -> "DensityPoly":
+    def normalize_trace(self, *, eps: float = 1e-14) -> DensityPoly:
         return DensityPoly(density_normalize_trace(self.terms, eps=eps))
 
     def hs_norm2(self) -> float:
@@ -291,7 +290,7 @@ class DensityPoly(DensityPolyProto):
         return all(dt.left.signature == dt.right.signature for dt in self.terms)
 
     @property
-    def unique_modes(self) -> Tuple[ModeOpProto, ...]:
+    def unique_modes(self) -> tuple[ModeOpProto, ...]:
         seen: dict[tuple, ModeOpProto] = {}
         for dt in self.terms:
             for m in (*dt.left.mode_ops, *dt.right.mode_ops):

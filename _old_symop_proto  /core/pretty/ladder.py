@@ -19,17 +19,13 @@ def _latex_subscript(op) -> str:
 
 
 def ladder_text(op, base: str = "m") -> str:
-    """
-    Plain-text: m<label> or m<index>, with † for creation.
-    """
+    """Plain-text: m<label> or m<index>, with † for creation."""
     sub = _text_subscript(op)
     return f"{base}{sub}†" if op.is_creation else f"{base}{sub}"
 
 
 def ladder_latex(op, base: str = "a") -> str:
-    r"""
-    LaTeX (no $...$): \hat{a}_{sub} or \hat{a}_{sub}^{\dagger}.
-    """
+    r"""LaTeX (no $...$): \hat{a}_{sub} or \hat{a}_{sub}^{\dagger}."""
     sub = _latex_subscript(op)
     core = rf"\hat{{{base}}}_{{{sub}}}"
     return core + r"^{\dagger}" if op.is_creation else core

@@ -1,23 +1,23 @@
 from __future__ import annotations
+
+from collections.abc import Callable, Sequence
 from typing import (
-    Callable,
-    Optional,
     Protocol,
-    Tuple,
-    Sequence,
-    Union,
     Self,
+    Union,
     cast,
     runtime_checkable,
 )
+
 import numpy as np
 from numpy.typing import NDArray
 
 try:
-    from matplotlib.figure import FigureBase
     from matplotlib.axes import Axes
+    from matplotlib.figure import FigureBase
 except Exception:
-    from typing import Any as FigureBase, Any as Axes  # type: ignore[misc]
+    from typing import Any as Axes
+    from typing import Any as FigureBase  # type: ignore[misc]
 
 from symop_proto.core.protocols import HasSignature
 
@@ -27,7 +27,7 @@ RCArray = FloatArray | ComplexArray
 TimeFunc = Callable[[FloatArray], RCArray]
 
 AxesLike = Union[Axes, Sequence[Axes], np.ndarray]
-PlotReturn = Tuple[FigureBase, np.ndarray]
+PlotReturn = tuple[FigureBase, np.ndarray]
 
 
 @runtime_checkable
@@ -40,25 +40,25 @@ class EnvelopeProto(HasSignature, Protocol):
     def delayed(self, dt: float) -> Self: ...
     def phased(self, dphi: float) -> Self: ...
 
-    def center_and_scale(self) -> Tuple[float, float]: ...
+    def center_and_scale(self) -> tuple[float, float]: ...
     def overlap(self, other: EnvelopeProto) -> complex: ...
     @property
-    def latex(self) -> Optional[str]: ...
+    def latex(self) -> str | None: ...
 
     # --- plotting ---
     def plot(
         self,
         *,
-        t: Optional[FloatArray] = None,
-        tmin: Optional[float] = None,
-        tmax: Optional[float] = None,
+        t: FloatArray | None = None,
+        tmin: float | None = None,
+        tmax: float | None = None,
         n: int = 2000,
         show_real_imag: bool = True,
         show_phase: bool = False,
         show_formula: bool = True,
-        title: Optional[str] = None,
-        axes: Optional[AxesLike] = None,
-        label: Optional[str] = None,
+        title: str | None = None,
+        axes: AxesLike | None = None,
+        label: str | None = None,
         normalize_envelope: bool = False,
         show_parts: bool = False,
     ) -> PlotReturn: ...
@@ -84,8 +84,7 @@ class HasSpectralHints(Protocol):
 
 
 def _coerce_axes_array(axes: AxesLike) -> tuple[FigureBase, np.ndarray]:
-    """
-    Normalize Axes-like inputs to (FigureBase, 1-D object array of Axes).
+    """Normalize Axes-like inputs to (FigureBase, 1-D object array of Axes).
     Raises if the Axes isn't attached to any Figure.
     """
     if isinstance(axes, _HasGetFigure):

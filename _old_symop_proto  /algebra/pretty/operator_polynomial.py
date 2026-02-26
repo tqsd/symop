@@ -1,19 +1,21 @@
 from __future__ import annotations
-from typing import Dict, Iterable, Tuple
-from symop_proto.core.protocols import LadderOpProto
-from symop_proto.core.monomial import Monomial
+
+from collections.abc import Iterable
+
 from symop_proto.algebra.pretty.monomial import (
-    monomial_to_str,
-    monomial_to_latex,
     collect_mode_order,
+    monomial_to_latex,
+    monomial_to_str,
 )
+from symop_proto.core.monomial import Monomial
 from symop_proto.core.pretty.scalars import (
-    complex_to_text,
     complex_to_latex,
+    complex_to_text,
 )
+from symop_proto.core.protocols import LadderOpProto
 
 
-def _ops_as_monomials(ops: Tuple[LadderOpProto, ...]) -> Tuple[Monomial, ...]:
+def _ops_as_monomials(ops: tuple[LadderOpProto, ...]) -> tuple[Monomial, ...]:
     out = []
     for op in ops:
         if getattr(op, "is_creation", False):
@@ -23,14 +25,14 @@ def _ops_as_monomials(ops: Tuple[LadderOpProto, ...]) -> Tuple[Monomial, ...]:
     return tuple(out)
 
 
-def _word_text(ops: Tuple[LadderOpProto, ...], mode_index: Dict[Tuple, int]) -> str:
+def _word_text(ops: tuple[LadderOpProto, ...], mode_index: dict[tuple, int]) -> str:
     if not ops:
         return "I"
     parts = [monomial_to_str(m, mode_index) for m in _ops_as_monomials(ops)]
     return " ".join(parts)
 
 
-def _word_latex(ops: Tuple[LadderOpProto, ...], mode_index: Dict[Tuple, int]) -> str:
+def _word_latex(ops: tuple[LadderOpProto, ...], mode_index: dict[tuple, int]) -> str:
     if not ops:
         return r"\mathbb{I}"
     parts = [monomial_to_latex(m, mode_index) for m in _ops_as_monomials(ops)]
@@ -38,9 +40,9 @@ def _word_latex(ops: Tuple[LadderOpProto, ...], mode_index: Dict[Tuple, int]) ->
 
 
 def opterm_to_str(
-    ops: Tuple[LadderOpProto, ...],
+    ops: tuple[LadderOpProto, ...],
     coeff: complex,
-    mode_index: Dict[Tuple, int],
+    mode_index: dict[tuple, int],
     *,
     mul: str = " ",
 ) -> str:
@@ -50,9 +52,9 @@ def opterm_to_str(
 
 
 def opterm_to_latex(
-    ops: Tuple[LadderOpProto, ...],
+    ops: tuple[LadderOpProto, ...],
     coeff: complex,
-    mode_index: Dict[Tuple, int],
+    mode_index: dict[tuple, int],
 ) -> str:
     c = complex_to_latex(coeff)
     needs_paren = ("+" in c[1:] or "-" in c[1:]) and not c.startswith("-")
@@ -62,7 +64,7 @@ def opterm_to_latex(
 
 
 def oppoly_to_str(
-    terms: Iterable[Tuple[Tuple[LadderOpProto, ...], complex]],
+    terms: Iterable[tuple[tuple[LadderOpProto, ...], complex]],
     *,
     mul: str = " ",
 ) -> str:
@@ -74,7 +76,7 @@ def oppoly_to_str(
 
 
 def oppoly_to_latex(
-    terms: Iterable[Tuple[Tuple[LadderOpProto, ...], complex]],
+    terms: Iterable[tuple[tuple[LadderOpProto, ...], complex]],
 ) -> str:
     monos = []
     for ops, _ in terms:

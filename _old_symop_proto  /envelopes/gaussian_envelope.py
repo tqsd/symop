@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
-from typing import Any, Tuple
+from typing import Any
 
 import numpy as np
-
 from symop_proto.core.protocols import SignatureProto
 from symop_proto.envelopes.base import BaseEnvelope
 from symop_proto.envelopes.protocols import EnvelopeProto, FloatArray, RCArray
@@ -12,8 +11,7 @@ from symop_proto.envelopes.protocols import EnvelopeProto, FloatArray, RCArray
 
 @dataclass(frozen=True)
 class GaussianEnvelope(BaseEnvelope):
-    r"""
-    Canonical Gaussian time-domain envelope.
+    r"""Canonical Gaussian time-domain envelope.
 
     Parameters
     ----------
@@ -64,6 +62,7 @@ class GaussianEnvelope(BaseEnvelope):
     where :math:`\mathcal{A}` is a real constant (depends on normalization and
     Fourier convention). For overlaps and CCR-consistent mode construction,
     the absolute constant does not matter as long as it is used consistently.
+
     """
 
     omega0: float
@@ -118,7 +117,7 @@ class GaussianEnvelope(BaseEnvelope):
             * np.exp(1j * float(self.phi0))
         ).astype(complex)
 
-    def center_and_scale(self) -> Tuple[float, float]:
+    def center_and_scale(self) -> tuple[float, float]:
         return float(self.tau), float(self.sigma)
 
     def delayed(self, dt: float) -> GaussianEnvelope:

@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Any, Iterable, Tuple, Union, Optional
-from numpy import sqrt, cos, sin
+from typing import Any
 
+from numpy import cos, sin, sqrt
 from symop_proto.algebra.op_poly.combine import op_combine_like_terms
 from symop_proto.algebra.op_poly.from_words import op_from_words
 from symop_proto.algebra.op_poly.multiply import op_multiply
@@ -21,8 +22,7 @@ from symop_proto.core.protocols import LadderOpProto, ModeOpProto
 
 @dataclass(frozen=True)
 class OpTerm(OpTermProto):
-    r"""
-    Single operator "word" with a complex coefficient.
+    r"""Single operator "word" with a complex coefficient.
 
     An :class:`OpTerm` represents a monomial in ladder operators:
 
@@ -47,9 +47,10 @@ class OpTerm(OpTermProto):
     -----
     - ``identity()`` creates the empty word (no operators) with a given coeff.
     - This class is immutable; scaling and adjoint return new instances.
+
     """
 
-    ops: Tuple[LadderOpProto, ...]
+    ops: tuple[LadderOpProto, ...]
     coeff: complex = 1.0
 
     @staticmethod
@@ -66,10 +67,10 @@ class OpTerm(OpTermProto):
         )
 
     @property
-    def signature(self) -> Tuple[Any, ...]:
+    def signature(self) -> tuple[Any, ...]:
         return ("OP", tuple(op.signature for op in self.ops))
 
-    def approx_signature(self, **env_kw) -> Tuple[Any, ...]:
+    def approx_signature(self, **env_kw) -> tuple[Any, ...]:
         return (
             "OP_approx",
             tuple(op.approx_signature(**env_kw) for op in self.ops),
@@ -106,8 +107,7 @@ class OpTerm(OpTermProto):
 
 @dataclass(frozen=True)
 class OpPoly(OpPolyProto):
-    r"""
-    Finite linear combination of :class:`OpTerm` objects.
+    r"""Finite linear combination of :class:`OpTerm` objects.
 
     .. math::
 
@@ -145,14 +145,15 @@ class OpPoly(OpPolyProto):
     - Multiplication does not automatically merge terms; call
       ``combine_like_terms()`` to collapse identical words.
     - All helpers accept any iterables; generators are safely materialized.
+
     """
 
-    terms: Tuple[OpTermProto, ...] = ()
+    terms: tuple[OpTermProto, ...] = ()
 
     @staticmethod
     def from_words(
         words: Iterable[Iterable[LadderOpProto]],
-        coeffs: Optional[Iterable[complex]] = None,
+        coeffs: Iterable[complex] | None = None,
     ) -> OpPoly:
         return OpPoly(op_from_words(words, coeffs, term_factory=OpTerm))
 
@@ -236,12 +237,12 @@ class OpPoly(OpPolyProto):
     def __add__(self, other: OpPolyProto) -> OpPoly:
         return OpPoly((*self.terms, *other.terms))
 
-    def __mul__(self, other: Union[OpPolyProto, complex]) -> OpPoly:
+    def __mul__(self, other: OpPolyProto | complex) -> OpPoly:
         if isinstance(other, (int, float, complex)):
             return self.scaled(other)
         return OpPoly(op_multiply(self.terms, other.terms, term_factory=OpTerm))
 
-    def __rmul__(self, other: complex) -> "OpPoly":
+    def __rmul__(self, other: complex) -> OpPoly:
         if isinstance(other, (int, float, complex)):
             return self.scaled(other)
         return NotImplemented

@@ -1,9 +1,10 @@
 from __future__ import annotations
-from typing import Any, Optional, Protocol, Self, Tuple, runtime_checkable
+
+from typing import Any, Protocol, Self, runtime_checkable
 
 import numpy as np
 
-SignatureProto = Tuple[Any, ...]
+SignatureProto = tuple[Any, ...]
 
 
 @runtime_checkable
@@ -23,7 +24,7 @@ class EnvelopeLike(HasSignature, Protocol):
 @runtime_checkable
 class TimeEvaluable(Protocol):
     def time_eval(self, t: np.ndarray) -> np.ndarray: ...
-    def center_and_scale(self) -> Tuple[float, float]: ...
+    def center_and_scale(self) -> tuple[float, float]: ...
 
 
 @runtime_checkable
@@ -60,8 +61,8 @@ class ModeOpProto(HasSignature, Protocol):
     env: EnvelopeLike
     label: ModeLabelLike
 
-    user_label: Optional[str]
-    display_index: Optional[int]
+    user_label: str | None
+    display_index: int | None
 
     ann: LadderOpProto
     create: LadderOpProto
@@ -98,11 +99,11 @@ class LadderOpProto(HasSignature, Protocol):
 
 @runtime_checkable
 class MonomialProto(HasSignature, Protocol):
-    creators: Tuple[LadderOpProto, ...]
-    annihilators: Tuple[LadderOpProto, ...]
+    creators: tuple[LadderOpProto, ...]
+    annihilators: tuple[LadderOpProto, ...]
 
     @property
-    def mode_ops(self) -> Tuple[ModeOpProto, ...]: ...
+    def mode_ops(self) -> tuple[ModeOpProto, ...]: ...
 
     def adjoint(self) -> MonomialProto: ...
 
@@ -140,7 +141,7 @@ class KetTermProto(HasSignature, Protocol):
     @property
     def total_degree(self) -> int: ...
     @property
-    def mode_ops(self) -> Tuple[ModeOpProto, ...]: ...
+    def mode_ops(self) -> tuple[ModeOpProto, ...]: ...
 
 
 @runtime_checkable
@@ -177,6 +178,6 @@ class DensityTermProto(HasSignature, Protocol):
     @property
     def annihilation_count_right(self) -> int: ...
     @property
-    def mode_ops_left(self) -> Tuple[ModeOpProto, ...]: ...
+    def mode_ops_left(self) -> tuple[ModeOpProto, ...]: ...
     @property
-    def mode_ops_right(self) -> Tuple[ModeOpProto, ...]: ...
+    def mode_ops_right(self) -> tuple[ModeOpProto, ...]: ...

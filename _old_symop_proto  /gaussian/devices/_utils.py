@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Callable, Optional, Sequence, Tuple
+from collections.abc import Callable, Sequence
 
 from symop_proto.core.protocols import HasSignature, ModeOpProto, PathProto
 from symop_proto.devices.io import DeviceIO
@@ -13,22 +13,21 @@ def relabel_modes_with_paths(
     modes: Sequence[ModeOpProto],
     *,
     paths: Sequence[object],
-) -> Tuple[ModeOpProto, ...]:
-    """
-    Create output modes by copying each input mode and replacing its path label.
+) -> tuple[ModeOpProto, ...]:
+    """Create output modes by copying each input mode and replacing its path label.
     Assumes ModeOpProto supports .with_path(...).
     """
     if len(paths) != len(modes):
         raise ValueError("paths must have same length as modes")
     out: list[ModeOpProto] = []
-    for m, p in zip(modes, paths):
+    for m, p in zip(modes, paths, strict=False):
         out.append(m.with_path(p))  # relies on your ModeOp API
     return tuple(out)
 
 
 def require_arity(
     modes: Sequence[ModeOpProto], *, k: int, name: str
-) -> Tuple[ModeOpProto, ...]:
+) -> tuple[ModeOpProto, ...]:
     modes_t = tuple(modes)
     if len(modes_t) != k:
         raise ValueError(f"{name} requires exactly {k} modes, got {len(modes_t)}")
@@ -37,10 +36,10 @@ def require_arity(
 
 def build_reroute_io(
     *,
-    input_modes: Tuple[ModeOpProto, ...],
-    output_modes: Tuple[ModeOpProto, ...],
-    env_modes: Tuple[ModeOpProto, ...] = (),
-    meta: Optional[dict] = None,
+    input_modes: tuple[ModeOpProto, ...],
+    output_modes: tuple[ModeOpProto, ...],
+    env_modes: tuple[ModeOpProto, ...] = (),
+    meta: dict | None = None,
 ) -> DeviceIO:
     return DeviceIO(
         input_modes=input_modes,
@@ -53,14 +52,13 @@ def build_reroute_io(
 def swap_inputs_into_outputs_passive(
     core: GaussianCore,
     *,
-    input_modes: Tuple[ModeOpProto, ...],
-    output_modes: Tuple[ModeOpProto, ...],
+    input_modes: tuple[ModeOpProto, ...],
+    output_modes: tuple[ModeOpProto, ...],
     trace_inputs: bool = True,
     check_unitary: bool = False,
     atol: float = 1e-12,
 ) -> GaussianCore:
-    """
-    Generic routing primitive:
+    """Generic routing primitive:
     - ensure output modes exist by extending with vacuum
     - apply passive unitary on subsystem (inputs + outputs) that swaps them
     - optionally trace out the old inputs
@@ -95,12 +93,11 @@ def swap_inputs_into_outputs_passive(
 def select_modes(
     core: GaussianCore,
     *,
-    path: Optional[HasSignature] = None,
-    pol: Optional[HasSignature] = None,
-    predicate: Optional[Callable[[ModeOpProto], bool]] = None,
-) -> Tuple[ModeOpProto, ...]:
-    """
-    Select modes from the state's basis by label metadata.
+    path: HasSignature | None = None,
+    pol: HasSignature | None = None,
+    predicate: Callable[[ModeOpProto], bool] | None = None,
+) -> tuple[ModeOpProto, ...]:
+    """Select modes from the state's basis by label metadata.
 
     `path` and `pol` are compared via signature (so can be label objects).
     """
@@ -120,7 +117,7 @@ def select_modes(
 
 def require_nonempty(
     modes: Sequence[ModeOpProto], *, what: str
-) -> Tuple[ModeOpProto, ...]:
+) -> tuple[ModeOpProto, ...]:
     mt = tuple(modes)
     if len(mt) == 0:
         raise ValueError(f"no modes selected for {what}")
@@ -129,5 +126,5 @@ def require_nonempty(
 
 def relabel_modes_with_path(
     modes: Sequence[ModeOpProto], *, out_path: PathProto
-) -> Tuple[ModeOpProto, ...]:
+) -> tuple[ModeOpProto, ...]:
     return tuple(m.with_path(out_path) for m in modes)

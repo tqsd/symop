@@ -1,10 +1,9 @@
 from __future__ import annotations
-from typing import Tuple
 
 from symop_proto.core.protocols import KetTermProto
 
 
-def identity_coeff(terms: Tuple[KetTermProto, ...]) -> complex:
+def identity_coeff(terms: tuple[KetTermProto, ...]) -> complex:
     """Extract the coefficient of the identity term from a list of ket terms
 
     Searches the given tuple of :class:`KetTerm` instances for the
@@ -24,6 +23,7 @@ def identity_coeff(terms: Tuple[KetTermProto, ...]) -> complex:
           component of the operator expansion.
         - Useful for detecting constant offsets, such as those arisin from
           bosonig commutation relations.
+
     """
     for t in terms:
         if t.monomial.is_identity:
