@@ -66,10 +66,15 @@ class Monomial(MonomialProto):
         if not isinstance(self.annihilators, tuple):
             object.__setattr__(self, "annihilators", tuple(self.annihilators))
 
+    @staticmethod
+    def identity() -> Monomial:
+        """Return an identity ``Monomial``."""
+        return Monomial((), ())
+
     @property
     def mode_ops(self) -> tuple[ModeOpProto, ...]:
         """Return all unique ``ModeOps`` from creators and annihilators."""
-        seen: set[tuple[SignatureProto, ...]] = set()
+        seen: set[SignatureProto] = set()
         out: list[ModeOpProto] = []
         for op in (*self.creators, *self.annihilators):
             sig = op.mode.signature
@@ -87,9 +92,9 @@ class Monomial(MonomialProto):
     @property
     def signature(self) -> SignatureProto:
         """Return a signature."""
-        c = tuple(sorted(op.signature for op in self.creators))
-        a = tuple(sorted(op.signature for op in self.annihilators))
-        return ("cre", c, "ann", a)
+        c = tuple(op.signature for op in self.creators)
+        a = tuple(op.signature for op in self.annihilators)
+        return ("monomial", "cre", c, "ann", a)
 
     def approx_signature(
         self,
@@ -99,24 +104,20 @@ class Monomial(MonomialProto):
     ) -> SignatureProto:
         """Return an approximate signature."""
         c = tuple(
-            sorted(
-                op.approx_signature(
-                    decimals=decimals,
-                    ignore_global_phase=ignore_global_phase,
-                )
-                for op in self.creators
+            op.approx_signature(
+                decimals=decimals,
+                ignore_global_phase=ignore_global_phase,
             )
+            for op in self.creators
         )
         a = tuple(
-            sorted(
-                op.approx_signature(
-                    decimals=decimals,
-                    ignore_global_phase=ignore_global_phase,
-                )
-                for op in self.annihilators
+            op.approx_signature(
+                decimals=decimals,
+                ignore_global_phase=ignore_global_phase,
             )
+            for op in self.annihilators
         )
-        return ("cre", c, "ann", a)
+        return ("monomial_approx", "cre", c, "ann", a)
 
     @property
     def is_creator_only(self) -> bool:

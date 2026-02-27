@@ -132,3 +132,80 @@ Dependencies
 - Internal deepndency: ``core``.
 - External dependendencies: NumPy (required), Matplotlib (optional, for plotting).
 - No higher-level modeling packages may be imported.
+
+``ccr``
+-------
+
+Purpose
+^^^^^^^
+
+- Provide the symbolic CCR algebra layer built on top of ``core``.
+- Implement operator, ket, and density polynomials.
+- Provide linear-algebra-like operations at the symbolic level.
+- Enable mode-overlap-aware commutation behavior.
+- Remain fully matrix-free.
+
+Scope
+^^^^^
+
+- Operator word polynomial (``OpPoly``).
+- Ket polynomials (``KetPoly``).
+- Density polynomial (``DensityPoly``).
+- Symbolic left/right operator actions.
+- Signature-based canonicalization and term merging.
+- Trace, purity, Hilbert-Schmidt inner product.
+- Partial trace over selected modes.
+- Adjoint and composition operations.
+
+Primary Objects
+^^^^^^^^^^^^^^^
+
+- :class:`~symop.ccr.algebra.op.poly.OpPoly`
+  Finite linear combination of operator words.
+  Provides symbolic multiplication (word concatenation), adjoint,
+  scaling, and composition via ``@``.
+- :class:`~symop.ccr.algebra.ket.poly.KetPoly`
+  Symbolic ket polynomial built from normally ordered monomials.
+  Supports left action of ``OpPoly``.
+- :class:`~symop.ccr.algebra.density.poly.DensityPoly`
+  Symbolic density polynomial represented as sums of outer products
+  of monomials.
+  Supports trace, purity, partial trace, Hilbert-Schmidt norm,
+  and both left and right operator actions.
+
+Protocols Implemented
+^^^^^^^^^^^^^^^^^^^^^
+
+- Operator and term protocols defined in ``core``.
+- Density and ket action protocols for operator composition.
+- Signature-based merging via ``signature`` and ``approx_signature``.
+
+Invariants and Conventions
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- No matrices are constructed in this layer.
+- All operations are linear and symbolic.
+- No implicit CCR rewriting is applied during multiplication.
+  Word concatenation is structural.
+- Canonicalization is signature-based only.
+- Term ordering has no semantic meaning unless explicitly normalized.
+- ``combine_like_terms`` must be called explicitly when structural
+  merging is required.
+- ``@`` implement algebraic composition, not numerical product.
+
+Layering Constraints
+^^^^^^^^^^^^^^^^^^^^
+
+- ``ccr`` depends on ``core``.
+- ``ccr`` may depend on ``modes`` only for overlap-drivven commutation
+  behavior.
+- ``core`` must not depend on ``ccr``.
+- ``modes`` must not depend on ``ccr``.
+- Higher-level modeling layers may depend on ``ccr``.
+
+Dependencies
+^^^^^^^^^^^^
+
+- Internal: ``core``, ``modes``
+- External: NumPy (minimal use for scalar handling)
+- No plotting or visualization dependencies allowed.

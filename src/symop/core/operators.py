@@ -2,6 +2,11 @@
 
 This module defines logical modes and their associated ladder operators,
 including signatures and commutation behavior based on overlaps.
+
+A logical mode is represented by :class:`ModeOp`, which is defined by a
+composite mode label (typically including path, polarization, and envelope).
+The generalized canonical commutation relations are implemented by
+:class:`LadderOp` using overlaps induced by the mode label.
 """
 
 from __future__ import annotations
@@ -38,13 +43,11 @@ class OperatorKind(StrEnum):
 
 @dataclass(frozen=True)
 class ModeOp(ModeOpProto):
-    r"""A logical mode, defined by an envelope and a mode label.
+    r"""A logical mode, defined by a composite mode label.
 
     Conceptually, a ``ModeOp`` represents a (possibly composite) bosonic mode
-    characterized by:
-
-    - an envelope (temporal/spectral wavepacket) ``env``
-    - a label ``label`` (e.g., path, polarization, additional tags)
+    characterized by a label ``label`` that fully specifies how the mode overlaps
+    with other modes (e.g., via path, polarization, and envelope components).
 
     This object is also the factory for its ladder operators ``ann`` and
     ``create``:
@@ -54,7 +57,7 @@ class ModeOp(ModeOpProto):
         a_{\mathrm{mode}}, \quad a_{\mathrm{mode}}^\dagger.
 
     The commutation relations are implemented on :class:`LadderOp` using the
-    overlaps induced by ``env`` and ``label``.
+    overlap induced by ``label``.
 
     Notes
     -----
@@ -66,7 +69,6 @@ class ModeOp(ModeOpProto):
 
     """
 
-    env: EnvelopeLike
     label: ModeLabelLike
 
     user_label: str | None = None
@@ -92,9 +94,9 @@ class ModeOp(ModeOpProto):
         """Return an updated ``ModeOp`` with new ``index``."""
         return replace(self, display_index=idx)
 
-    def with_env(self, env: EnvelopeLike) -> ModeOp:
+    def with_envelope(self, envelope: EnvelopeLike) -> ModeOp:
         """Return an updated ``ModeOp`` with new ``Envelope``."""
-        return replace(self, env=env)
+        return replace(self, label=self.label.with_envelope(envelope))
 
     def with_label(self, label: ModeLabelLike) -> ModeOp:
         """Return an updated ``ModeOp`` with new ``label``."""
@@ -111,7 +113,7 @@ class ModeOp(ModeOpProto):
     @property
     def signature(self) -> SignatureProto:
         """Return a signature."""
-        return ("mode", self.env.signature, self.label.signature)
+        return ("mode", self.label.signature)
 
     def approx_signature(
         self,
@@ -122,10 +124,6 @@ class ModeOp(ModeOpProto):
         """Return an approximate signature."""
         return (
             "mode_approx",
-            self.env.approx_signature(
-                decimals=decimals,
-                ignore_global_phase=ignore_global_phase,
-            ),
             self.label.approx_signature(
                 decimals=decimals,
                 ignore_global_phase=ignore_global_phase,
@@ -141,13 +139,13 @@ class LadderOp(LadderOpProto):
     operator :math:`a^\dagger` acting on the mode specified by ``mode``.
 
     The (generalized) canonical commutation relations used here are determined
-    by overlaps of the mode's envelope and label. For two logical modes
-    :math:`i` and :math:`j`, define:
+    by the overlap of the logical modes. For two logical modes :math:`i` and
+    :math:`j`, define:
 
     .. math::
 
-        G_{ij} = \langle \mathrm{env}_i, \mathrm{env}_j \rangle\,
-                \langle \mathrm{label}_i, \mathrm{label}_j \rangle.
+        G_{ij} = \langle \mathrm{mode}_i, \mathrm{mode}_j \rangle
+            = \langle \mathrm{label}_i, \mathrm{label}_j \rangle.
 
     Then the commutators are:
 
@@ -157,7 +155,7 @@ class LadderOp(LadderOpProto):
         [a_i^\dagger, a_j] = -G_{ij}, \qquad
         [a_i, a_j] = [a_i^\dagger, a_j^\dagger] = 0.
 
-    If label overlap is (numerically) zero, the operators commute.
+    If the mode overlap is (numerically) zero, the operators commute.
     """
 
     kind: OperatorKindProto
@@ -186,16 +184,14 @@ class LadderOp(LadderOpProto):
     def commutator(self, other: LadderOpProto) -> complex:
         r"""Compute the commutator with another ladder operator.
 
-        The result implements the generalized CCR based on overlaps:
+        The result implements the generalized CCR based on logical-mode overlap:
 
         .. math::
 
-            [a_i, a_j^\dagger] =
-            \langle \mathrm{env}_i, \mathrm{env}_j \rangle
-            \langle \mathrm{label}_i, \mathrm{label}_j \rangle.
+            [a_i, a_j^\dagger] = \langle \mathrm{mode}_i, \mathrm{mode}_j \rangle
+                            = \langle \mathrm{label}_i, \mathrm{label}_j \rangle.
 
-        The other cases follow by antisymmetry and vanishing same-kind
-        commutators:
+        The other cases follow by antisymmetry and vanishing same-kind commutators:
 
         .. math::
 
@@ -204,16 +200,16 @@ class LadderOp(LadderOpProto):
 
         Numerical note
         --------------
-        If the label overlap magnitude is below ``1e-15``, this returns ``0j``
-        to avoid noise from nearly-orthogonal labels.
+        If the overlap magnitude is below ``1e-15``, this returns ``0j`` to avoid
+        noise from nearly-orthogonal modes.
         """
-        L = self.mode.label.overlap(other.mode.label)
-        if abs(L) < 1e-15:
+        G = self.mode.label.overlap(other.mode.label)
+        if abs(G) < 1e-15:
             return 0.0 + 0.0j
         if self.is_annihilation and other.is_creation:
-            return self.mode.env.overlap(other.mode.env) * L
+            return G
         if self.is_creation and other.is_annihilation:
-            return -self.mode.env.overlap(other.mode.env) * L
+            return -G
         return 0.0 + 0.0j
 
     @property

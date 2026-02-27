@@ -160,9 +160,7 @@ class TestMonomial(unittest.TestCase):
         self.assertEqual(m_adj_adj.creators, m.creators)
         self.assertEqual(m_adj_adj.annihilators, m.annihilators)
 
-    def test_signature_is_order_insensitive_within_creators_and_annihilators(
-        self,
-    ):
+    def test_signature_preserves_order_within_creators_and_annihilators(self):
         data = self.make_ops()
         a1 = data["a1"]
         b1 = data["b1"]
@@ -171,16 +169,24 @@ class TestMonomial(unittest.TestCase):
         b1_dag = data["b1_dag"]
         c1_dag = data["c1_dag"]
 
-        m1 = Monomial(creators=(a1_dag, b1_dag, c1_dag), annihilators=(a1, b1, c1))
-        m2 = Monomial(creators=(c1_dag, a1_dag, b1_dag), annihilators=(b1, c1, a1))
+        m1 = Monomial(
+            creators=(a1_dag, b1_dag, c1_dag),
+            annihilators=(a1, b1, c1),
+        )
+        m2 = Monomial(
+            creators=(c1_dag, a1_dag, b1_dag),
+            annihilators=(b1, c1, a1),
+        )
 
-        self.assertEqual(m1.signature, m2.signature)
+        # Order is preserved, so these are NOT equal.
+        self.assertNotEqual(m1.signature, m2.signature)
 
         sig = m1.signature
-        self.assertEqual(sig[0], "cre")
-        self.assertEqual(sig[2], "ann")
-        self.assertIsInstance(sig[1], tuple)
-        self.assertIsInstance(sig[3], tuple)
+        self.assertEqual(sig[0], "monomial")
+        self.assertEqual(sig[1], "cre")
+        self.assertEqual(sig[3], "ann")
+        self.assertIsInstance(sig[2], tuple)
+        self.assertIsInstance(sig[4], tuple)
 
     def test_approx_signature_passes_parameters_to_ops(self):
         data = self.make_ops()
@@ -191,8 +197,9 @@ class TestMonomial(unittest.TestCase):
         m = Monomial(creators=(a1_dag,), annihilators=(a1, b1))
         out = m.approx_signature(decimals=7, ignore_global_phase=True)
 
-        self.assertEqual(out[0], "cre")
-        self.assertEqual(out[2], "ann")
+        self.assertEqual(out[0], "monomial_approx")
+        self.assertEqual(out[1], "cre")
+        self.assertEqual(out[3], "ann")
 
         # Ensure args were propagated to each op used.
         self.assertEqual(a1_dag.last_approx_args, (7, True))

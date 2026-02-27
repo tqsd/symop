@@ -1,0 +1,1693 @@
+{
+ "GaussianEnvelope": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.gaussian",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.base",
+   "module_short": "symop.modes.envelopes.base",
+   "name": "BaseEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "BaseEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "BaseEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "BaseEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols",
+   "name": "HasLatex"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "HasLatex"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "HasLatex"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasLatex"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols",
+   "name": "EnvelopeProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "EnvelopeProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "EnvelopeProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "EnvelopeProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "abc",
+   "module_short": "abc",
+   "name": "ABC"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Protocol"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols.signature",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.gaussian",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianEnvelope"
+  }
+ ],
+ "ModeLabel": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.labels.mode",
+   "module_short": "symop.modes.labels",
+   "name": "ModeLabel"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.labels",
+   "module_short": "symop.modes.labels",
+   "name": "ModeLabel"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "ModeLabel"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "ModeLabel"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.labels",
+   "module_short": "symop.modes.protocols",
+   "name": "ModeLabelProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "ModeLabelProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "ModeLabelProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "ModeLabelProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols.labels",
+   "module_short": "symop.core.protocols",
+   "name": "LabelProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "LabelProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "LabelProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "LabelProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Protocol"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols.signature",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.labels.mode",
+   "module_short": "symop.modes.labels",
+   "name": "ModeLabel"
+  }
+ ],
+ "ModeOp": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.operators",
+   "module_short": "symop.core",
+   "name": "ModeOp"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "ModeOp"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "ModeOp"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols.operators",
+   "module_short": "symop.core.protocols",
+   "name": "ModeOpProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "ModeOpProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "ModeOpProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "ModeOpProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols.signature",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Protocol"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.operators",
+   "module_short": "symop.core",
+   "name": "ModeOp"
+  }
+ ],
+ "PathLabel": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.labels.path",
+   "module_short": "symop.modes.labels",
+   "name": "PathLabel"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.labels",
+   "module_short": "symop.modes.labels",
+   "name": "PathLabel"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "PathLabel"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "PathLabel"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.labels",
+   "module_short": "symop.modes.protocols",
+   "name": "PathLabelProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "PathLabelProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "PathLabelProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "PathLabelProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols.labels",
+   "module_short": "symop.core.protocols",
+   "name": "LabelProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "LabelProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "LabelProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "LabelProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Protocol"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols.signature",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.labels.path",
+   "module_short": "symop.modes.labels",
+   "name": "PathLabel"
+  }
+ ],
+ "PolarizationLabel.H": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.labels.polarization",
+   "module_short": "symop.modes.labels",
+   "name": "PolarizationLabel.H"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.labels",
+   "module_short": "symop.modes.labels",
+   "name": "PolarizationLabel.H"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "PolarizationLabel.H"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "PolarizationLabel.H"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.labels",
+   "module_short": "symop.modes.protocols.labels",
+   "name": "PolarizationLabelProto.H"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "PolarizationLabelProto.H"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "PolarizationLabelProto.H"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "PolarizationLabelProto.H"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols.labels",
+   "module_short": "symop.core.protocols.labels",
+   "name": "LabelProto.H"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "LabelProto.H"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "LabelProto.H"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "LabelProto.H"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Protocol.H"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols.signature",
+   "module_short": "symop.core.protocols.signature",
+   "name": "HasSignature.H"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature.H"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "HasSignature.H"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasSignature.H"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic.H"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.labels.polarization.PolarizationLabel",
+   "module_short": "symop.modes.labels.polarization.PolarizationLabel",
+   "name": "H"
+  }
+ ],
+ "__name__": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "str"
+  }
+ ],
+ "ax": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Axes"
+  }
+ ],
+ "ax.grid": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Axes.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._base",
+   "module_short": "matplotlib.axes._base",
+   "name": "_AxesBase.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "_AxesBase.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "_AxesBase.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.grid"
+  }
+ ],
+ "ax.plot": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Axes.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._base",
+   "module_short": "matplotlib.axes._base",
+   "name": "_AxesBase.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "_AxesBase.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "_AxesBase.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.plot"
+  }
+ ],
+ "ax.set_title": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Axes.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._base",
+   "module_short": "matplotlib.axes._base",
+   "name": "_AxesBase.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "_AxesBase.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "_AxesBase.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.set_title"
+  }
+ ],
+ "ax.set_xlabel": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Axes.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._base",
+   "module_short": "matplotlib.axes._base",
+   "name": "_AxesBase.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "_AxesBase.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "_AxesBase.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.set_xlabel"
+  }
+ ],
+ "ax.set_ylabel": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Axes.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._base",
+   "module_short": "matplotlib.axes._base",
+   "name": "_AxesBase.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "_AxesBase.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "_AxesBase.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.set_ylabel"
+  }
+ ],
+ "c_path": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "complex"
+  }
+ ],
+ "c_same": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "complex"
+  }
+ ],
+ "fig": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.figure",
+   "module_short": "matplotlib.figure",
+   "name": "Figure"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Figure"
+  }
+ ],
+ "fig.add_subplot": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.figure",
+   "module_short": "matplotlib.figure",
+   "name": "Figure.add_subplot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Figure.add_subplot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.figure",
+   "module_short": "matplotlib.figure",
+   "name": "FigureBase.add_subplot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "FigureBase.add_subplot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.add_subplot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.add_subplot"
+  }
+ ],
+ "fig.tight_layout": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.figure",
+   "module_short": "matplotlib.figure",
+   "name": "Figure.tight_layout"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Figure.tight_layout"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.figure",
+   "module_short": "matplotlib.figure",
+   "name": "FigureBase.tight_layout"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "FigureBase.tight_layout"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.tight_layout"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.tight_layout"
+  }
+ ],
+ "m": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.operators",
+   "module_short": "symop.core",
+   "name": "ModeOp"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "ModeOp"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "ModeOp"
+  }
+ ],
+ "m.ann.commutator": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.operators",
+   "module_short": "symop.core",
+   "name": "LadderOp.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "LadderOp.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "LadderOp.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols.operators",
+   "module_short": "symop.core.protocols",
+   "name": "LadderOpProto.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "LadderOpProto.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "LadderOpProto.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "LadderOpProto.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols.signature",
+   "module_short": "symop.core.protocols.signature",
+   "name": "HasSignature.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "HasSignature.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasSignature.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Protocol.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic.commutator"
+  }
+ ],
+ "m.create": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.operators",
+   "module_short": "symop.core",
+   "name": "LadderOp"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "LadderOp"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "LadderOp"
+  }
+ ],
+ "mA": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.operators",
+   "module_short": "symop.core",
+   "name": "ModeOp"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "ModeOp"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "ModeOp"
+  }
+ ],
+ "mA.ann.commutator": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.operators",
+   "module_short": "symop.core",
+   "name": "LadderOp.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "LadderOp.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "LadderOp.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols.operators",
+   "module_short": "symop.core.protocols",
+   "name": "LadderOpProto.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "LadderOpProto.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "LadderOpProto.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "LadderOpProto.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols.signature",
+   "module_short": "symop.core.protocols.signature",
+   "name": "HasSignature.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "HasSignature.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasSignature.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Protocol.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic.commutator"
+  }
+ ],
+ "mB": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.operators",
+   "module_short": "symop.core",
+   "name": "ModeOp"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "ModeOp"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "ModeOp"
+  }
+ ],
+ "mB.create": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.operators",
+   "module_short": "symop.core",
+   "name": "LadderOp"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "LadderOp"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "LadderOp"
+  }
+ ],
+ "make_mode": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  }
+ ],
+ "np.array": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "builtin_function_or_method"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "array"
+  }
+ ],
+ "np.linspace": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "_ArrayFunctionDispatcher"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "linspace"
+  }
+ ],
+ "plt.figure": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.pyplot",
+   "module_short": "matplotlib.pyplot",
+   "name": "figure"
+  }
+ ],
+ "plt.show": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.pyplot",
+   "module_short": "matplotlib.pyplot",
+   "name": "show"
+  }
+ ],
+ "ref": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.operators",
+   "module_short": "symop.core",
+   "name": "ModeOp"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "ModeOp"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "ModeOp"
+  }
+ ],
+ "ref.ann.commutator": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.operators",
+   "module_short": "symop.core",
+   "name": "LadderOp.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "LadderOp.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "LadderOp.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols.operators",
+   "module_short": "symop.core.protocols",
+   "name": "LadderOpProto.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "LadderOpProto.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "LadderOpProto.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "LadderOpProto.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols.signature",
+   "module_short": "symop.core.protocols.signature",
+   "name": "HasSignature.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "HasSignature.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasSignature.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Protocol.commutator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic.commutator"
+  }
+ ],
+ "shifted": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.operators",
+   "module_short": "symop.core",
+   "name": "ModeOp"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "ModeOp"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "ModeOp"
+  }
+ ],
+ "shifted.create": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.operators",
+   "module_short": "symop.core",
+   "name": "LadderOp"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "LadderOp"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "LadderOp"
+  }
+ ],
+ "t": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "float64"
+  }
+ ],
+ "taus": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "ndarray"
+  }
+ ],
+ "vals": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "ndarray"
+  }
+ ],
+ "vals.append": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "ndarray"
+  }
+ ]
+}

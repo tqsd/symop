@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterable
 
-from symop_proto.core.protocols import (
+from symop.core.monomial import Monomial
+from symop.core.terms import KetTerm as _KetTerm
+from symop.core.protocols import (
     KetTermProto,
     LadderOpProto,
     MonomialProto,
@@ -136,11 +138,7 @@ def ket_from_word(
         display(Math(ket.latex))
 
     """
-    from symop_proto.core.monomial import Monomial
-
     if term_factory is None:
-        from symop_proto.core.terms import KetTerm as _KetTerm
-
         term_factory = _KetTerm
 
     coeffs: dict[tuple, complex] = {}
@@ -174,7 +172,9 @@ def ket_from_word(
                         new_coeffs[kc] = new_coeffs.get(kc, 0j) + c * w
                         new_reps.setdefault(kc, m_contract)
         coeffs, reps = new_coeffs, new_reps
-    terms = [term_factory(c, reps[k]) for k, c in coeffs.items() if abs(c) > eps]
+    terms = [
+        term_factory(c, reps[k]) for k, c in coeffs.items() if abs(c) > eps
+    ]
     if apply_to_vacuum:
         terms = [t for t in terms if not t.monomial.annihilators]
 

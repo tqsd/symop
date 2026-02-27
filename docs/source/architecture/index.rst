@@ -49,6 +49,67 @@ All other internal packages are required to depend on ``core`` rather than
 the revers. This constraint is enforced through static analysis and linting
 contracts.
 
+Modes Layer
+^^^^^^^^^^^
+
+The ``modes`` package forms the second foundational layer above ``core``.
+It provides the analytic and numerical realizations of abstract CCR modes
+defined in ``core``.
+
+While ``core`` defines algebraic primitives (mode operators, ladder operatrors
+monomials, signatures), it is intentionally agnostic to any specific functional
+representation of modes. The ``modes`` layer assigns these abstract modes a concrete
+continuous-variable structure.
+
+
+Its architectural role is to:
+
+- Represent complex time-domain envelopes.
+- Provide frequency-domain representations consistent with the project
+  Fourier convenvion.
+- Define overlap structure between (possibly non-orthogonal) modes.
+- Implement analytic envelope models (e.g. Gaussian envelopes).
+- Define transfer functions acting multiplicatively in frequency space.
+- Provide controlled plotting and inspection utilities.
+
+This layer introduces functional structure without modifying the underlying
+CCR algebra.
+
+CCR Layer
+^^^^^^^^^
+
+The ``ccr`` package builds on top of ``core`` (and uses ``modes`` where overlap)
+and continuous-variable structure are required) to provide the symbolic
+operator algebra for canonical commutation relations.
+
+Its responsibility is to represent and manipulate CCR expression in a
+purely symbolic form, without constructing matrices.
+
+Architectural role
+~~~~~~~~~~~~~~~~~~
+
+The ``ccr`` layer providec:
+
+- Word- and polynomial-based symbolic objects:
+  operator polynomials (``OpPoly``), ket polynomials (``KetPoly``),
+  and density polynomials (``DensityPoly``).
+- Linear-algebra-like operations at the symbolic level:
+  addition, scalar scaling, adjoints, composition, and left/right actions.
+- Canonicalization utilities based on structural signatures:
+  combining like terms and stable hashing for caching and deduplication.
+- Domain-specific operations for densities where defined:
+  trace, purity, partial trace, and Hilbert-Schmidt inner products.
+
+Design constraints
+~~~~~~~~~~~~~~~~~~
+
+- No numeriacl state vectors or matrices are created in this layer.
+- No commutations-based rewriting is applied implicitly.
+  Normal ordering and CCR rewrite rules are modeled explicitly as
+  separate transformations to keep semantics predictable and testable.
+- All operations are linear and signature-driven unless stated otherwise.
+
+
 
 Design Goals
 ------------

@@ -180,7 +180,8 @@ class OpPoly(OpPolyProto):
     @staticmethod
     def q(mode: ModeOpProto) -> OpPoly:
         return (
-            OpPoly.from_words([[mode.ann]]) + OpPoly.from_words([[mode.create]])
+            OpPoly.from_words([[mode.ann]])
+            + OpPoly.from_words([[mode.create]])
         ) * (1.0 / sqrt(2))
 
     @staticmethod
@@ -189,9 +190,9 @@ class OpPoly(OpPolyProto):
 
     @staticmethod
     def p(mode: ModeOpProto) -> OpPoly:
-        return OpPoly.from_words([[mode.create]]) * (1j / sqrt(2)) + OpPoly.from_words(
-            [[mode.ann]]
-        ) * (-1j / sqrt(2))
+        return OpPoly.from_words([[mode.create]]) * (
+            1j / sqrt(2)
+        ) + OpPoly.from_words([[mode.ann]]) * (-1j / sqrt(2))
 
     @staticmethod
     def X_theta(mode: ModeOpProto, theta: float) -> OpPoly:
@@ -224,7 +225,9 @@ class OpPoly(OpPolyProto):
         return OpPoly(tuple(term.adjoint() for term in self.terms))
 
     def combine_like_terms(self, **kw):
-        return OpPoly(op_combine_like_terms(self.terms, term_factory=OpTerm, **kw))
+        return OpPoly(
+            op_combine_like_terms(self.terms, term_factory=OpTerm, **kw)
+        )
 
     @property
     def is_zero(self) -> bool:
@@ -240,7 +243,9 @@ class OpPoly(OpPolyProto):
     def __mul__(self, other: OpPolyProto | complex) -> OpPoly:
         if isinstance(other, (int, float, complex)):
             return self.scaled(other)
-        return OpPoly(op_multiply(self.terms, other.terms, term_factory=OpTerm))
+        return OpPoly(
+            op_multiply(self.terms, other.terms, term_factory=OpTerm)
+        )
 
     def __rmul__(self, other: complex) -> OpPoly:
         if isinstance(other, (int, float, complex)):

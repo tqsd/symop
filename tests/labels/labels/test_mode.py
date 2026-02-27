@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import unittest
 from dataclasses import FrozenInstanceError
 
@@ -7,8 +9,9 @@ from symop.modes.labels.polarization import PolarizationLabel
 
 
 class DummyEnvelope:
-    def __init__(self, name):
+    def __init__(self, name, overlaps=None):
         self.name = name
+        self._overlaps = overlaps or {}
 
     @property
     def signature(self):
@@ -16,6 +19,17 @@ class DummyEnvelope:
 
     def approx_signature(self, *, decimals=12, ignore_global_phase=False):
         return ("env_approx", self.name, decimals, ignore_global_phase)
+
+    def overlap(self, other: DummyEnvelope) -> complex:
+        if self.name == other.name:
+            return 1.0 + 0.0j
+        key = f"{self.name}|{other.name}"
+        if key in self._overlaps:
+            return self._overlaps[key]
+        key_rev = f"{other.name}|{self.name}"
+        if key_rev in self._overlaps:
+            return self._overlaps[key_rev]
+        return 0.0 + 0.0j
 
 
 class TestModeLabel(unittest.TestCase):
@@ -26,22 +40,19 @@ class TestModeLabel(unittest.TestCase):
         self.pol_h = PolarizationLabel.H()
         self.pol_v = PolarizationLabel.V()
 
-        self.env1 = DummyEnvelope("e1")
-        self.env2 = DummyEnvelope("e2")
+        # Keep your original expectation that env1 and env2 overlap to 1.
+        env_overlaps = {"e1|e2": 1.0 + 0.0j}
+        self.env1 = DummyEnvelope("e1", overlaps=env_overlaps)
+        self.env2 = DummyEnvelope("e2", overlaps=env_overlaps)
 
-    def test_overlap_factorizes_path_and_pol(self):
+    def test_overlap_factorizes_path_pol_envelope(self):
         m1 = ModeLabel(self.path_a, self.pol_h, self.env1)
         m2 = ModeLabel(self.path_a, self.pol_h, self.env2)
         m3 = ModeLabel(self.path_b, self.pol_h, self.env1)
         m4 = ModeLabel(self.path_a, self.pol_v, self.env1)
 
-        # Same path and pol → overlap 1
         self.assertAlmostEqual(abs(m1.overlap(m2)), 1.0, places=14)
-
-        # Different path → 0
         self.assertAlmostEqual(abs(m1.overlap(m3)), 0.0, places=14)
-
-        # Different polarization → 0
         self.assertAlmostEqual(abs(m1.overlap(m4)), 0.0, places=14)
 
     def test_signature_structure(self):

@@ -19,7 +19,7 @@ release = ""
 sphinx_gallery_conf = {
     "examples_dirs": str(ROOT / "examples"),
     "gallery_dirs": "examples",
-    "filename_pattern": r"plot_.*\.py$",
+    "filename_pattern": r"(plot_|example_).*\.py$",
     "ignore_pattern": r"(^|/)_",
 }
 

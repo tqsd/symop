@@ -84,6 +84,56 @@ class FakeLabel:
         )
 
 
+class FakeModeLabel:
+    """
+    Minimal composite label for operator tests.
+
+    It mimics the real ModeLabel behavior:
+    overlap factorizes into base_label_overlap * envelope_overlap.
+    """
+
+    def __init__(self, *, base: FakeLabel, envelope: FakeEnvelope) -> None:
+        self.base = base
+        self.envelope = envelope
+
+    @property
+    def signature(self):
+        return ("mode_label", self.base.signature, self.envelope.signature)
+
+    def approx_signature(
+        self, *, decimals: int = 12, ignore_global_phase: bool = False
+    ):
+        return (
+            "mode_label_approx",
+            self.base.approx_signature(
+                decimals=decimals, ignore_global_phase=ignore_global_phase
+            ),
+            self.envelope.approx_signature(
+                decimals=decimals, ignore_global_phase=ignore_global_phase
+            ),
+        )
+
+    def overlap(self, other: FakeModeLabel) -> complex:
+        return self.base.overlap(other.base) * self.envelope.overlap(other.envelope)
+
+    def with_pol(self, pol):
+        return FakeModeLabel(base=self.base.with_pol(pol), envelope=self.envelope)
+
+    def with_path(self, path):
+        return FakeModeLabel(base=self.base.with_path(path), envelope=self.envelope)
+
+    def with_envelope(self, envelope: FakeEnvelope):
+        return FakeModeLabel(base=self.base, envelope=envelope)
+
+    @property
+    def pol(self):
+        return self.base.pol
+
+    @property
+    def path(self):
+        return self.base.path
+
+
 class TestOperatorKind(unittest.TestCase):
     def test_values(self):
         self.assertEqual(opmod.OperatorKind.ANN.value, "a")
@@ -93,13 +143,14 @@ class TestOperatorKind(unittest.TestCase):
 class TestModeOp(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        # Make display_index deterministic across test runs.
         opmod._mode_display_counter = count(1)
 
     def test_post_init_creates_cached_ladder_ops(self):
         env = FakeEnvelope("e1")
-        label = FakeLabel("l1")
-        m = opmod.ModeOp(env=env, label=label)
+        base = FakeLabel("l1")
+        label = FakeModeLabel(base=base, envelope=env)
+
+        m = opmod.ModeOp(label=label)
 
         self.assertIsNotNone(m.display_index)
         self.assertIsNotNone(m.ann)
@@ -120,10 +171,15 @@ class TestModeOp(unittest.TestCase):
     def test_with_helpers_return_new_instances(self):
         env1 = FakeEnvelope("e1")
         env2 = FakeEnvelope("e2")
-        label1 = FakeLabel("l1", pol="H", path="p1")
-        label2 = FakeLabel("l2", pol="V", path="p2")
 
-        m = opmod.ModeOp(env=env1, label=label1)
+        base1 = FakeLabel("l1", pol="H", path="p1")
+        base2 = FakeLabel("l2", pol="V", path="p2")
+
+        label1 = FakeModeLabel(base=base1, envelope=env1)
+        label2 = FakeModeLabel(base=base2, envelope=env2)
+
+        m = opmod.ModeOp(label=label1)
+
         m2 = m.with_user_label("tag")
         self.assertIsNot(m2, m)
         self.assertEqual(m2.user_label, "tag")
@@ -133,9 +189,9 @@ class TestModeOp(unittest.TestCase):
         self.assertEqual(m3.display_index, 123)
         self.assertNotEqual(m.display_index, 123)
 
-        m4 = m.with_env(env2)
-        self.assertIs(m4.env, env2)
-        self.assertIs(m.env, env1)
+        m4 = m.with_envelope(env2)
+        self.assertIs(m4.label.envelope, env2)
+        self.assertIs(m.label.envelope, env1)
 
         m5 = m.with_label(label2)
         self.assertIs(m5.label, label2)
@@ -153,17 +209,17 @@ class TestModeOp(unittest.TestCase):
 
     def test_signature_and_approx_signature(self):
         env = FakeEnvelope("e1")
-        label = FakeLabel("l1", pol="H", path="p1")
-        m = opmod.ModeOp(env=env, label=label)
+        base = FakeLabel("l1", pol="H", path="p1")
+        label = FakeModeLabel(base=base, envelope=env)
+        m = opmod.ModeOp(label=label)
 
-        self.assertEqual(m.signature, ("mode", env.signature, label.signature))
+        self.assertEqual(m.signature, ("mode", label.signature))
 
         approx = m.approx_signature(decimals=7, ignore_global_phase=True)
         self.assertEqual(
             approx,
             (
                 "mode_approx",
-                env.approx_signature(decimals=7, ignore_global_phase=True),
                 label.approx_signature(decimals=7, ignore_global_phase=True),
             ),
         )
@@ -175,35 +231,35 @@ class TestLadderOp(unittest.TestCase):
         opmod._mode_display_counter = count(1)
 
     def make_modes_for_commutator(
-        self,
-        *,
-        env_overlap: complex,
-        label_overlap: complex,
+        self, *, env_overlap: complex, label_overlap: complex
     ):
         env_overlaps = {"e1|e2": env_overlap}
+
+        base1 = FakeLabel("l1")
+        base2 = FakeLabel("l2")
+
         label_overlaps = {}
-
-        l1 = FakeLabel("l1")
-        l2 = FakeLabel("l2")
-
-        # Encode overlap using their signatures to avoid accidental collisions.
-        key = f"{l1.signature}|{l2.signature}"
+        key = f"{base1.signature}|{base2.signature}"
         label_overlaps[key] = label_overlap
 
-        label1 = FakeLabel("l1", overlaps=label_overlaps)
-        label2 = FakeLabel("l2", overlaps=label_overlaps)
+        base1 = FakeLabel("l1", overlaps=label_overlaps)
+        base2 = FakeLabel("l2", overlaps=label_overlaps)
 
         env1 = FakeEnvelope("e1", overlaps=env_overlaps)
         env2 = FakeEnvelope("e2", overlaps=env_overlaps)
 
-        m1 = opmod.ModeOp(env=env1, label=label1)
-        m2 = opmod.ModeOp(env=env2, label=label2)
+        label1 = FakeModeLabel(base=base1, envelope=env1)
+        label2 = FakeModeLabel(base=base2, envelope=env2)
+
+        m1 = opmod.ModeOp(label=label1)
+        m2 = opmod.ModeOp(label=label2)
         return m1, m2
 
     def test_is_annihilation_is_creation(self):
         env = FakeEnvelope("e1")
-        label = FakeLabel("l1")
-        m = opmod.ModeOp(env=env, label=label)
+        base = FakeLabel("l1")
+        label = FakeModeLabel(base=base, envelope=env)
+        m = opmod.ModeOp(label=label)
 
         self.assertTrue(m.ann.is_annihilation)
         self.assertFalse(m.ann.is_creation)
@@ -213,8 +269,9 @@ class TestLadderOp(unittest.TestCase):
 
     def test_dagger_involution_and_identity(self):
         env = FakeEnvelope("e1")
-        label = FakeLabel("l1")
-        m = opmod.ModeOp(env=env, label=label)
+        base = FakeLabel("l1")
+        label = FakeModeLabel(base=base, envelope=env)
+        m = opmod.ModeOp(label=label)
 
         self.assertIs(m.ann.dagger(), m.create)
         self.assertIs(m.create.dagger(), m.ann)
@@ -222,9 +279,10 @@ class TestLadderOp(unittest.TestCase):
         self.assertIs(m.ann.dagger().dagger(), m.ann)
         self.assertIs(m.create.dagger().dagger(), m.create)
 
-    def test_commutator_zero_if_label_overlap_small(self):
+    def test_commutator_zero_if_overlap_small(self):
         m1, m2 = self.make_modes_for_commutator(
-            env_overlap=0.7 + 0.2j, label_overlap=0.0 + 0.0j
+            env_overlap=0.7 + 0.2j,
+            label_overlap=0.0 + 0.0j,
         )
 
         self.assertEqual(m1.ann.commutator(m2.create), 0.0 + 0.0j)
@@ -234,7 +292,8 @@ class TestLadderOp(unittest.TestCase):
         env_overlap = 0.3 - 0.1j
         label_overlap = 0.5 + 0.0j
         m1, m2 = self.make_modes_for_commutator(
-            env_overlap=env_overlap, label_overlap=label_overlap
+            env_overlap=env_overlap,
+            label_overlap=label_overlap,
         )
 
         out = m1.ann.commutator(m2.create)
@@ -244,7 +303,8 @@ class TestLadderOp(unittest.TestCase):
         env_overlap = 0.3 - 0.1j
         label_overlap = 0.5 + 0.0j
         m1, m2 = self.make_modes_for_commutator(
-            env_overlap=env_overlap, label_overlap=label_overlap
+            env_overlap=env_overlap,
+            label_overlap=label_overlap,
         )
 
         out = m1.create.commutator(m2.ann)
@@ -252,7 +312,8 @@ class TestLadderOp(unittest.TestCase):
 
     def test_commutator_same_kind_is_zero(self):
         m1, m2 = self.make_modes_for_commutator(
-            env_overlap=1.0 + 0.0j, label_overlap=1.0 + 0.0j
+            env_overlap=1.0 + 0.0j,
+            label_overlap=1.0 + 0.0j,
         )
 
         self.assertEqual(m1.ann.commutator(m2.ann), 0.0 + 0.0j)
@@ -260,8 +321,9 @@ class TestLadderOp(unittest.TestCase):
 
     def test_signature_and_approx_signature(self):
         env = FakeEnvelope("e1")
-        label = FakeLabel("l1")
-        m = opmod.ModeOp(env=env, label=label)
+        base = FakeLabel("l1")
+        label = FakeModeLabel(base=base, envelope=env)
+        m = opmod.ModeOp(label=label)
         a = m.ann
 
         self.assertEqual(a.signature, ("lop", "a", m.signature))

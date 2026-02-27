@@ -110,7 +110,11 @@ class ModeLabel(ModeLabelProto):
             Product of path and polarization overlaps.
 
         """
-        return self.path.overlap(other.path) * self.pol.overlap(other.pol)
+        return (
+            self.path.overlap(other.path)
+            * self.pol.overlap(other.pol)
+            * self.envelope.overlap(other.envelope)
+        )
 
     @property
     def signature(self) -> SignatureProto:
