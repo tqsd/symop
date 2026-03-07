@@ -7,19 +7,20 @@ density-operator expansions in the symbolic ladder-operator formalism.
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+from typing import TYPE_CHECKING
 
 from symop.core.monomial import Monomial
-from symop.core.protocols import (
-    DensityTermProto,
-    KetTermProto,
-    ModeOpProto,
-    MonomialProto,
-    SignatureProto,
+from symop.core.protocols.ops import (
+    ModeOp as ModeOpProtocol,
 )
+from symop.core.protocols.ops import (
+    Monomial as MonomialProtocol,
+)
+from symop.core.types.signature import Signature
 
 
 @dataclass(frozen=True)
-class KetTerm(KetTermProto):
+class KetTerm:
     r"""A single term in a ket-like operator expression.
 
     A ``KetTerm`` represents a coefficient multiplied by a monomial in ladder
@@ -38,13 +39,16 @@ class KetTerm(KetTermProto):
     ``KetTerm`` is immutable (``frozen=True``). Use :meth:`scaled` to obtain a
     modified copy with a scaled coefficient.
 
+    This class implements
+    :class:`~symop.core.protocols.terms.ket_term.KetTerm` protocol.
+
     """
 
     coeff: complex
-    monomial: MonomialProto
+    monomial: MonomialProtocol
 
     @staticmethod
-    def identity() -> KetTermProto:
+    def identity() -> KetTerm:
         r"""Return the multiplicative identity term.
 
         This is the term with unit coefficient and the identity monomial:
@@ -55,7 +59,7 @@ class KetTerm(KetTermProto):
         """
         return KetTerm(1.0, Monomial())
 
-    def adjoint(self) -> KetTermProto:
+    def adjoint(self) -> KetTerm:
         r"""Return the adjoint (Hermitian conjugate) of this term.
 
         The adjoint is defined by conjugating the scalar coefficient and
@@ -79,7 +83,7 @@ class KetTerm(KetTermProto):
         return replace(self, coeff=self.coeff * s)
 
     @property
-    def signature(self) -> SignatureProto:
+    def signature(self) -> Signature:
         """Return a signature."""
         return ("KT", self.monomial.signature)
 
@@ -88,7 +92,7 @@ class KetTerm(KetTermProto):
         *,
         decimals: int = 12,
         ignore_global_phase: bool = False,
-    ) -> SignatureProto:
+    ) -> Signature:
         """Return an approximate signature."""
         return (
             "KT_approx",
@@ -144,13 +148,13 @@ class KetTerm(KetTermProto):
         return self.creation_count + self.annihilation_count
 
     @property
-    def mode_ops(self) -> tuple[ModeOpProto, ...]:
+    def mode_ops(self) -> tuple[ModeOpProtocol, ...]:
         """Return the ordered mode operators appearing in the monomial."""
         return self.monomial.mode_ops
 
 
 @dataclass(frozen=True)
-class DensityTerm(DensityTermProto):
+class DensityTerm:
     r"""A single term in a density-operator expression.
 
     A ``DensityTerm`` represents a coefficient multiplying a left and right
@@ -173,11 +177,14 @@ class DensityTerm(DensityTermProto):
     ``DensityTerm`` is immutable (``frozen=True``). Use :meth:`scaled` to
     obtain a modified copy with a scaled coefficient.
 
+    This class implements
+    :class:`~symop.core.terms.density_term.DensityTerm` protocol.
+
     """
 
     coeff: complex
-    left: MonomialProto
-    right: MonomialProto
+    left: MonomialProtocol
+    right: MonomialProtocol
 
     @staticmethod
     def identity() -> DensityTerm:
@@ -213,7 +220,7 @@ class DensityTerm(DensityTermProto):
         return replace(self, coeff=self.coeff * s)
 
     @property
-    def signature(self) -> SignatureProto:
+    def signature(self) -> Signature:
         """Return a signature."""
         return ("DT", "L", self.left.signature, "R", self.right.signature)
 
@@ -222,7 +229,7 @@ class DensityTerm(DensityTermProto):
         *,
         decimals: int = 12,
         ignore_global_phase: bool = False,
-    ) -> SignatureProto:
+    ) -> Signature:
         """Return an approximate signature."""
         return (
             "DT_approx",
@@ -311,11 +318,23 @@ class DensityTerm(DensityTermProto):
         return len(self.right.annihilators)
 
     @property
-    def mode_ops_left(self) -> tuple[ModeOpProto, ...]:
+    def mode_ops_left(self) -> tuple[ModeOpProtocol, ...]:
         """Return the ordered mode operators appearing in the left monomial."""
         return self.left.mode_ops
 
     @property
-    def mode_ops_right(self) -> tuple[ModeOpProto, ...]:
+    def mode_ops_right(self) -> tuple[ModeOpProtocol, ...]:
         """Return the ordered mode operators appearing in the right monomial."""
         return self.right.mode_ops
+
+
+if TYPE_CHECKING:
+    from symop.core.protocols.terms import (
+        DensityTerm as DensityTermProtocol,
+    )
+    from symop.core.protocols.terms import (
+        KetTerm as KetTermProtocol,
+    )
+
+    _ket_term_check: KetTermProtocol = KetTerm(1.0, Monomial())
+    _density_term_check: DensityTermProtocol = DensityTerm(1.0, Monomial(), Monomial())

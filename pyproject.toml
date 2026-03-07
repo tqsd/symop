@@ -74,6 +74,7 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
 "src/symop/core/protocols/*.py" = ["D"]
+"src/symop/core/types/*.py" = ["D"]
 "src/symop/**/protocols/**" = ["D"]
 "tests/**/*.py" = ["D"]
 "_old_examples/**" = ["D"]

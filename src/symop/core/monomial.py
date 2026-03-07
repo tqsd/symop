@@ -8,17 +8,22 @@ signatures used for hashing and merging.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from symop.core.protocols import (
-    LadderOpProto,
-    ModeOpProto,
-    MonomialProto,
-    SignatureProto,
+from symop.core.protocols.ops import (
+    LadderOp as LadderOpProtocol,
 )
+from symop.core.protocols.ops import (
+    ModeOp as ModeOpProtocol,
+)
+from symop.core.protocols.ops import (
+    Monomial as MonomialProtocol,
+)
+from symop.core.types.signature import Signature
 
 
 @dataclass(frozen=True)
-class Monomial(MonomialProto):
+class Monomial:
     r"""A normally ordered product of ladder operators.
 
     A :class:`Monomial` represents a single term in the operator
@@ -49,15 +54,19 @@ class Monomial(MonomialProto):
             adjoints.
 
     Notes:
-        - The monomial is assumed to be in *normal order*, meaning all
-          creation operators precese the annihilation operators.
-        - An empty monomial (``creators=(), annihilators=()``) represents
-          the identity operator :math:`\\mathbb{I}`.
+    -----
+    - The monomial is assumed to be in *normal order*, meaning all
+      creation operators precese the annihilation operators.
+    - An empty monomial (``creators=(), annihilators=()``) represents
+      the identity operator :math:`\\mathbb{I}`.
+
+    This class implements
+    :class:`~symop.core.protocols.ops.monomial.Monomial` protocol.
 
     """
 
-    creators: tuple[LadderOpProto, ...] = ()
-    annihilators: tuple[LadderOpProto, ...] = ()
+    creators: tuple[LadderOpProtocol, ...] = ()
+    annihilators: tuple[LadderOpProtocol, ...] = ()
 
     def __post_init__(self) -> None:
         """Normalize fields to tuples for immutability and predictable behavior."""
@@ -72,10 +81,10 @@ class Monomial(MonomialProto):
         return Monomial((), ())
 
     @property
-    def mode_ops(self) -> tuple[ModeOpProto, ...]:
+    def mode_ops(self) -> tuple[ModeOpProtocol, ...]:
         """Return all unique ``ModeOps`` from creators and annihilators."""
-        seen: set[SignatureProto] = set()
-        out: list[ModeOpProto] = []
+        seen: set[Signature] = set()
+        out: list[ModeOpProtocol] = []
         for op in (*self.creators, *self.annihilators):
             sig = op.mode.signature
             if sig not in seen:
@@ -90,7 +99,7 @@ class Monomial(MonomialProto):
         return Monomial(creators=dag_creators, annihilators=dag_annihilators)
 
     @property
-    def signature(self) -> SignatureProto:
+    def signature(self) -> Signature:
         """Return a signature."""
         c = tuple(op.signature for op in self.creators)
         a = tuple(op.signature for op in self.annihilators)
@@ -101,7 +110,7 @@ class Monomial(MonomialProto):
         *,
         decimals: int = 12,
         ignore_global_phase: bool = False,
-    ) -> SignatureProto:
+    ) -> Signature:
         """Return an approximate signature."""
         c = tuple(
             op.approx_signature(
@@ -143,3 +152,7 @@ class Monomial(MonomialProto):
     def has_annihilators(self) -> bool:
         """Return ``True`` if this ``Monomial has any annihilators."""
         return len(self.annihilators) > 0
+
+
+if TYPE_CHECKING:
+    _monomial_check: MonomialProtocol = Monomial()

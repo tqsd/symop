@@ -12,37 +12,32 @@ The generalized canonical commutation relations are implemented by
 from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
-from enum import StrEnum
 from itertools import count
+from typing import Self
 
-from symop.core.protocols import (
-    EnvelopeLike,
-    LabelProto,
-    LadderOpProto,
-    ModeLabelLike,
-    ModeOpProto,
-    OperatorKindProto,
-    SignatureProto,
+from symop.core.protocols.modes.labels import (
+    Envelope as EnvelopeProtocol,
 )
+from symop.core.protocols.modes.labels import (
+    ModeLabel as ModeLabelProtocol,
+)
+from symop.core.protocols.modes.labels import (
+    Path as PathProtocol,
+)
+from symop.core.protocols.modes.labels import (
+    Polarization as PolarizationProtocol,
+)
+from symop.core.protocols.ops import (
+    LadderOp as LadderOpProtocol,
+)
+from symop.core.types import OperatorKind
+from symop.core.types.signature import Signature
 
 _mode_display_counter = count(1)
 
 
-class OperatorKind(StrEnum):
-    """Kinds of ladder operators.
-
-    The string values are used in signatures and for compact display:
-
-    - ``"a"`` for annihilation operators
-    - ``"adag"`` for creation operators
-    """
-
-    ANN = "a"
-    CREATE = "adag"
-
-
 @dataclass(frozen=True)
-class ModeOp(ModeOpProto):
+class ModeOp:
     r"""A logical mode, defined by a composite mode label.
 
     Conceptually, a ``ModeOp`` represents a (possibly composite) bosonic mode
@@ -67,51 +62,72 @@ class ModeOp(ModeOpProto):
     The ``display_index`` is intended purely for UI/debugging and does not
     contribute to signatures.
 
+    This implements
+    :class:`~symop.core.protocols.ops.operators.ModeOp` protocol.
+
     """
 
-    label: ModeLabelLike
+    label: ModeLabelProtocol
 
     user_label: str | None = None
     display_index: int | None = field(
         default_factory=lambda: next(_mode_display_counter)
     )
 
-    ann: LadderOpProto = field(init=False, repr=False, compare=False)
-    create: LadderOpProto = field(init=False, repr=False, compare=False)
+    _ann: LadderOp = field(init=False, repr=False, compare=False)
+    _cre: LadderOp = field(init=False, repr=False, compare=False)
 
     def __post_init__(self) -> None:
         """Create cached ladder-operator views (ann/create) bound to this mode."""
-        object.__setattr__(self, "ann", LadderOp(kind=OperatorKind.ANN, mode=self))
-        object.__setattr__(
-            self, "create", LadderOp(kind=OperatorKind.CREATE, mode=self)
-        )
+        object.__setattr__(self, "_ann", LadderOp(kind=OperatorKind.ANN, mode=self))
+        object.__setattr__(self, "_cre", LadderOp(kind=OperatorKind.CRE, mode=self))
 
-    def with_user_label(self, tag: str) -> ModeOp:
+    @property
+    def ann(self) -> LadderOp:
+        """Public reference to an annihilation `LadderOp`."""
+        return self._ann
+
+    @property
+    def cre(self) -> LadderOp:
+        """Public reference to an creation `LadderOp`."""
+        return self._cre
+
+    @property
+    def annihilate(self) -> LadderOp:
+        """Alias for `self.ann`."""
+        return self.ann
+
+    @property
+    def create(self) -> LadderOp:
+        """Alias for `self.cre`."""
+        return self.cre
+
+    def with_user_label(self, tag: str) -> Self:
         """Return an updated ``ModeOp`` with new ``user_label``."""
         return replace(self, user_label=tag)
 
-    def with_index(self, idx: int) -> ModeOp:
+    def with_index(self, idx: int) -> Self:
         """Return an updated ``ModeOp`` with new ``index``."""
         return replace(self, display_index=idx)
 
-    def with_envelope(self, envelope: EnvelopeLike) -> ModeOp:
+    def with_envelope(self, envelope: EnvelopeProtocol) -> Self:
         """Return an updated ``ModeOp`` with new ``Envelope``."""
         return replace(self, label=self.label.with_envelope(envelope))
 
-    def with_label(self, label: ModeLabelLike) -> ModeOp:
+    def with_label(self, label: ModeLabelProtocol) -> Self:
         """Return an updated ``ModeOp`` with new ``label``."""
         return replace(self, label=label)
 
-    def with_pol(self, pol: LabelProto) -> ModeOp:
+    def with_polarization(self, polarization: PolarizationProtocol) -> Self:
         """Return an updated ``ModeOp`` with new ``Polarization``."""
-        return replace(self, label=self.label.with_pol(pol))
+        return replace(self, label=self.label.with_polarization(polarization))
 
-    def with_path(self, path: LabelProto) -> ModeOp:
+    def with_path(self, path: PathProtocol) -> Self:
         """Return an updated ``ModeOp`` with new ``Path``."""
         return replace(self, label=self.label.with_path(path))
 
     @property
-    def signature(self) -> SignatureProto:
+    def signature(self) -> Signature:
         """Return a signature."""
         return ("mode", self.label.signature)
 
@@ -120,7 +136,7 @@ class ModeOp(ModeOpProto):
         *,
         decimals: int = 12,
         ignore_global_phase: bool = False,
-    ) -> SignatureProto:
+    ) -> Signature:
         """Return an approximate signature."""
         return (
             "mode_approx",
@@ -132,7 +148,7 @@ class ModeOp(ModeOpProto):
 
 
 @dataclass(frozen=True)
-class LadderOp(LadderOpProto):
+class LadderOp:
     r"""A bosonic ladder operator bound to a specific logical mode.
 
     A ``LadderOp`` is either an annihilation operator :math:`a` or a creation
@@ -156,22 +172,31 @@ class LadderOp(LadderOpProto):
         [a_i, a_j] = [a_i^\dagger, a_j^\dagger] = 0.
 
     If the mode overlap is (numerically) zero, the operators commute.
+
+    Notes
+    -----
+    ``LadderOp`` is immutable (``frozen=True``). The ``with_*`` helpers return
+    updated copies via :func:`dataclasses.replace`.
+
+    This implements
+    :class:`~symop.core.protocols.ops.operators.LadderOp` protocol.
+
     """
 
-    kind: OperatorKindProto
-    mode: ModeOpProto
+    kind: OperatorKind
+    mode: ModeOp
 
     @property
     def is_annihilation(self) -> bool:
         r"""Return ``True`` if this operator is an annihilation operator :math:`a`."""
-        return self.kind.value == OperatorKind.ANN.value
+        return self.kind == OperatorKind.ANN
 
     @property
     def is_creation(self) -> bool:
         r"""Return ``True`` if this operator is a creation operator :math:`a^\dagger`."""
-        return self.kind.value == OperatorKind.CREATE.value
+        return self.kind == OperatorKind.CRE
 
-    def dagger(self) -> LadderOpProto:
+    def dagger(self) -> LadderOp:
         r"""Return the Hermitian adjoint of this ladder operator.
 
         .. math::
@@ -179,9 +204,9 @@ class LadderOp(LadderOpProto):
             (a_i)^\dagger = a_i^\dagger, \qquad
             (a_i^\dagger)^\dagger = a_i.
         """
-        return self.mode.ann if self.is_creation else self.mode.create
+        return self.mode.ann if self.is_creation else self.mode.cre
 
-    def commutator(self, other: LadderOpProto) -> complex:
+    def commutator(self, other: LadderOpProtocol) -> complex:
         r"""Compute the commutator with another ladder operator.
 
         The result implements the generalized CCR based on logical-mode overlap:
@@ -213,7 +238,7 @@ class LadderOp(LadderOpProto):
         return 0.0 + 0.0j
 
     @property
-    def signature(self) -> SignatureProto:
+    def signature(self) -> Signature:
         """Return a signature."""
         return ("lop", self.kind.value, self.mode.signature)
 
@@ -222,7 +247,7 @@ class LadderOp(LadderOpProto):
         *,
         decimals: int = 12,
         ignore_global_phase: bool = False,
-    ) -> SignatureProto:
+    ) -> Signature:
         """Return an approximate signature."""
         return (
             "lop",
