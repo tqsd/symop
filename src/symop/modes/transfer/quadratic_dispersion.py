@@ -21,17 +21,17 @@ spectral intensity :math:`|Z(\omega)|^2` unchanged.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 import numpy as np
 
-from symop.core.protocols.signature import SignatureProto
-from symop.modes.protocols import TransferFunctionProto
-from symop.modes.types import FloatArray, RCArray, as_float_array
+from symop.core.types.arrays import FloatArray, RCArray
+from symop.core.types.signature import Signature
+from symop.modes.types import as_float_array
 
 
 @dataclass(frozen=True)
-class QuadraticDispersion(TransferFunctionProto):
+class QuadraticDispersion:
     r"""Pure quadratic spectral phase around :math:`\omega_\mathrm{ref}`.
 
     .. math::
@@ -43,12 +43,12 @@ class QuadraticDispersion(TransferFunctionProto):
     w_ref: float = 0.0
 
     @property
-    def signature(self) -> SignatureProto:
+    def signature(self) -> Signature:
         """Stable signature for caching and comparison.
 
         Returns
         -------
-        SignatureProto
+        Signature
             Tuple uniquely identifying this transfer function.
 
         """
@@ -56,7 +56,7 @@ class QuadraticDispersion(TransferFunctionProto):
 
     def approx_signature(
         self, *, decimals: int = 12, ignore_global_phase: bool = False
-    ) -> SignatureProto:
+    ) -> Signature:
         """Approximate signature with rounded floating parameters.
 
         Parameters
@@ -68,7 +68,7 @@ class QuadraticDispersion(TransferFunctionProto):
 
         Returns
         -------
-        SignatureProto
+        Signature
             Approximate signature tuple.
 
         """
@@ -109,3 +109,9 @@ class QuadraticDispersion(TransferFunctionProto):
 
         dw = w - w_ref
         return cast(RCArray, np.exp(-1j * 0.5 * beta2 * dw * dw).astype(complex))
+
+
+if TYPE_CHECKING:
+    from symop.core.protocols.modes import TransferFunction
+
+    _check: TransferFunction = QuadraticDispersion(beta2=1.0, w_ref=3.0)

@@ -8,23 +8,24 @@ FFT-based inverse transformation and interpolation.
 It also provides numerical helpers for spectral interpolation,
 linear phase (delay) estimation, and window selection for
 frequency-domain quadrature.
+
 """
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
-from typing import cast
+from functools import cached_property
+from typing import Self, cast
 
 import numpy as np
 
-from symop.core.protocols.signature import SignatureProto
-from symop.modes.envelopes.base import BaseEnvelope
-from symop.modes.protocols import (
-    EnvelopeProto,
-    HasLatex,
-    TransferFunctionProto,
+from symop.core.protocols.modes import (
+    TransferFunction as TransferFunctionProtocol,
 )
-from symop.modes.types import FloatArray, RCArray
+from symop.core.types import FloatArray, RCArray, Signature
+from symop.modes.envelopes.base import BaseEnvelope
+from symop.modes.protocols.envelope import TimeFrequencyEnvelope
 
 
 def _interp_complex_1d(x: FloatArray, xp: FloatArray, fp: RCArray) -> RCArray:
@@ -67,10 +68,13 @@ def _fit_linear_phase_delay(
 
     .. math::
 
-        Z(\omega_\mathrm{rel}) \approx A(\omega_\mathrm{rel})\,e^{-i\omega_\mathrm{rel} t_0},
+        Z(\omega_\mathrm{rel}) \approx A(\omega_\mathrm{rel})\,
+        e^{-i\omega_\mathrm{rel} t_0},
 
-    then the unwrapped phase satisfies :math:`\phi(\omega_\mathrm{rel}) \approx -t_0\,\omega_\mathrm{rel} + b`.
-    This function estimates :math:`t_0` from a least-squares fit of the phase slope.
+    then the unwrapped phase satisfies
+    :math:`\phi(\omega_\mathrm{rel}) \approx -t_0\,\omega_\mathrm{rel} + b`.
+    This function estimates :math:`t_0` from a least-squares fit of the phase
+    slope.
 
     Parameters
     ----------
@@ -150,7 +154,7 @@ def _remove_linear_phase(w_rel: np.ndarray, Z: np.ndarray, t0: float) -> np.ndar
 
 
 def _estimate_spectral_window(
-    env: EnvelopeProto,
+    env: TimeFrequencyEnvelope,
     *,
     w0_fallback: float,
     sigma_w_fallback: float,
@@ -191,7 +195,7 @@ def _estimate_spectral_window(
 
 
 @dataclass(frozen=True)
-class FilteredEnvelope(BaseEnvelope, HasLatex):
+class FilteredEnvelope(BaseEnvelope):
     r"""Envelope defined by spectral multiplication.
 
     Given an input spectrum :math:`Z_\mathrm{in}(\omega)` and a transfer function
@@ -213,17 +217,27 @@ class FilteredEnvelope(BaseEnvelope, HasLatex):
     - The absolute Fourier convention is not critical as long as internal
       operations (overlap, plotting) are consistent. If you later care about
       absolute scaling, unify the convention across all envelopes.
+    - Instances are treated as **mode descriptors** and are numerically normalized:
+    :meth:`freq_eval` applies a cached real scale factor chosen so that
+
+    .. math::
+
+        \frac{1}{2\pi}\int |Z(\omega)|^2\,d\omega \approx 1
+
+    where the integral is approximated by trapezoidal quadrature on an
+    automatically chosen finite frequency window. The normalization is therefore
+    subject to window truncation and discretization error.
 
     """
 
-    base: EnvelopeProto
-    transfer: TransferFunctionProto
+    base: TimeFrequencyEnvelope
+    transfer: TransferFunctionProtocol
 
     n_fft: int = 2**15
     w_span_sigma: float = 12.0
 
     @property
-    def signature(self) -> SignatureProto:
+    def signature(self) -> Signature:
         """Stable signature for caching/comparison."""
         return ("filtered", self.base.signature, self.transfer.signature)
 
@@ -232,7 +246,7 @@ class FilteredEnvelope(BaseEnvelope, HasLatex):
         *,
         decimals: int = 12,
         ignore_global_phase: bool = False,
-    ) -> SignatureProto:
+    ) -> Signature:
         """Approximate signature with rounded base-envelope parameters.
 
         Parameters
@@ -244,7 +258,7 @@ class FilteredEnvelope(BaseEnvelope, HasLatex):
 
         Returns
         -------
-        SignatureProto
+        Signature
             Approximate signature tuple.
 
         """
@@ -264,98 +278,159 @@ class FilteredEnvelope(BaseEnvelope, HasLatex):
             float(self.w_span_sigma),
         )
 
-    def center_and_scale(self) -> tuple[float, float]:
-        r"""Estimate a time-domain center and scale from the filtered spectrum.
+    @cached_property
+    def _norm2(self) -> float:
+        r"""Return the squared mode norm of the *unnormalized* filtered spectrum.
 
-        This computes a temporary time-domain signal via an FFT-based inverse transform,
-        then estimates the mean and standard deviation of :math:`|\zeta(t)|^2`.
+        We treat envelopes as **mode descriptors**, so they are expected to be
+        normalized such that
 
-        Returns
-        -------
-        center:
-            Center time.
-        scale:
-            Characteristic scale.
+        .. math::
+
+            \langle \zeta, \zeta \rangle = 1.
+
+        Using the package Fourier convention, the overlap can be evaluated in the
+        frequency domain as
+
+        .. math::
+
+            \langle \zeta, \zeta \rangle
+            = \frac{1}{2\pi}\int_{-\infty}^{\infty} |Z(\omega)|^2\,d\omega.
+
+        This method computes that quantity for the *raw* filtered spectrum
+
+        .. math::
+
+            Z_{\mathrm{raw}}(\omega) = H(\omega)\,Z_{\mathrm{in}}(\omega),
+
+        on a finite window and returns a positive finite scalar.
+
+        Notes
+        -----
+        - The window is chosen from spectral hints of the base envelope.
+        - The returned value is cached, so the normalization cost is paid once.
 
         """
-        w0 = float(getattr(self.base, "omega0", 0.0))
-        sigma_w = float(getattr(self.base, "sigma", 1.0))
-        sigma_w = max(sigma_w, 1e-12)
-
+        w0_self, sigma_w_self = _estimate_spectral_window(
+            self.base,
+            w0_fallback=float(getattr(self.base, "omega0", 0)),
+            sigma_w_fallback=1.0,
+        )
+        sigma_w = max(float(sigma_w_self), 1e-12)
         W = float(self.w_span_sigma) * sigma_w
         n = int(self.n_fft)
-        if n < 64 or not np.isfinite(W) or W <= 0.0:
-            return self.base.center_and_scale()
+        if n < 64:
+            raise ValueError(f"n_fft too small: {n}")
 
-        dw = 2.0 * W / float(n)
-        k = np.arange(n, dtype=float) - (n // 2)
-        w = w0 + k * dw
+        w = np.linspace(float(w0_self) - W, float(w0_self) + W, n, dtype=float)
+        z = np.asarray(self._freq_eval_raw(w), dtype=complex)
+        val = np.trapezoid(np.conjugate(z) * z, w) / (2.0 * np.pi)
+        out = float(np.real(val))
+        if not (out > 0.0) or not math.isfinite(out):
+            raise ValueError(f"FilteredEnvelope norm2 is invalid: {out!r}")
+        return out
 
-        Z = np.asarray(self.freq_eval(w), dtype=complex)
-        if not np.isfinite(Z).all():
-            return self.base.center_and_scale()
+    @cached_property
+    def _norm_scale(self) -> float:
+        r"""Return the scalar that normalizes the filtered envelope.
 
-        t0 = _fit_linear_phase_delay(k * dw, Z, frac=0.2)
-        Z = _remove_linear_phase(k * dw, Z, t0)
+        If
 
-        z = np.fft.fftshift(np.fft.ifft(np.fft.ifftshift(Z))) * (n * dw) / (2.0 * np.pi)
+        .. math::
 
-        dt = 2.0 * np.pi / (float(n) * dw)
-        t_grid = k * dt
+            N^2 = \frac{1}{2\pi}\int |Z_{\mathrm{raw}}(\omega)|^2\,d\omega,
 
-        p = np.abs(z) ** 2
-        s = float(np.sum(p))
-        if not (s > 0.0) or not np.isfinite(s):
-            return self.base.center_and_scale()
+        then the normalized spectrum is
 
-        c = float(np.sum(t_grid * p) / s)
-        v = float(np.sum(((t_grid - c) ** 2) * p) / s)
-        scale = float(np.sqrt(max(v, 1e-30)))
-        return c, scale
+        .. math::
 
-    def freq_eval(self, w: FloatArray) -> RCArray:
-        r"""Evaluate the filtered spectrum :math:`Z_\mathrm{out}(\omega)`.
+            Z(\omega) = \frac{1}{N}\,Z_{\mathrm{raw}}(\omega).
+
+        This method returns :math:`1/N`.
+
+        """
+        return 1.0 / math.sqrt(self._norm2)
+
+    def _freq_eval_raw(self, w: FloatArray) -> RCArray:
+        r"""Evaluate the *unnormalized* filtered spectrum.
+
+        Given a base spectrum :math:`Z_{\mathrm{in}}(\omega)` and transfer
+        :math:`H(\omega)`, this returns
+
+        .. math::
+
+            Z_{\mathrm{raw}}(\omega) = H(\omega)\,Z_{\mathrm{in}}(\omega).
+
+        This method intentionally does **not** apply the mode-normalization factor.
+        Use :meth:`freq_eval` for the normalized spectrum.
 
         Parameters
         ----------
         w:
-            Frequency grid.
+            Angular-frequency grid.
 
         Returns
         -------
         RCArray
-            Complex samples of :math:`Z_\mathrm{out}(\omega)`.
+            Complex samples of :math:`Z_{\mathrm{raw}}(\omega)`.
 
         """
         w = np.asarray(w, dtype=float)
-
         Hw = np.asarray(self.transfer(w), dtype=complex)
-        if not np.isfinite(Hw).all():
-            bad = np.argwhere(~np.isfinite(Hw))
-            i = int(bad[0, 0])
-            raise ValueError(f"Non-finite transfer(w) at w={w[i]}: {Hw[i]!r}")
-
         Zw = np.asarray(self.base.freq_eval(w), dtype=complex)
-        if not np.isfinite(Zw).all():
-            bad = np.argwhere(~np.isfinite(Zw))
-            i = int(bad[0, 0])
-            raise ValueError(f"Non-finite base.freq_eval(w) at w={w[i]}: {Zw[i]!r}")
-
         out = Hw * Zw
-        if not np.isfinite(out).all():
-            bad = np.argwhere(~np.isfinite(out))
-            i = int(bad[0, 0])
-            raise ValueError(
-                f"Non-finite product at w={w[i]}: H={Hw[i]!r}, base={Zw[i]!r}"
-            )
         return cast(RCArray, out)
+
+    def freq_eval(self, w: FloatArray) -> RCArray:
+        r"""Evaluate the normalized filtered spectrum :math:`Z(\omega)`.
+
+        The filtered (raw) spectrum is
+
+        .. math::
+
+            Z_{\mathrm{raw}}(\omega) = H(\omega)\,Z_{\mathrm{in}}(\omega).
+
+        We then normalize to enforce the mode condition
+
+        .. math::
+
+            \frac{1}{2\pi}\int_{-\infty}^{\infty} |Z(\omega)|^2\,d\omega = 1,
+
+        by applying a global real scale factor
+
+        .. math::
+
+            Z(\omega) = \alpha\,Z_{\mathrm{raw}}(\omega), \qquad
+            \alpha = \frac{1}{\sqrt{\frac{1}{2\pi}\int |Z_{\mathrm{raw}}(\omega)|^2\,d\omega}}.
+
+        Parameters
+        ----------
+        w:
+            Angular-frequency grid.
+
+        Returns
+        -------
+        RCArray
+            Complex samples of the normalized spectrum.
+
+        """
+        return cast(RCArray, self._freq_eval_raw(w) * complex(self._norm_scale))
 
     def time_eval(self, t: FloatArray) -> RCArray:
         r"""Evaluate the filtered time-domain field :math:`\zeta_\mathrm{out}(t)`.
 
+        The output spectrum is constructed as
+
+        .. math::
+
+            Z(\omega) = \alpha\,H(\omega)\,Z_{\mathrm{in}}(\omega),
+
+        where :math:`\alpha` is a global real normalization chosen such that
+        :math:`\langle \zeta, \zeta \rangle = 1`.
+
         The method:
         1. Builds a centered frequency grid around :math:`\omega_0`.
-        2. Samples :math:`Z_\mathrm{out}(\omega)` on that grid.
+        2. Samples :math:`Z(\omega)` on that grid.
         3. Applies an FFT-based inverse transform to obtain a centered time grid.
         4. Re-applies the carrier :math:`e^{i\omega_0 t}` and interpolates onto ``t``.
 
@@ -395,7 +470,7 @@ class FilteredEnvelope(BaseEnvelope, HasLatex):
         w_rel = k * dw
         w = w0 + w_rel
 
-        Z = np.asarray(self.freq_eval(w), dtype=complex)
+        Z = self._freq_eval_raw(w) * self._norm_scale
 
         t0 = _fit_linear_phase_delay(w_rel, Z, frac=0.2)
         if abs(t0) > 0.0:
@@ -418,7 +493,65 @@ class FilteredEnvelope(BaseEnvelope, HasLatex):
 
         return _interp_complex_1d(t, t_grid, z)
 
-    def delayed(self, dt: float) -> FilteredEnvelope:
+    def center_and_scale(self) -> tuple[float, float]:
+        r"""Estimate a time-domain center and scale from the filtered spectrum.
+
+        The estimate is invariant under global real rescaling of the spectrum, so
+        it uses the raw spectrum :math:`Z_{\mathrm{raw}}(\omega)`.
+
+        This computes a temporary time-domain signal via an FFT-based inverse transform,
+        then estimates the mean and standard deviation of :math:`|\zeta(t)|^2`.
+
+        Returns
+        -------
+        center:
+            Center time.
+        scale:
+            Characteristic scale.
+
+        """
+        w0 = float(getattr(self.base, "omega0", 0.0))
+        _, sigma_w = _estimate_spectral_window(
+            self.base,
+            w0_fallback=w0,
+            sigma_w_fallback=1.0,
+        )
+        sigma_w = max(float(sigma_w), 1e-12)
+
+        W = float(self.w_span_sigma) * sigma_w
+        n = int(self.n_fft)
+        if n < 64 or not np.isfinite(W) or W <= 0.0:
+            return self.base.center_and_scale()
+
+        dw = 2.0 * W / float(n)
+        k = np.arange(n, dtype=float) - (n // 2)
+        w_rel = k * dw
+        w = w0 + w_rel
+
+        # Use RAW spectrum here (normalization is a global real scalar anyway).
+        Z = np.asarray(self._freq_eval_raw(w), dtype=complex)
+        if not np.isfinite(Z).all():
+            return self.base.center_and_scale()
+
+        t0 = _fit_linear_phase_delay(w_rel, Z, frac=0.2)
+        Z = _remove_linear_phase(w_rel, Z, t0)
+
+        z = np.fft.fftshift(np.fft.ifft(np.fft.ifftshift(Z))) * (n * dw) / (2.0 * np.pi)
+
+        dt = 2.0 * np.pi / (float(n) * dw)
+        t_grid = k * dt
+
+        p = np.abs(z) ** 2
+        s = float(np.sum(p))
+        if not (s > 0.0) or not np.isfinite(s):
+            return self.base.center_and_scale()
+
+        c = float(np.sum(t_grid * p) / s)
+        v = float(np.sum(((t_grid - c) ** 2) * p) / s)
+        scale = float(np.sqrt(max(v, 1e-30)))
+        return c, scale
+
+    def delayed(self, dt: float) -> Self:
         """Return a delayed copy of this filtered envelope.
 
         Parameters
@@ -432,17 +565,14 @@ class FilteredEnvelope(BaseEnvelope, HasLatex):
             Delayed filtered envelope.
 
         """
-        base_delayed = (
-            self.base.delayed(dt) if hasattr(self.base, "delayed") else self.base
-        )
-        return FilteredEnvelope(
-            base=base_delayed,
+        return type(self)(
+            base=self.base.delayed(dt),
             transfer=self.transfer,
             n_fft=self.n_fft,
             w_span_sigma=self.w_span_sigma,
         )
 
-    def phased(self, dphi: float) -> FilteredEnvelope:
+    def phased(self, dphi: float) -> Self:
         """Return a phased copy of this filtered envelope.
 
         Parameters
@@ -456,22 +586,14 @@ class FilteredEnvelope(BaseEnvelope, HasLatex):
             Phased filtered envelope.
 
         """
-        base_phased = (
-            self.base.phased(dphi) if hasattr(self.base, "phased") else self.base
-        )
-        return FilteredEnvelope(
-            base=base_phased,
+        return type(self)(
+            base=self.base.phased(dphi),
             transfer=self.transfer,
             n_fft=self.n_fft,
             w_span_sigma=self.w_span_sigma,
         )
 
-    @property
-    def latex(self) -> str | None:
-        """LaTeX (mathtext) representation of the defining spectral relation."""
-        return r"Z_{\mathrm{out}}(\omega)=H(\omega)\,Z_{\mathrm{in}}(\omega)"
-
-    def overlap_with_generic(self, other: EnvelopeProto) -> complex:
+    def overlap_with_generic(self, other: TimeFrequencyEnvelope) -> complex:
         r"""Compute overlap using a frequency-domain quadrature.
 
         This approximates
@@ -497,7 +619,7 @@ class FilteredEnvelope(BaseEnvelope, HasLatex):
         """
         w0_self, sigma_w_self = _estimate_spectral_window(
             self.base,
-            w0_fallback=0.0,
+            w0_fallback=float(getattr(self.base, "omega0", 0.0)),
             sigma_w_fallback=1.0,
         )
         w0_other, sigma_w_other = _estimate_spectral_window(
@@ -534,3 +656,18 @@ class FilteredEnvelope(BaseEnvelope, HasLatex):
 
         ov = np.trapezoid(np.conjugate(z1) * z2, w)
         return complex(ov / (2.0 * np.pi))
+
+    @property
+    def eta(self) -> float:
+        r"""Power transmissivity of the raw filtered mode.
+
+        Defined as the squared norm of the unnormalized filtered spectrum:
+
+        .. math::
+
+            \eta = \frac{1}{2\pi}\int |H(\omega)|^2 |Z_{\mathrm{in}}(\omega)|^2 d\omega.
+
+        This is computed numerically on the same finite window used for
+        normalization.
+        """
+        return float(self._norm2)

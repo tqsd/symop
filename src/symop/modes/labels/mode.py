@@ -8,18 +8,22 @@ factorizes into the product of overlaps of its constituent labels.
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+from typing import TYPE_CHECKING, Self
 
-from symop.core.protocols.signature import SignatureProto
-from symop.modes.protocols.envelope import EnvelopeProto
-from symop.modes.protocols.labels import (
-    ModeLabelProto,
-    PathLabelProto,
-    PolarizationLabelProto,
+from symop.core.protocols.modes.labels import (
+    Envelope as EnvelopeProtocol,
 )
+from symop.core.protocols.modes.labels import (
+    Path as PathProtocol,
+)
+from symop.core.protocols.modes.labels import (
+    Polarization as PolarizationProtocol,
+)
+from symop.core.types.signature import Signature
 
 
 @dataclass(frozen=True)
-class ModeLabel(ModeLabelProto):
+class ModeLabel:
     r"""Mode label composed of a path label and a polarization label.
 
     The overlap factorizes into the product of the component overlaps:
@@ -39,16 +43,18 @@ class ModeLabel(ModeLabelProto):
     ----------
     path:
         Path label.
-    pol:
+    polarization:
         Polarization label.
+    envelope:
+        Envelope label.
 
     """
 
-    path: PathLabelProto
-    pol: PolarizationLabelProto
-    envelope: EnvelopeProto
+    path: PathProtocol
+    polarization: PolarizationProtocol
+    envelope: EnvelopeProtocol
 
-    def with_envelope(self, envelope: EnvelopeProto) -> ModeLabel:
+    def with_envelope(self, envelope: EnvelopeProtocol) -> Self:
         r"""Return a copy with replaced envelope.
 
         Parameters
@@ -64,7 +70,7 @@ class ModeLabel(ModeLabelProto):
         """
         return replace(self, envelope=envelope)
 
-    def with_path(self, path: PathLabelProto) -> ModeLabel:
+    def with_path(self, path: PathProtocol) -> Self:
         r"""Return a copy with a replaced path label.
 
         Parameters
@@ -80,12 +86,12 @@ class ModeLabel(ModeLabelProto):
         """
         return replace(self, path=path)
 
-    def with_pol(self, pol: PolarizationLabelProto) -> ModeLabel:
+    def with_polarization(self, polarization: PolarizationProtocol) -> Self:
         r"""Return a copy with a replaced polarization label.
 
         Parameters
         ----------
-        pol:
+        polarization:
             New polarization label.
 
         Returns
@@ -94,7 +100,7 @@ class ModeLabel(ModeLabelProto):
             Updated mode label.
 
         """
-        return replace(self, pol=pol)
+        return replace(self, polarization=polarization)
 
     def overlap(self, other: ModeLabel) -> complex:
         r"""Compute the overlap with another mode label.
@@ -107,35 +113,35 @@ class ModeLabel(ModeLabelProto):
         Returns
         -------
         complex
-            Product of path and polarization overlaps.
+            Product of path, polarization, and envelope overlaps.
 
         """
         return (
             self.path.overlap(other.path)
-            * self.pol.overlap(other.pol)
+            * self.polarization.overlap(other.polarization)
             * self.envelope.overlap(other.envelope)
         )
 
     @property
-    def signature(self) -> SignatureProto:
+    def signature(self) -> Signature:
         r"""Stable signature for caching/comparison.
 
         Returns
         -------
-        SignatureProto
+        Signature
             Tuple identifying the mode label and its components.
 
         """
         return (
             "mode_label",
             self.path.signature,
-            self.pol.signature,
+            self.polarization.signature,
             self.envelope.signature,
         )
 
     def approx_signature(
         self, *, decimals: int = 12, ignore_global_phase: bool = False
-    ) -> SignatureProto:
+    ) -> Signature:
         r"""Approximate signature.
 
         Parameters are forwarded to component :meth:`approx_signature` methods.
@@ -150,7 +156,7 @@ class ModeLabel(ModeLabelProto):
 
         Returns
         -------
-        SignatureProto
+        Signature
             Approximate signature tuple.
 
         """
@@ -159,10 +165,22 @@ class ModeLabel(ModeLabelProto):
             self.path.approx_signature(
                 decimals=decimals, ignore_global_phase=ignore_global_phase
             ),
-            self.pol.approx_signature(
+            self.polarization.approx_signature(
                 decimals=decimals, ignore_global_phase=ignore_global_phase
             ),
             self.envelope.approx_signature(
                 decimals=decimals, ignore_global_phase=ignore_global_phase
             ),
         )
+
+
+if TYPE_CHECKING:
+    from symop.core.protocols.modes import ModeLabel as ModeLabelProtocol
+    from symop.modes.envelopes import GaussianEnvelope
+    from symop.modes.labels.path import Path
+    from symop.modes.labels.polarization import Polarization
+
+    _env = GaussianEnvelope(omega0=10, sigma=10, tau=0)
+    _mode_label: ModeLabelProtocol = ModeLabel(
+        envelope=_env, polarization=Polarization.D(), path=Path("A")
+    )

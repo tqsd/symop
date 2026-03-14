@@ -27,16 +27,21 @@ This implementation models a purely real amplitude response
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 import numpy as np
 
-from symop.core.protocols.signature import SignatureProto
-from symop.modes.protocols import TransferFunctionProto
-from symop.modes.types import FloatArray, RCArray
+from symop.core.types.arrays import FloatArray, RCArray
+from symop.core.types.signature import Signature
+from symop.modes.protocols.envelope import SupportsGaussianClosedOverlap
+from symop.modes.transfer.gaussian_formalism import (
+    GaussianAtom,
+    GaussianTransferExpansion,
+)
 
 
 @dataclass(frozen=True)
-class GaussianLowpass(TransferFunctionProto):
+class GaussianLowpass:
     r"""Gaussian spectral amplitude transfer function.
 
     This implements a Gaussian low-pass response centered at :math:`\omega_0`
@@ -58,12 +63,12 @@ class GaussianLowpass(TransferFunctionProto):
     sigma_w: float
 
     @property
-    def signature(self) -> SignatureProto:
+    def signature(self) -> Signature:
         """Stable signature for caching/comparison.
 
         Returns
         -------
-        SignatureProto
+        Signature
             Tuple identifying the transfer function and its parameters.
 
         """
@@ -74,7 +79,7 @@ class GaussianLowpass(TransferFunctionProto):
         *,
         decimals: int = 12,
         ignore_global_phase: bool = False,
-    ) -> SignatureProto:
+    ) -> Signature:
         r"""Approximate signature with rounded floating parameters.
 
         Parameters
@@ -86,13 +91,13 @@ class GaussianLowpass(TransferFunctionProto):
 
         Returns
         -------
-        SignatureProto
+        Signature
             Rounded/approximate signature tuple.
 
         """
         r = round
         return (
-            "gauss_approx",
+            "gauss_lowpass_approx",
             r(float(self.w0), decimals),
             r(float(self.sigma_w), decimals),
         )
@@ -119,7 +124,98 @@ class GaussianLowpass(TransferFunctionProto):
         w = np.asarray(w, dtype=float)
         s = float(self.sigma_w)
         if not (s > 0.0) or not np.isfinite(s):
-            raise ValueError(f"sigma_w must be positive finite, got {self.sigma_w!r}")
+            raise ValueError(f"sigma_w must be positive finite, , got {self.sigma_w!r}")
 
         x = (w - float(self.w0)) / s
         return np.exp(-0.5 * x * x).astype(complex)
+
+    def _as_expansion(self) -> GaussianTransferExpansion:
+        r"""Return a Gaussian transfer expansion representation.
+
+        This expresses the transfer function as a sum of Gaussian atoms
+        compatible with the closed Gaussian formalism used by
+        :class:`GaussianTransferExpansion`.
+
+        The current implementation contains a single Gaussian atom with
+        coefficient ``1`` centered at :math:`\omega_0` with width
+        :math:`\sigma_\omega`, which exactly reproduces the transfer
+        function
+
+        .. math::
+
+            H(\omega) =
+            \exp\left[
+                -\frac{1}{2}
+                \left(
+                    \frac{\omega-\omega_0}{\sigma_\omega}
+                \right)^2
+            \right].
+
+        Returns
+        -------
+        GaussianTransferExpansion
+            Expansion object that can analytically act on Gaussian
+            envelopes in the closed-form formalism.
+
+        Notes
+        -----
+        This representation allows analytic application of the transfer
+        function to Gaussian envelopes without numerical sampling.
+
+        """
+        return GaussianTransferExpansion(
+            c0=0.0 + 0.0j,
+            atoms=(
+                GaussianAtom(
+                    coeff=1.0 + 0.0j, w0=float(self.w0), sigma_w=(self.sigma_w)
+                ),
+            ),
+        )
+
+    def apply_to_gaussian(
+        self, env: SupportsGaussianClosedOverlap
+    ) -> tuple[SupportsGaussianClosedOverlap, float]:
+        r"""Apply the transfer function to a Gaussian envelope.
+
+        The input envelope is multiplied by the spectral transfer
+        function
+
+        .. math::
+
+            \zeta_{out}(\omega) = H(\omega) \zeta_{in}(\omega),
+
+        and the result is projected back into the closed Gaussian
+        envelope family.
+
+        Parameters
+        ----------
+        env:
+            Input Gaussian envelope supporting the closed-form overlap
+            formalism.
+
+        Returns
+        -------
+        tuple[SupportsGaussianClosedOverlap, float]
+            A pair ``(env_out, eta)`` where
+
+            - ``env_out`` is the normalized output envelope
+            - ``eta`` is the transmission efficiency
+
+            .. math::
+
+                \eta = \langle \zeta_{out} | \zeta_{out} \rangle.
+
+        Notes
+        -----
+        The implementation converts the transfer function to a
+        :class:`GaussianTransferExpansion` and delegates the analytic
+        envelope transformation to that representation.
+
+        """
+        return self._as_expansion().apply_to_gaussian(env)
+
+
+if TYPE_CHECKING:
+    from symop.core.protocols.modes import TransferFunction
+
+    _check_gaussian_bandpass: TransferFunction = GaussianLowpass(w0=1, sigma_w=2)

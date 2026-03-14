@@ -21,22 +21,20 @@ It models a hard cutoff in the frequency domain (an idealized filter).
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 import numpy as np
 
-from symop.core.protocols.signature import SignatureProto
-from symop.modes.protocols import TransferFunctionProto
+from symop.core.types.arrays import FloatArray, RCArray
+from symop.core.types.signature import Signature
 from symop.modes.types import (
-    FloatArray,
-    RCArray,
     as_float_array,
     require_pos_finite,
 )
 
 
 @dataclass(frozen=True)
-class RectBandpass(TransferFunctionProto):
+class RectBandpass:
     r"""Ideal rectangular band-pass amplitude transfer.
 
     .. math::
@@ -53,12 +51,12 @@ class RectBandpass(TransferFunctionProto):
     width: float  # full width
 
     @property
-    def signature(self) -> SignatureProto:
+    def signature(self) -> Signature:
         """Stable signature for caching and comparison.
 
         Returns
         -------
-        SignatureProto
+        Signature
             Tuple uniquely identifying this transfer function.
 
         """
@@ -66,7 +64,7 @@ class RectBandpass(TransferFunctionProto):
 
     def approx_signature(
         self, *, decimals: int = 12, ignore_global_phase: bool = False
-    ) -> SignatureProto:
+    ) -> Signature:
         """Approximate signature with rounded floating parameters.
 
         Parameters
@@ -78,7 +76,7 @@ class RectBandpass(TransferFunctionProto):
 
         Returns
         -------
-        SignatureProto
+        Signature
             Approximate signature tuple.
 
         """
@@ -113,3 +111,9 @@ class RectBandpass(TransferFunctionProto):
         half = 0.5 * width
         mask = np.abs(w - float(self.w0)) <= half
         return cast(RCArray, mask.astype(complex))
+
+
+if TYPE_CHECKING:
+    from symop.core.protocols.modes import TransferFunction
+
+    _check: TransferFunction = RectBandpass(w0=1, width=10)

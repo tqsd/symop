@@ -23,17 +23,17 @@ which corresponds to a shift in the time domain.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 import numpy as np
 
-from symop.core.protocols.signature import SignatureProto
-from symop.modes.protocols import TransferFunctionProto
-from symop.modes.types import FloatArray, RCArray, as_float_array
+from symop.core.types.arrays import FloatArray, RCArray
+from symop.core.types.signature import Signature
+from symop.modes.types import as_float_array
 
 
 @dataclass(frozen=True)
-class TimeDelay(TransferFunctionProto):
+class TimeDelay:
     r"""Time delay in the frequency domain.
 
     .. math::
@@ -44,12 +44,12 @@ class TimeDelay(TransferFunctionProto):
     tau: float
 
     @property
-    def signature(self) -> SignatureProto:
+    def signature(self) -> Signature:
         """Stable signature for caching and comparison.
 
         Returns
         -------
-        SignatureProto
+        Signature
             Tuple uniquely identifying this transfer function.
 
         """
@@ -57,7 +57,7 @@ class TimeDelay(TransferFunctionProto):
 
     def approx_signature(
         self, *, decimals: int = 12, ignore_global_phase: bool = False
-    ) -> SignatureProto:
+    ) -> Signature:
         """Approximate signature with rounded floating parameters.
 
         Parameters
@@ -69,7 +69,7 @@ class TimeDelay(TransferFunctionProto):
 
         Returns
         -------
-        SignatureProto
+        Signature
             Approximate signature tuple.
 
         """
@@ -102,3 +102,9 @@ class TimeDelay(TransferFunctionProto):
             raise ValueError(f"tau must be finite, got {self.tau!r}")
 
         return cast(RCArray, np.exp(-1j * w * tau).astype(complex))
+
+
+if TYPE_CHECKING:
+    from symop.core.protocols.modes import TransferFunction
+
+    _check: TransferFunction = TimeDelay(tau=1)

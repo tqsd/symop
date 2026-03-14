@@ -3,27 +3,15 @@ from symop.modes.protocols.descriptor import (
     ModeDescriptorProto,
 )
 from symop.modes.protocols.envelope import (
-    EnvelopeProto,
-    HasLatex,
     HasSpectralHints,
     SupportsOverlapWithGeneric,
 )
-from symop.modes.protocols.labels import (
-    ModeLabelProto,
-    PathLabelProto,
-    PolarizationLabelProto,
-)
-from symop.modes.protocols.transfer import TransferFunctionProto
+from symop.modes.protocols.transfer import SupportsGaussianClosedTransfer
 
 __all__ = [
-    "EnvelopeProto",
     "SupportsOverlapWithGeneric",
-    "HasLatex",
     "HasSpectralHints",
-    "TransferFunctionProto",
-    "PolarizationLabelProto",
-    "PathLabelProto",
-    "ModeLabelProto",
     "ModeDescriptorProto",
     "HasTransferChain",
+    "SupportsGaussianClosedTransfer",
 ]

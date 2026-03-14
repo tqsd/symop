@@ -18,29 +18,31 @@ that act multiplicatively in the frequency domain.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from symop.core.protocols.signature import SignatureProto
-from symop.modes.protocols import TransferFunctionProto
-from symop.modes.types import FloatArray, RCArray, as_float_array
+from symop.core.protocols.modes.transfer import TransferFunction
+from symop.core.types.arrays import FloatArray, RCArray
+from symop.core.types.signature import Signature
+from symop.modes.types import as_float_array
 
 
 @dataclass(frozen=True)
-class Product(TransferFunctionProto):
+class Product:
     r"""Pointwise product of two transfer functions.
 
     :math:`H(\omega) = H_a(\omega)\,H_b(\omega)`.
     """
 
-    a: TransferFunctionProto
-    b: TransferFunctionProto
+    a: TransferFunction
+    b: TransferFunction
 
     @property
-    def signature(self) -> SignatureProto:
+    def signature(self) -> Signature:
         """Stable signature for caching and comparison.
 
         Returns
         -------
-        SignatureProto
+        Signature
             Tuple uniquely identifying this transfer function.
 
         """
@@ -51,7 +53,7 @@ class Product(TransferFunctionProto):
         *,
         decimals: int = 12,
         ignore_global_phase: bool = False,
-    ) -> SignatureProto:
+    ) -> Signature:
         """Approximate signature with rounded floating parameters.
 
         Parameters
@@ -64,7 +66,7 @@ class Product(TransferFunctionProto):
 
         Returns
         -------
-        SignatureProto
+        Signature
             Approximate signature tuple.
 
         """
@@ -96,3 +98,11 @@ class Product(TransferFunctionProto):
         """
         w = as_float_array(w)
         return (self.a(w) * self.b(w)).astype(complex)
+
+
+if TYPE_CHECKING:
+    from symop.modes.transfer import GaussianBandpass
+
+    g1 = GaussianBandpass(w0=1, sigma_w=0.5)
+    g2 = GaussianBandpass(w0=2, sigma_w=0.5)
+    _check: TransferFunction = Product(g1, g1)

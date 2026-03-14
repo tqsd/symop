@@ -10,7 +10,7 @@ mode construction and caching.
 """
 
 from .mode import ModeLabel
-from .path import PathLabel
-from .polarization import PolarizationLabel
+from .path import Path
+from .polarization import Polarization
 
-__all__ = ["ModeLabel", "PathLabel", "PolarizationLabel"]
+__all__ = ["ModeLabel", "Path", "Polarization"]

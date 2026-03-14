@@ -18,17 +18,17 @@ rotates the complex field globally.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 import numpy as np
 
-from symop.core.protocols.signature import SignatureProto
-from symop.modes.protocols import TransferFunctionProto
-from symop.modes.types import FloatArray, RCArray, as_float_array
+from symop.core.types.arrays import RCArray
+from symop.core.types.signature import Signature
+from symop.modes.types import FloatArray, as_float_array
 
 
 @dataclass(frozen=True)
-class ConstantPhase(TransferFunctionProto):
+class ConstantPhase:
     r"""Global phase factor.
 
     .. math::
@@ -39,12 +39,12 @@ class ConstantPhase(TransferFunctionProto):
     phi0: float
 
     @property
-    def signature(self) -> SignatureProto:
+    def signature(self) -> Signature:
         """Stable signature for caching and comparison.
 
         Returns
         -------
-        SignatureProto
+        Signature
             Tuple uniquely identifying this transfer function.
 
         """
@@ -55,7 +55,7 @@ class ConstantPhase(TransferFunctionProto):
         *,
         decimals: int = 12,
         ignore_global_phase: bool = False,
-    ) -> SignatureProto:
+    ) -> Signature:
         """Approximate signature with rounded floating parameters.
 
         Parameters
@@ -67,7 +67,7 @@ class ConstantPhase(TransferFunctionProto):
 
         Returns
         -------
-        SignatureProto
+        Signature
             Approximate signature tuple.
 
         """
@@ -92,7 +92,7 @@ class ConstantPhase(TransferFunctionProto):
         Raises
         ------
         ValueError
-            If :math:`\sigma_\omega` is not positive and finite.
+            If :math:`\phi_0` is not positive and finite.
 
         """
         w = as_float_array(w)
@@ -103,3 +103,9 @@ class ConstantPhase(TransferFunctionProto):
             RCArray,
             (np.exp(1j * phi0) * np.ones_like(w, dtype=complex)).astype(complex),
         )
+
+
+if TYPE_CHECKING:
+    from symop.core.protocols.modes import TransferFunction
+
+    _check: TransferFunction = ConstantPhase(phi0=1)

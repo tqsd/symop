@@ -9,11 +9,13 @@ and validating floating-point parameters.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
+from collections.abc import Sequence
 from typing import TYPE_CHECKING, Any, Protocol, TypeAlias, cast
 
 import numpy as np
 from numpy.typing import NDArray
+
+from symop.core.types.arrays import FloatArray
 
 if TYPE_CHECKING:
     from matplotlib.axes import Axes as MplAxes
@@ -24,12 +26,6 @@ else:
 
 FigureBase: TypeAlias = "MplFigureBase"
 Axes: TypeAlias = "MplAxes"
-
-FloatArray = NDArray[np.floating[Any]]
-ComplexArray = NDArray[np.complexfloating[Any, Any]]
-RCArray = FloatArray | ComplexArray
-
-TimeFunc = Callable[[FloatArray], RCArray]
 
 
 class HasGetFigure(Protocol):

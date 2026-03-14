@@ -26,21 +26,27 @@ sharp physical cutoff.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 import numpy as np
 
-from symop.core.protocols.signature import SignatureProto
-from symop.modes.protocols import TransferFunctionProto
+from symop.core.types.arrays import FloatArray, RCArray
+from symop.core.types.signature import Signature
+from symop.modes.protocols.envelope import (
+    SupportsGaussianClosedOverlap,
+)
+from symop.modes.transfer.gaussian_formalism import (
+    GaussianAtom,
+    GaussianTransferExpansion,
+)
 from symop.modes.types import (
-    FloatArray,
-    RCArray,
     as_float_array,
     require_pos_finite,
 )
 
 
 @dataclass(frozen=True)
-class GaussianHighpass(TransferFunctionProto):
+class GaussianHighpass:
     r"""Gaussian high-pass amplitude transfer.
 
     Implemented as the complement of a Gaussian low-pass:
@@ -56,12 +62,12 @@ class GaussianHighpass(TransferFunctionProto):
     sigma_w: float
 
     @property
-    def signature(self) -> SignatureProto:
+    def signature(self) -> Signature:
         """Stable signature for caching and comparison.
 
         Returns
         -------
-        SignatureProto
+        Signature
             Tuple uniquely identifying this transfer function.
 
         """
@@ -72,7 +78,7 @@ class GaussianHighpass(TransferFunctionProto):
         *,
         decimals: int = 12,
         ignore_global_phase: bool = False,
-    ) -> SignatureProto:
+    ) -> Signature:
         r"""Approximate signature with rounded floating parameters.
 
         Parameters
@@ -84,7 +90,7 @@ class GaussianHighpass(TransferFunctionProto):
 
         Returns
         -------
-        SignatureProto
+        Signature
             Rounded/approximate signature tuple.
 
         """
@@ -119,3 +125,88 @@ class GaussianHighpass(TransferFunctionProto):
         x = (w - float(self.w0)) / s
         Hlp = np.exp(-0.5 * x * x)
         return (1.0 - Hlp).astype(complex)
+
+    def _as_expansion(self) -> GaussianTransferExpansion:
+        r"""Convert this transfer into a Gaussian transfer expansion.
+
+        This representation is used by the ``gaussian_closed`` formalism to
+        apply the transfer analytically to Gaussian envelopes.
+
+        Returns
+        -------
+        GaussianTransferExpansion
+            Expansion consisting of a single Gaussian atom representing the
+            band-pass filter:
+
+            .. math::
+
+                H(\omega)
+                =
+                \exp\left[
+                    -\frac{1}{2}
+                    \left(
+                        \frac{\omega-\omega_0}{\sigma_\omega}
+                    \right)^2
+                \right].
+
+        Notes
+        -----
+        This allows closed-form propagation of Gaussian envelopes by
+        representing the filter as a sum of Gaussian atoms. In this case
+        the expansion contains a single atom and no constant term.
+
+        """
+        return GaussianTransferExpansion(
+            c0=1.0 + 0.0j,
+            atoms=(
+                GaussianAtom(
+                    coeff=-1.0 + 0.0j,
+                    w0=float(self.w0),
+                    sigma_w=float(self.sigma_w),
+                ),
+            ),
+        )
+
+    def apply_to_gaussian(
+        self, env: SupportsGaussianClosedOverlap
+    ) -> tuple[SupportsGaussianClosedOverlap, float]:
+        r"""Apply this transfer to a Gaussian-closed envelope.
+
+        This method delegates to the Gaussian transfer expansion produced
+        by :meth:`_as_expansion`, enabling closed-form filtering of Gaussian
+        envelopes and Gaussian mixtures.
+
+        Parameters
+        ----------
+        env:
+            Input envelope belonging to the ``gaussian_closed`` family.
+
+        Returns
+        -------
+        (env_out, eta):
+            - env_out: resulting Gaussian-closed envelope (typically a
+            Gaussian mixture).
+            - eta: transmissivity
+
+            .. math::
+
+                \eta =
+                \frac{1}{2\pi}
+                \int |H(\omega)|^2 |Z(\omega)|^2 d\omega,
+
+            representing the power transmission of the filter.
+
+        Notes
+        -----
+        The returned envelope remains normalized as a **mode descriptor**.
+        The transmissivity :math:`\eta` should be applied separately to the
+        quantum state to represent loss.
+
+        """
+        return self._as_expansion().apply_to_gaussian(env)
+
+
+if TYPE_CHECKING:
+    from symop.core.protocols.modes import TransferFunction
+
+    _check_gaussian_bandpass: TransferFunction = GaussianHighpass(w0=1, sigma_w=2)

@@ -8,15 +8,15 @@ stable signatures.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING, Self
 
 import numpy as np
 
-from symop.core.protocols.signature import SignatureProto
-from symop.modes.protocols.labels import PolarizationLabelProto
+from symop.core.types import Signature
 
 
 @dataclass(frozen=True)
-class PolarizationLabel(PolarizationLabelProto):
+class Polarization:
     r"""Polarization label represented by a normalized Jones vector.
 
     The Jones vector is stored as a 2-component complex vector:
@@ -93,7 +93,7 @@ class PolarizationLabel(PolarizationLabelProto):
             (_chopc(complex(v[0])), _chopc(complex(v[1]))),
         )
 
-    def overlap(self, other: PolarizationLabel) -> complex:
+    def overlap(self, other: Polarization) -> complex:
         r"""Compute the polarization overlap.
 
         This is the usual complex inner product of normalized Jones vectors:
@@ -118,36 +118,36 @@ class PolarizationLabel(PolarizationLabelProto):
         return complex(np.vdot(v1, v2))
 
     @classmethod
-    def H(cls) -> PolarizationLabel:
+    def H(cls) -> Self:
         r"""Horizontal linear polarization.
 
         Returns
         -------
-        PolarizationLabel
+        Polarization
             :math:`(1, 0)`.
 
         """
         return cls((1 + 0j, 0 + 0j))
 
     @classmethod
-    def V(cls) -> PolarizationLabel:
+    def V(cls) -> Self:
         r"""Vertical linear polarization.
 
         Returns
         -------
-        PolarizationLabel
+        Polarization
             :math:`(0, 1)`.
 
         """
         return cls((0 + 0j, 1 + 0j))
 
     @classmethod
-    def D(cls) -> PolarizationLabel:
+    def D(cls) -> Self:
         r"""Diagonal linear polarization.
 
         Returns
         -------
-        PolarizationLabel
+        Polarization
             :math:`\frac{1}{\sqrt{2}}(1, 1)`.
 
         """
@@ -155,12 +155,12 @@ class PolarizationLabel(PolarizationLabelProto):
         return cls((s + 0j, s + 0j))
 
     @classmethod
-    def A(cls) -> PolarizationLabel:
+    def A(cls) -> Self:
         r"""Anti-diagonal linear polarization.
 
         Returns
         -------
-        PolarizationLabel
+        Polarization
             :math:`\frac{1}{\sqrt{2}}(1, -1)`.
 
         """
@@ -168,12 +168,12 @@ class PolarizationLabel(PolarizationLabelProto):
         return cls((s + 0j, -s + 0j))
 
     @classmethod
-    def R(cls) -> PolarizationLabel:
+    def R(cls) -> Self:
         r"""Right-circular polarization (one common convention).
 
         Returns
         -------
-        PolarizationLabel
+        Polarization
             :math:`\frac{1}{\sqrt{2}}(1, -i)`.
 
         """
@@ -181,12 +181,12 @@ class PolarizationLabel(PolarizationLabelProto):
         return cls((s + 0j, -1j * s))
 
     @classmethod
-    def L(cls) -> PolarizationLabel:
+    def L(cls) -> Self:
         r"""Left-circular polarization (one common convention).
 
         Returns
         -------
-        PolarizationLabel
+        Polarization
             :math:`\frac{1}{\sqrt{2}}(1, i)`.
 
         """
@@ -194,7 +194,7 @@ class PolarizationLabel(PolarizationLabelProto):
         return cls((s + 0j, 1j * s))
 
     @classmethod
-    def linear(cls, theta: float) -> PolarizationLabel:
+    def linear(cls, theta: float) -> Self:
         r"""Linear polarization at angle :math:`\theta`.
 
         The Jones vector is:
@@ -210,13 +210,13 @@ class PolarizationLabel(PolarizationLabelProto):
 
         Returns
         -------
-        PolarizationLabel
+        Polarization
             Linear polarization label at angle :math:`\theta`.
 
         """
         return cls((complex(np.cos(theta)), complex(np.sin(theta))))
 
-    def rotated(self, theta: float) -> PolarizationLabel:
+    def rotated(self, theta: float) -> Self:
         r"""Rotate the polarization by angle :math:`\theta`.
 
         This applies the real rotation matrix:
@@ -234,16 +234,16 @@ class PolarizationLabel(PolarizationLabelProto):
 
         Returns
         -------
-        PolarizationLabel
+        Polarization
             Rotated polarization label.
 
         """
         a, b = self.jones
         c, s = np.cos(theta), np.sin(theta)
-        return PolarizationLabel((c * a + s * b, -s * a + c * b))
+        return type(self)((c * a + s * b, -s * a + c * b))
 
     @property
-    def signature(self) -> SignatureProto:
+    def signature(self) -> Signature:
         r"""Stable signature for caching/comparison.
 
         The signature is based on the canonicalized Jones components.
@@ -259,7 +259,7 @@ class PolarizationLabel(PolarizationLabelProto):
 
     def approx_signature(
         self, *, decimals: int = 12, ignore_global_phase: bool = False
-    ) -> SignatureProto:
+    ) -> Signature:
         r"""Approximate signature with rounded components.
 
         Parameters
@@ -272,7 +272,7 @@ class PolarizationLabel(PolarizationLabelProto):
 
         Returns
         -------
-        SignatureProto
+        Signature
             Signature tuple with rounded real/imag parts.
 
         """
@@ -284,3 +284,11 @@ class PolarizationLabel(PolarizationLabelProto):
         ra = r(a)
         rb = r(b)
         return ("pol_approx", *ra, *rb)
+
+
+if TYPE_CHECKING:
+    from symop.core.protocols.modes.labels import (
+        Polarization as PolarizationProtocol,
+    )
+
+    pol: PolarizationProtocol = Polarization.D()

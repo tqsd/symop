@@ -8,13 +8,13 @@ overlap if and only if their names are identical.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from symop.core.protocols.signature import SignatureProto
-from symop.modes.protocols.labels import PathLabelProto
+from symop.core.types.signature import Signature
 
 
 @dataclass(frozen=True)
-class PathLabel(PathLabelProto):
+class Path:
     r"""Path label identifying a spatial (or logical) mode path.
 
     Two path labels overlap if and only if their names are identical:
@@ -30,7 +30,7 @@ class PathLabel(PathLabelProto):
 
     name: str
 
-    def overlap(self, other: PathLabel) -> complex:
+    def overlap(self, other: Path) -> complex:
         r"""Compute the overlap with another path label.
 
         Parameters
@@ -47,12 +47,12 @@ class PathLabel(PathLabelProto):
         return 1.0 + 0.0j if self.name == other.name else 0.0 + 0.0j
 
     @property
-    def signature(self) -> SignatureProto:
+    def signature(self) -> Signature:
         r"""Stable signature for caching/comparison.
 
         Returns
         -------
-        SignatureProto
+        Signature
             Tuple identifying the path label.
 
         """
@@ -60,7 +60,7 @@ class PathLabel(PathLabelProto):
 
     def approx_signature(
         self, *, decimals: int = 12, ignore_global_phase: bool = False
-    ) -> SignatureProto:
+    ) -> Signature:
         """Approximate signature with rounded floating parameters.
 
         Parameters
@@ -73,8 +73,14 @@ class PathLabel(PathLabelProto):
 
         Returns
         -------
-        SignatureProto
+        Signature
             Approximate signature tuple.
 
         """
         return self.signature
+
+
+if TYPE_CHECKING:
+    from symop.core.protocols.modes.labels import Path as PathProtocol
+
+    _path_check: PathProtocol = Path("A")

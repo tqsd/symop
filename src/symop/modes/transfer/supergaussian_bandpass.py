@@ -25,21 +25,20 @@ For :math:`m=1` this reduces to a Gaussian band-pass. Increasing
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 import numpy as np
 
-from symop.core.protocols.signature import SignatureProto
-from symop.modes.protocols import TransferFunctionProto
+from symop.core.types.arrays import FloatArray, RCArray
+from symop.core.types.signature import Signature
 from symop.modes.types import (
-    FloatArray,
-    RCArray,
     as_float_array,
     require_pos_finite,
 )
 
 
 @dataclass(frozen=True)
-class SuperGaussianBandpass(TransferFunctionProto):
+class SuperGaussianBandpass:
     r"""Super-Gaussian band-pass amplitude transfer.
 
     .. math::
@@ -60,12 +59,12 @@ class SuperGaussianBandpass(TransferFunctionProto):
     order: int = 2
 
     @property
-    def signature(self) -> SignatureProto:
+    def signature(self) -> Signature:
         """Stable signature for caching and comparison.
 
         Returns
         -------
-        SignatureProto
+        Signature
             Tuple uniquely identifying this transfer function.
 
         """
@@ -78,7 +77,7 @@ class SuperGaussianBandpass(TransferFunctionProto):
 
     def approx_signature(
         self, *, decimals: int = 12, ignore_global_phase: bool = False
-    ) -> SignatureProto:
+    ) -> Signature:
         """Approximate signature with rounded floating parameters.
 
         Parameters
@@ -90,7 +89,7 @@ class SuperGaussianBandpass(TransferFunctionProto):
 
         Returns
         -------
-        SignatureProto
+        Signature
             Approximate signature tuple.
 
         """
@@ -131,3 +130,9 @@ class SuperGaussianBandpass(TransferFunctionProto):
 
         x = (w - float(self.w0)) / s
         return np.exp(-0.5 * np.power(x * x, m)).astype(complex)
+
+
+if TYPE_CHECKING:
+    from symop.core.protocols.modes import TransferFunction
+
+    _check: TransferFunction = SuperGaussianBandpass(w0=1, sigma_w=0.5)

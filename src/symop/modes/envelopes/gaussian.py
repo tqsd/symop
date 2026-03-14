@@ -17,19 +17,22 @@ block for filtering and mode construction.
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, replace
-from typing import cast
+from typing import TYPE_CHECKING, ClassVar, cast
 
 import numpy as np
 
-from symop.core.protocols.signature import SignatureProto
+from symop.core.types import FloatArray, RCArray, Signature
 from symop.modes.envelopes.base import BaseEnvelope
-from symop.modes.protocols import EnvelopeProto, HasLatex
-from symop.modes.types import FloatArray, RCArray
+from symop.modes.protocols.envelope import (
+    EnvelopeFormalism,
+    SupportsGaussianClosedOverlap,
+)
 
 
 @dataclass(frozen=True)
-class GaussianEnvelope(BaseEnvelope, HasLatex):
+class GaussianEnvelope(BaseEnvelope):
     r"""Canonical Gaussian time-domain envelope.
 
     Parameters
@@ -89,6 +92,8 @@ class GaussianEnvelope(BaseEnvelope, HasLatex):
     explicitly standardized a Fourier convention across the codebase.
 
     """
+
+    formalism: ClassVar[EnvelopeFormalism] = "gaussian_closed"
 
     omega0: float
     sigma: float
@@ -218,7 +223,7 @@ class GaussianEnvelope(BaseEnvelope, HasLatex):
         return replace(self, phi0=float(self.phi0) + float(dphi))
 
     @property
-    def signature(self) -> SignatureProto:
+    def signature(self) -> Signature:
         """Stable signature for caching/comparison."""
         return (
             "gauss",
@@ -233,7 +238,7 @@ class GaussianEnvelope(BaseEnvelope, HasLatex):
         *,
         decimals: int = 12,
         ignore_global_phase: bool = False,
-    ) -> SignatureProto:
+    ) -> Signature:
         r"""Approximate signature with rounded floating parameters.
 
         Parameters
@@ -245,7 +250,7 @@ class GaussianEnvelope(BaseEnvelope, HasLatex):
 
         Returns
         -------
-        SignatureProto
+        Signature
             Rounded/approximate signature tuple.
 
         """
@@ -259,19 +264,109 @@ class GaussianEnvelope(BaseEnvelope, HasLatex):
             r(float(phi), decimals),
         )
 
-    def overlap(self, other: EnvelopeProto) -> complex:
-        """Overlap with another envelope.
+    def overlap_gaussian_closed(self, other: SupportsGaussianClosedOverlap) -> complex:
+        r"""Closed-form overlap with another closed-form Gaussian envelope.
 
-        This currently delegates to the generic overlap implementation provided by
-        :class:`BaseEnvelope`.
+        This computes the inner product
+
+        .. math::
+
+            \langle \zeta_1, \zeta_2 \rangle
+            =
+            \int_{-\infty}^{\infty} \overline{\zeta_1(t)}\,\zeta_2(t)\,dt,
+
+        specialized to the normalized Gaussian family defined by :meth:`time_eval`.
+
+        Let :math:`\sigma_1,\tau_1,\omega_1,\phi_1` be the parameters of ``self`` and
+        :math:`\sigma_2,\tau_2,\omega_2,\phi_2` those of ``other``. Define
+
+        .. math::
+
+            S &= \sigma_1^2 + \sigma_2^2, \\
+            \Delta\tau &= \tau_2 - \tau_1, \\
+            \Delta\omega &= \omega_2 - \omega_1, \\
+            \omega_w &= \frac{\omega_1\sigma_1^2 + \omega_2\sigma_2^2}{S}.
+
+        Then the overlap is
+
+        .. math::
+
+            \langle \zeta_1, \zeta_2 \rangle
+            =
+            \sqrt{\frac{2\sigma_1\sigma_2}{S}}
+            \exp\!\left(-\frac{\Delta\tau^2}{4S}\right)
+            \exp\!\left(-\frac{\sigma_1^2\sigma_2^2}{S}\,\Delta\omega^2\right)
+            \exp\!\left(i(\phi_2-\phi_1-\omega_w\Delta\tau)\right).
+
+        Notes
+        -----
+        - This formula assumes both envelopes are normalized such that
+        :math:`\langle \zeta, \zeta \rangle = 1`. The normalization used in
+        :meth:`time_eval` satisfies this.
+        - The result is consistent with conjugate symmetry:
+        :math:`\langle \zeta_1,\zeta_2\rangle = \overline{\langle \zeta_2,\zeta_1\rangle}`.
+
+        Parameters
+        ----------
+        other:
+            Another envelope in the same closed-form Gaussian family.
+
+        Returns
+        -------
+        complex
+            The overlap :math:`\langle \zeta_1, \zeta_2 \rangle`.
+
+        Raises
+        ------
+        TypeError
+            If ``other`` is not a :class:`GaussianEnvelope` (current implementation).
+        ValueError
+            If either temporal width :math:`\sigma` is non-positive.
+
         """
-        return super().overlap(other)
+        if not isinstance(other, GaussianEnvelope):
+            raise TypeError(
+                "Gaussian closed-form overlap currently requires GaussianEnvelope."
+            )
 
-    @property
-    def latex(self) -> str | None:
-        r"""LaTeX (mathtext) representation of :math:`\zeta(t)` for plotting headers."""
-        return (
-            r"\zeta(t)=\left(\frac{1}{2\pi\sigma^{2}}\right)^{1/4}"
-            r"\exp\left(-\frac{(t-\tau)^2}{4\sigma^{2}}\right)"
-            r"\exp\left(i(\omega_0(t-\tau)+\phi_0)\right)"
+        s1 = float(self.sigma)
+        s2 = float(other.sigma)
+        if not (s1 > 0.0 and s2 > 0.0):
+            raise ValueError("sigma must be positive")
+
+        S = (s1 * s1) + (s2 * s2)
+        dt = float(other.tau) - float(self.tau)
+        dw = float(other.omega0) - float(self.omega0)
+
+        amp = math.sqrt((2.0 * s1 * s2) / S)
+        env_term = math.exp(-(dt * dt) / (4.0 * S))
+        spec_term = math.exp(-((s1 * s1) * (s2 * s2) / S) * (dw * dw))
+
+        omega_w = (float(self.omega0) * (s1 * s1) + float(other.omega0) * (s2 * s2)) / S
+
+        phase = (float(other.phi0) - float(self.phi0)) - (omega_w * dt)
+
+        return complex(amp * env_term * spec_term) * complex(
+            math.cos(phase), math.sin(phase)
         )
+
+
+if TYPE_CHECKING:
+    from symop.core.protocols.modes.labels import Envelope as EnvelopeProtocol
+    from symop.modes.protocols.envelope import (
+        GaussianClosedEnvelope,
+        HasSpectralHints,
+        TimeFrequencyEnvelope,
+    )
+
+    _env = GaussianEnvelope(
+        omega0=1.0,
+        sigma=1.0,
+        tau=0.0,
+        phi0=0.0,
+    )
+
+    _env_check: EnvelopeProtocol = _env
+    _tf_env_check: TimeFrequencyEnvelope = _env
+    _gaussian_closed_check: GaussianClosedEnvelope = _env
+    _spectral_hints_check: HasSpectralHints = _env
