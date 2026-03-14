@@ -7,7 +7,9 @@ import symop.core.operators as opmod
 
 
 class FakeEnvelope:
-    def __init__(self, name: str, overlaps: dict[str, complex] | None = None) -> None:
+    def __init__(
+        self, name: str, overlaps: dict[str, complex] | None = None
+    ) -> None:
         self.name = name
         self._overlaps = overlaps or {}
 
@@ -73,7 +75,7 @@ class FakeLabel:
             return self._overlaps[key_rev]
         return 0.0 + 0.0j
 
-    def with_pol(self, pol):
+    def with_polarization(self, pol):
         return FakeLabel(
             self.name, pol=str(pol), path=self.path, overlaps=self._overlaps
         )
@@ -114,13 +116,19 @@ class FakeModeLabel:
         )
 
     def overlap(self, other: FakeModeLabel) -> complex:
-        return self.base.overlap(other.base) * self.envelope.overlap(other.envelope)
+        return self.base.overlap(other.base) * self.envelope.overlap(
+            other.envelope
+        )
 
-    def with_pol(self, pol):
-        return FakeModeLabel(base=self.base.with_pol(pol), envelope=self.envelope)
+    def with_polarization(self, pol):
+        return FakeModeLabel(
+            base=self.base.with_polarization(pol), envelope=self.envelope
+        )
 
     def with_path(self, path):
-        return FakeModeLabel(base=self.base.with_path(path), envelope=self.envelope)
+        return FakeModeLabel(
+            base=self.base.with_path(path), envelope=self.envelope
+        )
 
     def with_envelope(self, envelope: FakeEnvelope):
         return FakeModeLabel(base=self.base, envelope=envelope)
@@ -197,7 +205,7 @@ class TestModeOp(unittest.TestCase):
         self.assertIs(m5.label, label2)
         self.assertIs(m.label, label1)
 
-        m6 = m.with_pol("D")
+        m6 = m.with_polarization("D")
         self.assertEqual(m6.label.pol, "D")
         self.assertEqual(m6.label.path, "p1")
         self.assertEqual(m.label.pol, "H")
