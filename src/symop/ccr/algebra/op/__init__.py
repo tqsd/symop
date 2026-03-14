@@ -33,6 +33,5 @@ individual :class:`LadderOp` instances.
 """
 
 from .poly import OpPoly
-from .term import OpTerm
 
-__all__ = ["OpTerm", "OpPoly"]
+__all__ = ["OpPoly"]

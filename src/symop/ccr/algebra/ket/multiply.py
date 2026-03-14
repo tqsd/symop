@@ -27,7 +27,7 @@ The resulting terms are then canonicalized by merging identical monomials.
 
 from __future__ import annotations
 
-from symop.core.protocols import KetTermProto
+from symop.core.protocols.terms import KetTerm as KetTermProtocol
 from symop.core.terms import KetTerm
 
 from .combine import combine_like_terms_ket
@@ -35,8 +35,8 @@ from .from_word import ket_from_word
 
 
 def ket_multiply(
-    a: tuple[KetTermProto, ...],
-    b: tuple[KetTermProto, ...],
+    a: tuple[KetTermProtocol, ...],
+    b: tuple[KetTermProtocol, ...],
     *,
     eps: float = 1e-12,
     approx: bool = False,
@@ -91,7 +91,7 @@ def ket_multiply(
     This routine is symbolic. It does not apply the result to a vacuum state.
 
     """
-    out: list[KetTermProto] = []
+    out: list[KetTermProtocol] = []
 
     for ti in a:
         if abs(ti.coeff) <= eps:

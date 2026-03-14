@@ -1,4 +1,4 @@
-﻿symop.modes.transfer.cascade
+symop.modes.transfer.cascade
 ============================
 
 .. automodule:: symop.modes.transfer.cascade

@@ -30,7 +30,6 @@ class ModeOp(ModeOpProto):
     creates ladder-operators
     """
 
-    env: EnvelopeLike
     label: ModeLabelLike
 
     user_label: str | None = None
@@ -42,7 +41,9 @@ class ModeOp(ModeOpProto):
     create: LadderOpProto = field(init=False, repr=False, compare=False)
 
     def __post_init__(self):
-        object.__setattr__(self, "ann", LadderOp(kind=OperatorKind.ANN, mode=self))
+        object.__setattr__(
+            self, "ann", LadderOp(kind=OperatorKind.ANN, mode=self)
+        )
         object.__setattr__(
             self, "create", LadderOp(kind=OperatorKind.CREATE, mode=self)
         )
@@ -54,7 +55,7 @@ class ModeOp(ModeOpProto):
         return replace(self, display_index=idx)
 
     def with_env(self, env: EnvelopeLike) -> ModeOp:
-        return replace(self, env=env)
+        return replace(self, label=self.label.with_env(env))
 
     def with_label(self, label: LabelProto) -> ModeOp:
         return replace(self, label=label)

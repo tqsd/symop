@@ -8,8 +8,10 @@ symop.modes.protocols.envelope
 
    .. autosummary::
    
-      EnvelopeProto
-      HasLatex
+      GaussianClosedEnvelope
+      HasEnvelopeFormalism
       HasSpectralHints
+      SupportsGaussianClosedOverlap
       SupportsOverlapWithGeneric
+      TimeFrequencyEnvelope
    

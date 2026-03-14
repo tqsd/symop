@@ -69,6 +69,23 @@ modes behave in *symop*.
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="We construct a small mixture of normalized Gaussian envelopes and study:">
+
+.. only:: html
+
+  .. image:: /examples/modes/images/thumb/sphx_glr_plot_004_gaussian_mixture_thumb.png
+    :alt:
+
+  :doc:`/examples/modes/plot_004_gaussian_mixture`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Gaussian mixture: envelope shape, overlap vs delay, and spectrum</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how a full mode label consists of:">
 
 .. only:: html
@@ -90,10 +107,10 @@ modes behave in *symop*.
 
 .. only:: html
 
-  .. image:: /examples/modes/images/thumb/sphx_glr_plot_004_gaussian_lowpass_thumb.png
+  .. image:: /examples/modes/images/thumb/sphx_glr_plot_005_gaussian_lowpass_thumb.png
     :alt:
 
-  :doc:`/examples/modes/plot_004_gaussian_lowpass`
+  :doc:`/examples/modes/plot_005_gaussian_lowpass`
 
 .. raw:: html
 
@@ -107,10 +124,10 @@ modes behave in *symop*.
 
 .. only:: html
 
-  .. image:: /examples/modes/images/thumb/sphx_glr_plot_005_transfer_functions_thumb.png
+  .. image:: /examples/modes/images/thumb/sphx_glr_plot_007_transfer_functions_thumb.png
     :alt:
 
-  :doc:`/examples/modes/plot_005_transfer_functions`
+  :doc:`/examples/modes/plot_007_transfer_functions`
 
 .. raw:: html
 
@@ -131,7 +148,8 @@ modes behave in *symop*.
    /examples/modes/plot_001_gaussian_envelopes
    /examples/modes/plot_002_overlap_vs_delay
    /examples/modes/plot_003_phase_invariance
+   /examples/modes/plot_004_gaussian_mixture
    /examples/modes/plot_006_mode_labels
-   /examples/modes/plot_004_gaussian_lowpass
-   /examples/modes/plot_005_transfer_functions
+   /examples/modes/plot_005_gaussian_lowpass
+   /examples/modes/plot_007_transfer_functions
 

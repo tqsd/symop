@@ -8,5 +8,5 @@
 
    .. autosummary::
    
-      PathLabel
+      Path
    

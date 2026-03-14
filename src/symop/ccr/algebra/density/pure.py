@@ -18,14 +18,15 @@ All terms are merged using symbolic density combination.
 
 from __future__ import annotations
 
-from symop.core.protocols import DensityTermProto, KetTermProto
+from symop.core.protocols.terms import KetTerm as KetTermProtocol
+from symop.core.terms.density_term import DensityTerm
 
 from .combine import combine_like_terms_density
 
 
 def density_pure(
-    ket_terms: tuple[KetTermProto, ...],
-) -> tuple[DensityTermProto, ...]:
+    ket_terms: tuple[KetTermProtocol, ...],
+) -> tuple[DensityTerm, ...]:
     r"""Construct a pure-state density polynomial.
 
     Given a ket expansion
@@ -59,9 +60,7 @@ def density_pure(
     - The output is Hermitian by construction.
 
     """
-    from symop.core.terms import DensityTerm
-
-    out: list[DensityTermProto] = []
+    out: list[DensityTerm] = []
 
     for ti in ket_terms:
         for tj in ket_terms:

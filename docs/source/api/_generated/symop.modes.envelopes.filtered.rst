@@ -1,4 +1,4 @@
-﻿symop.modes.envelopes.filtered
+symop.modes.envelopes.filtered
 ==============================
 
 .. automodule:: symop.modes.envelopes.filtered

@@ -14,3 +14,4 @@
    operators
    protocols
    terms
+   types

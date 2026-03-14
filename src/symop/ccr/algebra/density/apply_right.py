@@ -41,16 +41,16 @@ from collections.abc import Iterable
 from symop.ccr.algebra.density.expand_word_times_monomial import (
     expand_word_times_monomial,
 )
-from symop.core.protocols import DensityTermProto, LadderOpProto
+from symop.core.protocols.ops import LadderOp as LadderOpProtocol
 from symop.core.terms import DensityTerm
 
 from .combine import combine_like_terms_density
 
 
 def apply_right(
-    terms: tuple[DensityTermProto, ...],
-    word: Iterable[LadderOpProto],
-) -> tuple[DensityTermProto, ...]:
+    terms: tuple[DensityTerm, ...],
+    word: Iterable[LadderOpProtocol],
+) -> tuple[DensityTerm, ...]:
     """Apply an operator word on the right of a density polynomial.
 
     For each density term ``t``, this function computes the symbolic right
@@ -80,7 +80,7 @@ def apply_right(
 
     Returns
     -------
-    tuple[DensityTermProto, ...]
+    tuple[DensityTerm, ...]
         Output density polynomial terms after right application and combination.
 
     Notes
@@ -92,7 +92,7 @@ def apply_right(
     w = tuple(word)
     dag_word = tuple(op.dagger() for op in reversed(w))
 
-    out: list[DensityTermProto] = []
+    out: list[DensityTerm] = []
     for t in terms:
         for kt in expand_word_times_monomial(dag_word, t.right):
             out.append(

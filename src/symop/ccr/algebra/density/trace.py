@@ -19,13 +19,13 @@ The bra–ket overlap is evaluated purely symbolically via
 
 from __future__ import annotations
 
-from symop.core.protocols import DensityTermProto
+from symop.core.protocols.terms import DensityTerm as DensityTermProtocol
 
 from .overlap_right_left import overlap_right_left
 
 
 def density_trace(
-    terms: tuple[DensityTermProto, ...],
+    terms: tuple[DensityTermProtocol, ...],
 ) -> complex:
     r"""Compute the trace of a density polynomial.
 

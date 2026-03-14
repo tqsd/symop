@@ -1,0 +1,2759 @@
+{
+ "GaussianEnvelope": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.gaussian",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.base",
+   "module_short": "symop.modes.envelopes.base",
+   "name": "BaseEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "BaseEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "BaseEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "BaseEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "SupportsGaussianClosedOverlap"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "SupportsGaussianClosedOverlap"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "SupportsGaussianClosedOverlap"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "SupportsGaussianClosedOverlap"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols",
+   "name": "HasLatex"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "HasLatex"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "HasLatex"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasLatex"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols",
+   "name": "EnvelopeProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "EnvelopeProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "EnvelopeProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "EnvelopeProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "abc",
+   "module_short": "abc",
+   "name": "ABC"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Protocol"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols.signature",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "HasEnvelopeFormalism"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "HasEnvelopeFormalism"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "HasEnvelopeFormalism"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasEnvelopeFormalism"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.gaussian",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianEnvelope"
+  }
+ ],
+ "GaussianMixtureEnvelope": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.gaussian_mixture",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianMixtureEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianMixtureEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "GaussianMixtureEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "GaussianMixtureEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.base",
+   "module_short": "symop.modes.envelopes.base",
+   "name": "BaseEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "BaseEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "BaseEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "BaseEnvelope"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "SupportsGaussianClosedOverlap"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "SupportsGaussianClosedOverlap"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "SupportsGaussianClosedOverlap"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "SupportsGaussianClosedOverlap"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols",
+   "name": "HasLatex"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "HasLatex"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "HasLatex"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasLatex"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols",
+   "name": "EnvelopeProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "EnvelopeProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "EnvelopeProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "EnvelopeProto"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "abc",
+   "module_short": "abc",
+   "name": "ABC"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Protocol"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols.signature",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasSignature"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "HasEnvelopeFormalism"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "HasEnvelopeFormalism"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "HasEnvelopeFormalism"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasEnvelopeFormalism"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.gaussian_mixture",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianMixtureEnvelope"
+  }
+ ],
+ "Z": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "ndarray"
+  }
+ ],
+ "__name__": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "str"
+  }
+ ],
+ "ax_ov": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Axes"
+  }
+ ],
+ "ax_ov.grid": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Axes.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._base",
+   "module_short": "matplotlib.axes._base",
+   "name": "_AxesBase.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "_AxesBase.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "_AxesBase.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.grid"
+  }
+ ],
+ "ax_ov.plot": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Axes.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._base",
+   "module_short": "matplotlib.axes._base",
+   "name": "_AxesBase.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "_AxesBase.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "_AxesBase.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.plot"
+  }
+ ],
+ "ax_ov.set_title": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Axes.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._base",
+   "module_short": "matplotlib.axes._base",
+   "name": "_AxesBase.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "_AxesBase.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "_AxesBase.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.set_title"
+  }
+ ],
+ "ax_ov.set_xlabel": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Axes.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._base",
+   "module_short": "matplotlib.axes._base",
+   "name": "_AxesBase.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "_AxesBase.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "_AxesBase.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.set_xlabel"
+  }
+ ],
+ "ax_ov.set_ylabel": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Axes.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._base",
+   "module_short": "matplotlib.axes._base",
+   "name": "_AxesBase.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "_AxesBase.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "_AxesBase.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.set_ylabel"
+  }
+ ],
+ "ax_sp": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Axes"
+  }
+ ],
+ "ax_sp.grid": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Axes.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._base",
+   "module_short": "matplotlib.axes._base",
+   "name": "_AxesBase.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "_AxesBase.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "_AxesBase.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.grid"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.grid"
+  }
+ ],
+ "ax_sp.plot": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Axes.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._base",
+   "module_short": "matplotlib.axes._base",
+   "name": "_AxesBase.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "_AxesBase.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "_AxesBase.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.plot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.plot"
+  }
+ ],
+ "ax_sp.set_title": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Axes.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._base",
+   "module_short": "matplotlib.axes._base",
+   "name": "_AxesBase.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "_AxesBase.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "_AxesBase.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.set_title"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.set_title"
+  }
+ ],
+ "ax_sp.set_xlabel": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Axes.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._base",
+   "module_short": "matplotlib.axes._base",
+   "name": "_AxesBase.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "_AxesBase.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "_AxesBase.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.set_xlabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.set_xlabel"
+  }
+ ],
+ "ax_sp.set_ylabel": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "Axes.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Axes.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes._base",
+   "module_short": "matplotlib.axes._base",
+   "name": "_AxesBase.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.axes",
+   "module_short": "matplotlib.axes",
+   "name": "_AxesBase.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "_AxesBase.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.set_ylabel"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.set_ylabel"
+  }
+ ],
+ "axs_env": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "ndarray"
+  }
+ ],
+ "components": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "tuple"
+  }
+ ],
+ "delays": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "ndarray"
+  }
+ ],
+ "dt": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "float64"
+  }
+ ],
+ "fig_env": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.figure",
+   "module_short": "matplotlib.figure",
+   "name": "Figure"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Figure"
+  }
+ ],
+ "fig_ov": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.figure",
+   "module_short": "matplotlib.figure",
+   "name": "Figure"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Figure"
+  }
+ ],
+ "fig_ov.add_subplot": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.figure",
+   "module_short": "matplotlib.figure",
+   "name": "Figure.add_subplot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Figure.add_subplot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.figure",
+   "module_short": "matplotlib.figure",
+   "name": "FigureBase.add_subplot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "FigureBase.add_subplot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.add_subplot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.add_subplot"
+  }
+ ],
+ "fig_ov.tight_layout": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.figure",
+   "module_short": "matplotlib.figure",
+   "name": "Figure.tight_layout"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Figure.tight_layout"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.figure",
+   "module_short": "matplotlib.figure",
+   "name": "FigureBase.tight_layout"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "FigureBase.tight_layout"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.tight_layout"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.tight_layout"
+  }
+ ],
+ "fig_sp": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.figure",
+   "module_short": "matplotlib.figure",
+   "name": "Figure"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Figure"
+  }
+ ],
+ "fig_sp.add_subplot": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.figure",
+   "module_short": "matplotlib.figure",
+   "name": "Figure.add_subplot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Figure.add_subplot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.figure",
+   "module_short": "matplotlib.figure",
+   "name": "FigureBase.add_subplot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "FigureBase.add_subplot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.add_subplot"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.add_subplot"
+  }
+ ],
+ "fig_sp.tight_layout": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.figure",
+   "module_short": "matplotlib.figure",
+   "name": "Figure.tight_layout"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Figure.tight_layout"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.figure",
+   "module_short": "matplotlib.figure",
+   "name": "FigureBase.tight_layout"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "FigureBase.tight_layout"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.artist",
+   "module_short": "matplotlib.artist",
+   "name": "Artist.tight_layout"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Artist.tight_layout"
+  }
+ ],
+ "g0": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.gaussian",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "GaussianEnvelope"
+  }
+ ],
+ "g0.norm2": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.gaussian",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianEnvelope.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianEnvelope.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "GaussianEnvelope.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "GaussianEnvelope.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.base",
+   "module_short": "symop.modes.envelopes.base",
+   "name": "BaseEnvelope.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "BaseEnvelope.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "BaseEnvelope.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "BaseEnvelope.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "SupportsGaussianClosedOverlap.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "SupportsGaussianClosedOverlap.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "SupportsGaussianClosedOverlap.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "SupportsGaussianClosedOverlap.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "HasLatex.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "HasLatex.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "HasLatex.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasLatex.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "EnvelopeProto.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "EnvelopeProto.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "EnvelopeProto.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "EnvelopeProto.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "abc",
+   "module_short": "abc",
+   "name": "ABC.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Protocol.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols.signature",
+   "module_short": "symop.core.protocols.signature",
+   "name": "HasSignature.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "HasSignature.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasSignature.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "HasEnvelopeFormalism.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "HasEnvelopeFormalism.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "HasEnvelopeFormalism.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasEnvelopeFormalism.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic.norm2"
+  }
+ ],
+ "g0.omega0": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "float"
+  }
+ ],
+ "g0.plot_many": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  }
+ ],
+ "g1": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.gaussian",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "GaussianEnvelope"
+  }
+ ],
+ "g2": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.gaussian",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "GaussianEnvelope"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "GaussianEnvelope"
+  }
+ ],
+ "i": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "int"
+  }
+ ],
+ "mags": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "ndarray"
+  }
+ ],
+ "mags.max": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "builtin_function_or_method"
+  }
+ ],
+ "mags.min": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "builtin_function_or_method"
+  }
+ ],
+ "mix": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.gaussian_mixture",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianMixtureEnvelope"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianMixtureEnvelope"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "GaussianMixtureEnvelope"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "GaussianMixtureEnvelope"
+  }
+ ],
+ "mix.delayed": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.gaussian_mixture",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianMixtureEnvelope.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianMixtureEnvelope.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "GaussianMixtureEnvelope.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "GaussianMixtureEnvelope.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.base",
+   "module_short": "symop.modes.envelopes.base",
+   "name": "BaseEnvelope.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "BaseEnvelope.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "BaseEnvelope.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "BaseEnvelope.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "SupportsGaussianClosedOverlap.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "SupportsGaussianClosedOverlap.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "SupportsGaussianClosedOverlap.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "SupportsGaussianClosedOverlap.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "HasLatex.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "HasLatex.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "HasLatex.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasLatex.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols",
+   "name": "EnvelopeProto.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "EnvelopeProto.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "EnvelopeProto.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "EnvelopeProto.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "abc",
+   "module_short": "abc",
+   "name": "ABC.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Protocol.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols.signature",
+   "module_short": "symop.core.protocols.signature",
+   "name": "HasSignature.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "HasSignature.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasSignature.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "HasEnvelopeFormalism.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "HasEnvelopeFormalism.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "HasEnvelopeFormalism.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasEnvelopeFormalism.delayed"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic.delayed"
+  }
+ ],
+ "mix.freq_eval": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.gaussian_mixture",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianMixtureEnvelope.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianMixtureEnvelope.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "GaussianMixtureEnvelope.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "GaussianMixtureEnvelope.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.base",
+   "module_short": "symop.modes.envelopes.base",
+   "name": "BaseEnvelope.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "BaseEnvelope.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "BaseEnvelope.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "BaseEnvelope.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "SupportsGaussianClosedOverlap.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "SupportsGaussianClosedOverlap.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "SupportsGaussianClosedOverlap.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "SupportsGaussianClosedOverlap.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "HasLatex.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "HasLatex.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "HasLatex.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasLatex.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols",
+   "name": "EnvelopeProto.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "EnvelopeProto.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "EnvelopeProto.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "EnvelopeProto.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "abc",
+   "module_short": "abc",
+   "name": "ABC.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Protocol.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols.signature",
+   "module_short": "symop.core.protocols.signature",
+   "name": "HasSignature.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "HasSignature.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasSignature.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "HasEnvelopeFormalism.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "HasEnvelopeFormalism.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "HasEnvelopeFormalism.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasEnvelopeFormalism.freq_eval"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic.freq_eval"
+  }
+ ],
+ "mix.norm2": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.gaussian_mixture",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianMixtureEnvelope.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianMixtureEnvelope.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "GaussianMixtureEnvelope.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "GaussianMixtureEnvelope.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.base",
+   "module_short": "symop.modes.envelopes.base",
+   "name": "BaseEnvelope.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "BaseEnvelope.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "BaseEnvelope.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "BaseEnvelope.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "SupportsGaussianClosedOverlap.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "SupportsGaussianClosedOverlap.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "SupportsGaussianClosedOverlap.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "SupportsGaussianClosedOverlap.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "HasLatex.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "HasLatex.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "HasLatex.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasLatex.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "EnvelopeProto.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "EnvelopeProto.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "EnvelopeProto.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "EnvelopeProto.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "abc",
+   "module_short": "abc",
+   "name": "ABC.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Protocol.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols.signature",
+   "module_short": "symop.core.protocols.signature",
+   "name": "HasSignature.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "HasSignature.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasSignature.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "HasEnvelopeFormalism.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "HasEnvelopeFormalism.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "HasEnvelopeFormalism.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasEnvelopeFormalism.norm2"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic.norm2"
+  }
+ ],
+ "mix.overlap": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.gaussian_mixture",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianMixtureEnvelope.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "GaussianMixtureEnvelope.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "GaussianMixtureEnvelope.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "GaussianMixtureEnvelope.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes.base",
+   "module_short": "symop.modes.envelopes.base",
+   "name": "BaseEnvelope.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.envelopes",
+   "module_short": "symop.modes.envelopes",
+   "name": "BaseEnvelope.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "BaseEnvelope.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "BaseEnvelope.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "SupportsGaussianClosedOverlap.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "SupportsGaussianClosedOverlap.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "SupportsGaussianClosedOverlap.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "SupportsGaussianClosedOverlap.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "HasLatex.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "HasLatex.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "HasLatex.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasLatex.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols",
+   "name": "EnvelopeProto.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "EnvelopeProto.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "EnvelopeProto.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "EnvelopeProto.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "abc",
+   "module_short": "abc",
+   "name": "ABC.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Protocol.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols.signature",
+   "module_short": "symop.core.protocols.signature",
+   "name": "HasSignature.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core.protocols",
+   "module_short": "symop.core.protocols",
+   "name": "HasSignature.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.core",
+   "module_short": "symop.core",
+   "name": "HasSignature.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasSignature.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols.envelope",
+   "module_short": "symop.modes.protocols.envelope",
+   "name": "HasEnvelopeFormalism.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes.protocols",
+   "module_short": "symop.modes.protocols",
+   "name": "HasEnvelopeFormalism.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop.modes",
+   "module_short": "symop.modes",
+   "name": "HasEnvelopeFormalism.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "symop",
+   "module_short": "symop",
+   "name": "HasEnvelopeFormalism.overlap"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "typing",
+   "module_short": "typing",
+   "name": "Generic.overlap"
+  }
+ ],
+ "np.abs": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "ufunc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "abs"
+  }
+ ],
+ "np.array": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "builtin_function_or_method"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "array"
+  }
+ ],
+ "np.empty_like": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "_ArrayFunctionDispatcher"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "empty_like"
+  }
+ ],
+ "np.linspace": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "_ArrayFunctionDispatcher"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "linspace"
+  }
+ ],
+ "plt.figure": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.pyplot",
+   "module_short": "matplotlib.pyplot",
+   "name": "figure"
+  }
+ ],
+ "plt.show": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib.pyplot",
+   "module_short": "matplotlib.pyplot",
+   "name": "show"
+  }
+ ],
+ "spec": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "ndarray"
+  }
+ ],
+ "w": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "ndarray"
+  }
+ ],
+ "w0": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "float"
+  }
+ ],
+ "weights": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "numpy",
+   "module_short": "numpy",
+   "name": "ndarray"
+  }
+ ]
+}

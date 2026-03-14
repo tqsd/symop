@@ -8,5 +8,5 @@ symop.modes.protocols.transfer
 
    .. autosummary::
    
-      TransferFunctionProto
+      SupportsGaussianClosedTransfer
    

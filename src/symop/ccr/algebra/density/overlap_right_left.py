@@ -17,10 +17,10 @@ from __future__ import annotations
 
 from symop.ccr.algebra.ket.from_word import ket_from_word
 from symop.ccr.algebra.ket.identity_coeff import identity_coeff
-from symop.core.protocols import MonomialProto
+from symop.core.protocols.ops import Monomial as MonomialProtocol
 
 
-def overlap_right_left(R: MonomialProto, L: MonomialProto) -> complex:
+def overlap_right_left(R: MonomialProtocol, L: MonomialProtocol) -> complex:
     r"""Symbolic overlap :math:`\langle R \,|\, L \rangle` via normal ordering.
 
     This routine computes the scalar overlap between a "right" monomial

@@ -29,16 +29,16 @@ from collections.abc import Iterable
 from symop.ccr.algebra.density.expand_word_times_monomial import (
     expand_word_times_monomial,
 )
-from symop.core.protocols import DensityTermProto, LadderOpProto
+from symop.core.protocols.ops import LadderOp as LadderOpProtocol
 from symop.core.terms import DensityTerm
 
 from .combine import combine_like_terms_density
 
 
 def apply_left(
-    terms: tuple[DensityTermProto, ...],
-    word: Iterable[LadderOpProto],
-) -> tuple[DensityTermProto, ...]:
+    terms: tuple[DensityTerm, ...],
+    word: Iterable[LadderOpProtocol],
+) -> tuple[DensityTerm, ...]:
     """Apply an operator word on the left of a density polynomial.
 
     For each density term ``t``, this function expands the product
@@ -64,7 +64,7 @@ def apply_left(
 
     Returns
     -------
-    tuple[DensityTermProto, ...]
+    tuple[DensityTerm, ...]
         Output density polynomial terms after left application and combination.
 
     Notes
@@ -73,7 +73,7 @@ def apply_left(
     relations inside ``expand_word_times_monomial``.
 
     """
-    out: list[DensityTermProto] = []
+    out: list[DensityTerm] = []
 
     for t in terms:
         for kt in expand_word_times_monomial(word, t.left):

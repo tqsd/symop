@@ -16,7 +16,7 @@ class TestGaussianLowpass(unittest.TestCase):
         self.assertEqual(
             got,
             (
-                "gauss_approx",
+                "gauss_lowpass_approx",
                 round(1.234567, 3),
                 round(9.876543, 3),
             ),

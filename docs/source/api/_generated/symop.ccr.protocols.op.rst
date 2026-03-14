@@ -8,6 +8,5 @@ symop.ccr.protocols.op
 
    .. autosummary::
    
-      OpPolyProto
-      OpTermProto
+      OpPoly
    

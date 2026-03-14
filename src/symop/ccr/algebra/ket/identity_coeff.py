@@ -23,10 +23,10 @@ normal ordering and represents the c-number component of the expansion.
 
 from __future__ import annotations
 
-from symop.core.protocols import KetTermProto
+from symop.core.protocols.terms import KetTerm as KetTermProtocol
 
 
-def identity_coeff(terms: tuple[KetTermProto, ...]) -> complex:
+def identity_coeff(terms: tuple[KetTermProtocol, ...]) -> complex:
     r"""Return the coefficient of the identity monomial.
 
     Parameters

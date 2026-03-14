@@ -8,5 +8,5 @@
 
    .. autosummary::
    
-      PolarizationLabel
+      Polarization
    

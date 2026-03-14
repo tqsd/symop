@@ -15,17 +15,18 @@ whenever :math:`|\mathrm{Tr}(\rho)|` is not too small.
 
 from __future__ import annotations
 
-from symop.core.protocols import DensityTermProto
+from symop.core.protocols.terms import DensityTerm as DensityTermProtocol
+from symop.core.terms.density_term import DensityTerm
 
 from .scale import density_scale
 from .trace import density_trace
 
 
 def density_normalize_trace(
-    terms: tuple[DensityTermProto, ...],
+    terms: tuple[DensityTermProtocol, ...],
     *,
     eps: float = 1e-14,
-) -> tuple[DensityTermProto, ...]:
+) -> tuple[DensityTerm, ...]:
     r"""Scale a density polynomial so that its trace equals 1.
 
     This function computes :math:`\mathrm{Tr}(\rho)` via
@@ -51,7 +52,7 @@ def density_normalize_trace(
 
     Returns
     -------
-    tuple[DensityTermProto, ...]
+    tuple[DensityTerm, ...]
         The scaled density polynomial with unit trace.
 
     Raises

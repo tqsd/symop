@@ -19,13 +19,19 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from symop.ccr.algebra.ket.apply import ket_apply_word
-from symop.core.protocols import KetTermProto, LadderOpProto, MonomialProto
+from symop.core.protocols.ops import (
+    LadderOp as LadderOpProtocol,
+)
+from symop.core.protocols.ops import (
+    Monomial as MonomialProtocol,
+)
+from symop.core.terms.ket_term import KetTerm
 
 
 def expand_word_times_monomial(
-    word: Iterable[LadderOpProto],
-    M: MonomialProto,
-) -> list[KetTermProto]:
+    word: Iterable[LadderOpProtocol],
+    M: MonomialProtocol,
+) -> list[KetTerm]:
     r"""Expand an operator word acting on a monomial from the left.
 
     Computes the normally-ordered expansion of
@@ -50,16 +56,14 @@ def expand_word_times_monomial(
 
     Returns
     -------
-    list[KetTermProto]
+    list[KetTerm]
         List of normally-ordered ket terms for :math:`W \hat{M}`.
 
     """
     from symop.core.terms import KetTerm
 
-    terms: tuple[KetTermProto, ...] = (KetTerm(coeff=1.0, monomial=M),)
+    terms: tuple[KetTerm, ...] = (KetTerm(coeff=1.0, monomial=M),)
 
-    # Left multiplication by W = o1 o2 ... oL means we apply operators starting
-    # from the rightmost operator on the current expression.
     for op in reversed(tuple(word)):
         terms = tuple(ket_apply_word(terms, (op,)))
 

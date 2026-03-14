@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:02.731** total execution time for 9 files **from all galleries**:
+**00:05.430** total execution time for 10 files **from all galleries**:
 
 .. container::
 
@@ -32,14 +32,23 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_examples_ccr_example_003_ccr_overlap.py` (``../../examples/ccr/example_003_ccr_overlap.py``)
-     - 00:02.723
+   * - :ref:`sphx_glr_examples_modes_plot_007_transfer_functions.py` (``../../examples/modes/plot_007_transfer_functions.py``)
+     - 00:03.006
      - 0.0
-   * - :ref:`sphx_glr_examples_ccr_example_002_density_poly.py` (``../../examples/ccr/example_002_density_poly.py``)
-     - 00:00.005
+   * - :ref:`sphx_glr_examples_modes_plot_004_gaussian_mixture.py` (``../../examples/modes/plot_004_gaussian_mixture.py``)
+     - 00:01.485
+     - 0.0
+   * - :ref:`sphx_glr_examples_modes_plot_005_gaussian_lowpass.py` (``../../examples/modes/plot_005_gaussian_lowpass.py``)
+     - 00:00.939
      - 0.0
    * - :ref:`sphx_glr_examples_ccr_example_001_ccr_basics.py` (``../../examples/ccr/example_001_ccr_basics.py``)
-     - 00:00.003
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_examples_ccr_example_002_density_poly.py` (``../../examples/ccr/example_002_density_poly.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_examples_ccr_example_003_ccr_overlap.py` (``../../examples/ccr/example_003_ccr_overlap.py``)
+     - 00:00.000
      - 0.0
    * - :ref:`sphx_glr_examples_modes_plot_001_gaussian_envelopes.py` (``../../examples/modes/plot_001_gaussian_envelopes.py``)
      - 00:00.000
@@ -48,12 +57,6 @@ Computation times
      - 00:00.000
      - 0.0
    * - :ref:`sphx_glr_examples_modes_plot_003_phase_invariance.py` (``../../examples/modes/plot_003_phase_invariance.py``)
-     - 00:00.000
-     - 0.0
-   * - :ref:`sphx_glr_examples_modes_plot_004_gaussian_lowpass.py` (``../../examples/modes/plot_004_gaussian_lowpass.py``)
-     - 00:00.000
-     - 0.0
-   * - :ref:`sphx_glr_examples_modes_plot_005_transfer_functions.py` (``../../examples/modes/plot_005_transfer_functions.py``)
      - 00:00.000
      - 0.0
    * - :ref:`sphx_glr_examples_modes_plot_006_mode_labels.py` (``../../examples/modes/plot_006_mode_labels.py``)

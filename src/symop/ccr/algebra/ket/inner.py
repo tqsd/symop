@@ -28,15 +28,15 @@ sandwich.
 
 from __future__ import annotations
 
-from symop.core.protocols import KetTermProto
+from symop.core.protocols.terms import KetTerm as KetTermProtocol
 
 from .from_word import ket_from_word
 from .identity_coeff import identity_coeff
 
 
 def ket_inner(
-    a: tuple[KetTermProto, ...],
-    b: tuple[KetTermProto, ...],
+    a: tuple[KetTermProtocol, ...],
+    b: tuple[KetTermProtocol, ...],
     *,
     eps: float = 1e-12,
 ) -> complex:

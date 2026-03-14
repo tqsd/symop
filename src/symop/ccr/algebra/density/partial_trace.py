@@ -24,7 +24,15 @@ from typing import Any
 
 from symop.ccr.algebra.density.combine import combine_like_terms_density
 from symop.ccr.algebra.ket.inner import ket_inner
-from symop.core.protocols import DensityTermProto, LadderOpProto, MonomialProto
+from symop.core.monomial import Monomial
+from symop.core.protocols.base import HasSignature
+from symop.core.protocols.ops import (
+    LadderOp as LadderOpProtocol,
+)
+from symop.core.protocols.ops import (
+    Monomial as MonomialProtocol,
+)
+from symop.core.protocols.terms import DensityTerm as DensityTermProtocol
 from symop.core.terms import DensityTerm, KetTerm
 
 
@@ -42,12 +50,12 @@ def _to_mode_signatures(trace_over_modes: Iterable[object]) -> set[Any]:
     """
     sigs: set[Any] = set()
     for obj in trace_over_modes:
-        if isinstance(obj, LadderOpProto):
+        if isinstance(obj, LadderOpProtocol):
             sigs.add(obj.mode.signature)
-        elif isinstance(obj, MonomialProto):
+        elif isinstance(obj, MonomialProtocol):
             for m in obj.mode_ops:
                 sigs.add(m.signature)
-        elif hasattr(obj, "signature"):
+        elif isinstance(obj, HasSignature):
             sigs.add(obj.signature)
         else:
             sigs.add(obj)
@@ -55,9 +63,9 @@ def _to_mode_signatures(trace_over_modes: Iterable[object]) -> set[Any]:
 
 
 def _split_monomial_by_modes(
-    m: MonomialProto,
+    m: MonomialProtocol,
     trace_sigs: set[Any],
-) -> tuple[MonomialProto, MonomialProto]:
+) -> tuple[Monomial, Monomial]:
     r"""Partition a monomial into kept vs traced parts.
 
     Operators whose ``op.mode.signature`` is **not** in ``trace_sigs`` go
@@ -78,9 +86,9 @@ def _split_monomial_by_modes(
 
 
 def density_partial_trace(
-    terms: tuple[DensityTermProto, ...],
+    terms: tuple[DensityTermProtocol, ...],
     trace_over_modes: Iterable[object],
-) -> tuple[DensityTermProto, ...]:
+) -> tuple[DensityTerm, ...]:
     r"""Partial trace over a subset of modes for a symbolic density polynomial.
 
     Let the Hilbert space factor as :math:`\mathcal{H} = \mathcal{H}_K \otimes
@@ -111,13 +119,13 @@ def density_partial_trace(
 
     Returns
     -------
-    tuple[DensityTermProto, ...]
+    tuple[DensityTerm, ...]
         The resulting density polynomial on :math:`\mathcal{H}_K` with traced
         modes removed and coefficients contracted.
 
     """
     trace_sigs = _to_mode_signatures(trace_over_modes)
-    out: list[DensityTermProto] = []
+    out: list[DensityTerm] = []
 
     for dt in terms:
         Lk, Lt = _split_monomial_by_modes(dt.left, trace_sigs)

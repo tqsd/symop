@@ -1,4 +1,4 @@
-symop.ccr.algebra.op
+﻿symop.ccr.algebra.op
 ====================
 
 .. automodule:: symop.ccr.algebra.op
@@ -14,4 +14,3 @@ symop.ccr.algebra.op
    from_words
    multiply
    poly
-   term

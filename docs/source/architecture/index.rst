@@ -126,3 +126,11 @@ Public API Strategy
 -------------------
 
 The project exposes a clearly defined public import surface.
+
+.. toctree::
+   :hidden:
+
+   devices
+
+    
+    

@@ -19,13 +19,13 @@ This module computes purity symbolically using the density inner product.
 
 from __future__ import annotations
 
-from symop.core.protocols import DensityTermProto
+from symop.core.protocols.terms import DensityTerm as DensityTermProtocol
 
 from .inner import density_inner
 
 
 def density_purity(
-    terms: tuple[DensityTermProto, ...],
+    terms: tuple[DensityTermProtocol, ...],
 ) -> float:
     r"""Compute the purity :math:`\mathrm{Tr}(\rho^2)`.
 

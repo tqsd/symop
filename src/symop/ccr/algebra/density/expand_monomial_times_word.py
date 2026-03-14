@@ -18,13 +18,19 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from symop.ccr.algebra.ket.from_word import ket_from_word
-from symop.core.protocols import KetTermProto, LadderOpProto, MonomialProto
+from symop.core.protocols.ops import (
+    LadderOp as LadderOpProtocol,
+)
+from symop.core.protocols.ops import (
+    Monomial as MonomialProtocol,
+)
+from symop.core.terms.ket_term import KetTerm
 
 
 def expand_monomial_times_word(
-    M: MonomialProto,
-    word: Iterable[LadderOpProto],
-) -> list[KetTermProto]:
+    M: MonomialProtocol,
+    word: Iterable[LadderOpProtocol],
+) -> list[KetTerm]:
     r"""Expand a monomial multiplied by an operator word.
 
     Produces all normally ordered ket terms resulting from
@@ -50,7 +56,7 @@ def expand_monomial_times_word(
 
     Returns
     -------
-    list[KetTermProto]
+    list[KetTerm]
         Expanded ket terms in normal order.
 
     """

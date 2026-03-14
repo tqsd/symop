@@ -1,4 +1,4 @@
-symop.modes.protocols
+﻿symop.modes.protocols
 =====================
 
 .. automodule:: symop.modes.protocols
@@ -12,5 +12,4 @@ symop.modes.protocols
 
    descriptor
    envelope
-   labels
    transfer

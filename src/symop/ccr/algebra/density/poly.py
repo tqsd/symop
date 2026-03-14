@@ -19,17 +19,19 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from symop.ccr.protocols.op import OpPolyProto
+from symop.ccr.protocols.op import OpPoly as OpPolyProtocol
 from symop.core.monomial import Monomial
-from symop.core.protocols import (
-    DensityTermProto,
-    KetTermProto,
-    LadderOpProto,
-    ModeOpProto,
+from symop.core.protocols.ops import (
+    LadderOp as LadderOpProtocol,
 )
-from symop.core.protocols.signature import SignatureProto
+from symop.core.protocols.ops import (
+    ModeOp as ModeOpProtocol,
+)
+from symop.core.protocols.terms import KetTerm as KetTermProtocol
 from symop.core.terms import DensityTerm
+from symop.core.types.signature import Signature
 
 from .apply_left import apply_left
 from .apply_right import apply_right
@@ -69,10 +71,10 @@ class DensityPoly:
 
     """
 
-    terms: tuple[DensityTermProto, ...] = ()
+    terms: tuple[DensityTerm, ...] = ()
 
     @staticmethod
-    def pure(ket_terms: tuple[KetTermProto, ...]) -> DensityPoly:
+    def pure(ket_terms: tuple[KetTermProtocol, ...]) -> DensityPoly:
         r"""Construct a pure-state density polynomial ``|psi><psi|``.
 
         Parameters
@@ -210,7 +212,7 @@ class DensityPoly:
         """
         return DensityPoly(density_scale(self.terms, c))
 
-    def apply_left(self, word: Iterable[LadderOpProto]) -> DensityPoly:
+    def apply_left(self, word: Iterable[LadderOpProtocol]) -> DensityPoly:
         r"""Apply an operator word to the left: ``word * rho``.
 
         This symbolically applies the ladder-operator word to each term's left
@@ -229,7 +231,7 @@ class DensityPoly:
         """
         return DensityPoly(apply_left(self.terms, word))
 
-    def apply_right(self, word: Iterable[LadderOpProto]) -> DensityPoly:
+    def apply_right(self, word: Iterable[LadderOpProtocol]) -> DensityPoly:
         r"""Apply an operator word to the right: ``rho * word``.
 
         This symbolically applies the ladder-operator word to each term's right
@@ -360,7 +362,7 @@ class DensityPoly:
         return float(self.hs_norm2() ** 0.5)
 
     @property
-    def unique_modes(self) -> tuple[ModeOpProto, ...]:
+    def unique_modes(self) -> tuple[ModeOpProtocol, ...]:
         r"""Return unique modes appearing in the density (first-seen order).
 
         Modes are extracted from both left and right monomials and uniqued
@@ -372,7 +374,7 @@ class DensityPoly:
             Unique modes in first-seen order.
 
         """
-        seen: dict[SignatureProto, ModeOpProto] = {}
+        seen: dict[Signature, ModeOpProtocol] = {}
         for dt in self.terms:
             for m in (*dt.left.mode_ops, *dt.right.mode_ops):
                 seen.setdefault(m.signature, m)
@@ -397,6 +399,21 @@ class DensityPoly:
     def is_identity_right(self) -> bool:
         r"""Return True iff every term has identity on the right."""
         return all(dt.right.is_identity for dt in self.terms)
+
+    @property
+    def is_creator_only_left(self) -> bool:
+        """Return True iff every term is creator-only or identity on the left."""
+        return all(dt.is_creator_only_left for dt in self.terms)
+
+    @property
+    def is_creator_only_right(self) -> bool:
+        """Return True iff every term is creator-only or identity on the right."""
+        return all(dt.is_creator_only_right for dt in self.terms)
+
+    @property
+    def is_creator_only(self) -> bool:
+        """Return True iff every term is creator-only or identity on both sides."""
+        return all(dt.is_creator_only for dt in self.terms)
 
     def is_trace_normalized(self, eps: float = 1e-12) -> bool:
         r"""Return True if :math:`\mathrm{Tr}(\rho)=1` within tolerance."""
@@ -428,7 +445,7 @@ class DensityPoly:
         r"""Return the number of density terms (structural length)."""
         return len(self.terms)
 
-    def __iter__(self) -> Iterator[DensityTermProto]:
+    def __iter__(self) -> Iterator[DensityTerm]:
         r"""Iterate over density terms in stored order."""
         return iter(self.terms)
 
@@ -535,8 +552,8 @@ class DensityPoly:
             If the operand type is unsupported.
 
         """
-        if isinstance(other, OpPolyProto):
-            out_terms: tuple[DensityTermProto, ...] = ()
+        if isinstance(other, OpPolyProtocol):
+            out_terms: tuple[DensityTerm, ...] = ()
             for t in other.terms:
                 if t.coeff == 0:
                     continue
@@ -559,3 +576,9 @@ class DensityPoly:
 
         """
         return NotImplemented
+
+
+if TYPE_CHECKING:
+    from symop.ccr.protocols.density import DensityPoly as DensityPolyProtocol
+
+    _density_poly_check: DensityPolyProtocol = DensityPoly.identity()

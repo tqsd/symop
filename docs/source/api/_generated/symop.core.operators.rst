@@ -10,5 +10,4 @@ symop.core.operators
    
       LadderOp
       ModeOp
-      OperatorKind
    

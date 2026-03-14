@@ -8,5 +8,5 @@ symop.ccr.protocols.ket
 
    .. autosummary::
    
-      KetPolyProto
+      KetPoly
    

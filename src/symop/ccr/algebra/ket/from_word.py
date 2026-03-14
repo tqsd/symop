@@ -71,14 +71,14 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from symop.core.monomial import Monomial
-from symop.core.protocols import LadderOpProto
-from symop.core.protocols.signature import SignatureProto
+from symop.core.protocols.ops import LadderOp as LadderOpProtocol
 from symop.core.terms import KetTerm
+from symop.core.types.signature import Signature
 
 
 def ket_from_word(
     *,
-    ops: Iterable[LadderOpProto],
+    ops: Iterable[LadderOpProtocol],
     eps: float = 1e-12,
 ) -> tuple[KetTerm, ...]:
     r"""Expand a ladder-operator word into normally ordered ket terms.
@@ -143,8 +143,8 @@ def ket_from_word(
     separate step that discards any term containing annihilation operators.
 
     """
-    coeffs: dict[SignatureProto, complex] = {}
-    reps: dict[SignatureProto, Monomial] = {}
+    coeffs: dict[Signature, complex] = {}
+    reps: dict[Signature, Monomial] = {}
 
     m0 = Monomial.identity()
     k0 = m0.signature
@@ -152,8 +152,8 @@ def ket_from_word(
     reps[k0] = m0
 
     for op in ops:
-        new_coeffs: dict[SignatureProto, complex] = {}
-        new_reps: dict[SignatureProto, Monomial] = {}
+        new_coeffs: dict[Signature, complex] = {}
+        new_reps: dict[Signature, Monomial] = {}
 
         for k, c in coeffs.items():
             m = reps[k]

@@ -13,3 +13,4 @@ symop.modes.envelopes
    base
    filtered
    gaussian
+   gaussian_mixture

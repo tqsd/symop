@@ -35,21 +35,23 @@ sits at the bottom of the CCR dependency tree.
 
 from __future__ import annotations
 
-from symop.core.protocols import (
-    DensityTermProto,
-    KetTermProto,
-    MonomialProto,
-    SignatureProto,
+from symop.core.protocols.ops import Monomial as MonomialProtocol
+from symop.core.protocols.terms import (
+    DensityTerm as DensityTermProtocol,
 )
+from symop.core.protocols.terms import (
+    KetTerm as KetTermProtocol,
+)
+from symop.core.types.signature import Signature
 
 
 def sig_mono(
-    m: MonomialProto,
+    m: MonomialProtocol,
     *,
     approx: bool = False,
     decimals: int = 12,
     ignore_global_phase: bool = False,
-) -> SignatureProto:
+) -> Signature:
     """Return an exact or approximate signature for a monomial.
 
     Parameters
@@ -80,12 +82,12 @@ def sig_mono(
 
 
 def sig_ket(
-    t: KetTermProto,
+    t: KetTermProtocol,
     *,
     approx: bool = False,
     decimals: int = 12,
     ignore_global_phase: bool = False,
-) -> SignatureProto:
+) -> Signature:
     """Return an exact or approximate signature for a ket term.
 
     Parameters
@@ -116,12 +118,12 @@ def sig_ket(
 
 
 def sig_density(
-    t: DensityTermProto,
+    t: DensityTermProtocol,
     *,
     approx: bool = False,
     decimals: int = 12,
     ignore_global_phase: bool = False,
-) -> SignatureProto:
+) -> Signature:
     """Return an exact or approximate signature for a density term.
 
     Parameters

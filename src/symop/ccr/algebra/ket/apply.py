@@ -23,7 +23,8 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from symop.core.protocols import KetTermProto, LadderOpProto
+from symop.core.protocols.ops.operators import LadderOp
+from symop.core.terms.ket_term import KetTerm
 
 from .combine import combine_like_terms_ket
 from .from_word import ket_from_word
@@ -32,11 +33,11 @@ from .scale import ket_scale
 
 
 def ket_apply_word(
-    ket: tuple[KetTermProto, ...],
-    word: Iterable[LadderOpProto],
+    ket: tuple[KetTerm, ...],
+    word: Iterable[LadderOp],
     *,
     eps: float = 1e-12,
-) -> tuple[KetTermProto, ...]:
+) -> tuple[KetTerm, ...]:
     """Apply a single operator word to a symbolic ket.
 
     The operator word (an ordered sequence of ladder operators) is expanded into
@@ -71,11 +72,11 @@ def ket_apply_word(
 
 
 def ket_apply_words_linear(
-    ket: tuple[KetTermProto, ...],
-    terms: Iterable[tuple[complex, Iterable[LadderOpProto]]],
+    ket: tuple[KetTerm, ...],
+    terms: Iterable[tuple[complex, Iterable[LadderOp]]],
     *,
     eps: float = 1e-12,
-) -> tuple[KetTermProto, ...]:
+) -> tuple[KetTerm, ...]:
     """Apply a linear combination of operator words to a ket.
 
     For each pair ``(c, word)`` in ``terms``, this computes
@@ -98,7 +99,7 @@ def ket_apply_words_linear(
         The resulting ket terms, combined into a canonical form.
 
     """
-    out: tuple[KetTermProto, ...] = ()
+    out: tuple[KetTerm, ...] = ()
 
     for coeff, word in terms:
         if coeff == 0:

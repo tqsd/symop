@@ -20,11 +20,18 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from symop.ccr.algebra.ket.apply import ket_apply_word, ket_apply_words_linear
-from symop.ccr.protocols.op import OpPolyProto
-from symop.core.protocols import KetTermProto, LadderOpProto, ModeOpProto
-from symop.core.protocols.signature import SignatureProto
+from symop.ccr.protocols.op import OpPoly as OpPolyProtocol
+from symop.core.protocols.ops.operators import (
+    LadderOp as LadderOpProtocol,
+)
+from symop.core.protocols.ops.operators import (
+    ModeOp,
+)
+from symop.core.terms.ket_term import KetTerm
+from symop.core.types.signature import Signature
 
 from .combine import combine_like_terms_ket
 from .from_ops import ket_from_ops
@@ -51,13 +58,18 @@ class KetPoly:
 
     """
 
-    terms: tuple[KetTermProto, ...] = ()
+    terms: tuple[KetTerm, ...] = ()
+
+    @staticmethod
+    def identity() -> KetPoly:
+        """Construct identity object ```KetPoly```."""
+        return KetPoly.from_ops(creators=(), annihilators=(), coeff=1.0)
 
     @staticmethod
     def from_ops(
         *,
-        creators: Iterable[LadderOpProto] = (),
-        annihilators: Iterable[LadderOpProto] = (),
+        creators: Iterable[LadderOpProtocol] = (),
+        annihilators: Iterable[LadderOpProtocol] = (),
         coeff: complex = 1.0,
         approx: bool = False,
         decimals: int = 12,
@@ -78,7 +90,7 @@ class KetPoly:
     @staticmethod
     def from_word(
         *,
-        ops: Iterable[LadderOpProto],
+        ops: Iterable[LadderOpProtocol],
         eps: float = 1e-12,
     ) -> KetPoly:
         r"""Construct by normal-ordering an operator word."""
@@ -129,7 +141,7 @@ class KetPoly:
         )
 
     def apply_word(
-        self, word: Iterable[LadderOpProto], *, eps: float = 1e-12
+        self, word: Iterable[LadderOpProtocol], *, eps: float = 1e-12
     ) -> KetPoly:
         r"""Apply an operator word on the left: ``word * self``.
 
@@ -150,7 +162,7 @@ class KetPoly:
 
     def apply_words(
         self,
-        terms: Iterable[tuple[complex, Iterable[LadderOpProto]]],
+        terms: Iterable[tuple[complex, Iterable[LadderOpProtocol]]],
         *,
         eps: float = 1e-12,
     ) -> KetPoly:
@@ -231,9 +243,9 @@ class KetPoly:
         return self.creation_count + self.annihilation_count
 
     @property
-    def unique_modes(self) -> tuple[ModeOpProto, ...]:
+    def unique_modes(self) -> tuple[ModeOp, ...]:
         r"""Return unique modes appearing in the polynomial (first-seen order)."""
-        seen: dict[SignatureProto, ModeOpProto] = {}
+        seen: dict[Signature, ModeOp] = {}
         for t in self.terms:
             for m in t.monomial.mode_ops:
                 seen.setdefault(m.signature, m)
@@ -431,6 +443,12 @@ class KetPoly:
         unless your :meth:`apply_words` implementation canonicalizes.
 
         """
-        if isinstance(other, OpPolyProto):
+        if isinstance(other, OpPolyProtocol):
             return self.apply_words((t.coeff, t.ops) for t in other.terms)
         return NotImplemented
+
+
+if TYPE_CHECKING:
+    from symop.ccr.protocols.ket import KetPoly as KetPolyProtocol
+
+    _ket_poly_check: KetPolyProtocol = KetPoly.identity()

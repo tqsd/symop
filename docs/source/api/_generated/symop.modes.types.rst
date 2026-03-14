@@ -1,4 +1,4 @@
-﻿symop.modes.types
+symop.modes.types
 =================
 
 .. automodule:: symop.modes.types

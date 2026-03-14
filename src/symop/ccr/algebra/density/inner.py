@@ -18,14 +18,14 @@ without constructing any explicit matrix representations.
 
 from __future__ import annotations
 
-from symop.core.protocols import DensityTermProto
+from symop.core.protocols.terms import DensityTerm as DensityTermProtocol
 
 from .overlap_right_left import overlap_right_left
 
 
 def density_inner(
-    a: tuple[DensityTermProto, ...],
-    b: tuple[DensityTermProto, ...],
+    a: tuple[DensityTermProtocol, ...],
+    b: tuple[DensityTermProtocol, ...],
 ) -> complex:
     r"""Compute the Hilbert--Schmidt inner product between two density polynomials.
 

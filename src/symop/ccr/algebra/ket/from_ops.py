@@ -27,7 +27,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from symop.core.monomial import Monomial
-from symop.core.protocols import LadderOpProto
+from symop.core.protocols.ops import LadderOp as LadderOpProtocol
 from symop.core.terms import KetTerm
 
 from .combine import combine_like_terms_ket
@@ -35,8 +35,8 @@ from .combine import combine_like_terms_ket
 
 def ket_from_ops(
     *,
-    creators: Iterable[LadderOpProto] = (),
-    annihilators: Iterable[LadderOpProto] = (),
+    creators: Iterable[LadderOpProtocol] = (),
+    annihilators: Iterable[LadderOpProtocol] = (),
     coeff: complex = 1.0,
     approx: bool = False,
     decimals: int = 12,

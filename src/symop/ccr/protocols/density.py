@@ -1,84 +1,43 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import Protocol, runtime_checkable
+from typing import Protocol, Self, runtime_checkable
 
-from symop.ccr.protocols.ket import KetPolyProto
-from symop.core.protocols import (
-    DensityTermProto,
-    HasSignature,
-    LadderOpProto,
-    ModeOpProto,
+from symop.ccr.protocols.actions import (
+    SupportsLeftWordAction,
+    SupportsRightWordAction,
 )
+from symop.ccr.protocols.common import (
+    Additive,
+    Canonical,
+    HasModes,
+    HasTerms,
+    ScalarMultipliable,
+    Scaled,
+)
+from symop.core.protocols.ops.operators import ModeOp
+from symop.core.protocols.terms.density_term import DensityTerm
 
 
 @runtime_checkable
-class SupportsLeftActionDensity(Protocol):
-    @staticmethod
-    def zero() -> SupportsLeftActionDensity: ...
-
-    def apply_left(
-        self, word: Iterable[LadderOpProto]
-    ) -> SupportsLeftActionDensity: ...
-
-    def scaled(self, c: complex) -> SupportsLeftActionDensity: ...
-
-    def __add__(
-        self, other: SupportsLeftActionDensity
-    ) -> SupportsLeftActionDensity: ...
-
-
-@runtime_checkable
-class SupportsRightActionDensity(Protocol):
-    @staticmethod
-    def zero() -> SupportsRightActionDensity: ...
-
-    def apply_right(
-        self, word: Iterable[LadderOpProto]
-    ) -> SupportsRightActionDensity: ...
-
-    def scaled(self, c: complex) -> SupportsRightActionDensity: ...
-
-    def __add__(
-        self, other: SupportsRightActionDensity
-    ) -> SupportsRightActionDensity: ...
-
-
-@runtime_checkable
-class DensityPolyProto(Protocol):
-    terms: tuple[DensityTermProto, ...]
-
-    # ---- Constructors -------------------------------------------------------
-    @staticmethod
-    def zero() -> DensityPolyProto: ...
-    @staticmethod
-    def pure(psi: KetPolyProto) -> DensityPolyProto: ...
-
-    # ---- Algebra ------------------------------------------------------------
-    def scaled(self, c: complex) -> DensityPolyProto: ...
-
-    def combine_like_terms(
-        self,
-        *,
-        eps: float = 1e-12,
-        approx: bool = False,
-        decimals: int = 12,
-        ignore_global_phase: bool = False,
-    ) -> DensityPolyProto: ...
-
-    def apply_left(self, word: Iterable[LadderOpProto]) -> DensityPolyProto: ...
-
-    def apply_right(self, word: Iterable[LadderOpProto]) -> DensityPolyProto: ...
-
+class DensityPoly(
+    HasTerms[DensityTerm],
+    Additive,
+    ScalarMultipliable,
+    HasModes,
+    Scaled,
+    Canonical,
+    SupportsLeftWordAction,
+    SupportsRightWordAction,
+    Protocol,
+):
     def trace(self) -> complex: ...
 
-    def partial_trace(
-        self, trace_over_modes: Iterable[HasSignature]
-    ) -> DensityPolyProto: ...
+    def partial_trace(self, trace_over_modes: Iterable[ModeOp]) -> Self: ...
 
-    def inner(self, other: DensityPolyProto) -> complex: ...
+    def inner(self, other: Self) -> complex: ...
     def purity(self) -> float: ...
-    def normalize_trace(self, *, eps: float = ...) -> DensityPolyProto: ...
+    def normalize_trace(self, *, eps: float = ...) -> Self: ...
     def hs_norm2(self) -> float: ...
     def hs_norm(self) -> float: ...
 
@@ -101,16 +60,12 @@ class DensityPolyProto(Protocol):
     @property
     def is_diagonal_in_monomials(self) -> bool: ...
 
-    @property
-    def unique_modes(self) -> tuple[ModeOpProto, ...]: ...
-
-    @property
-    def mode_count(self) -> int: ...
-
     # ---- Physical sanity checks --------------------------------------------
     def is_trace_normalized(self, eps: float = ...) -> bool: ...
     def is_pure(self, eps: float = ...) -> bool: ...
     def require_trace_normalized(self, eps: float = ...) -> None: ...
     def is_block_diagonal_by_modes(self) -> bool: ...
 
-    def __add__(self, other: DensityPolyProto) -> DensityPolyProto: ...
+    def __mul__(self, other: complex) -> Self: ...
+    def __matmul__(self, other: object) -> object: ...
+    def __rmatmul__(self, other: object) -> object: ...

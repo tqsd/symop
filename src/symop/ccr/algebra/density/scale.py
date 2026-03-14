@@ -17,13 +17,14 @@ The structure of monomials is unchanged; only coefficients are scaled.
 
 from __future__ import annotations
 
-from symop.core.protocols import DensityTermProto
+from symop.core.protocols.terms import DensityTerm as DensityTermProtocol
+from symop.core.terms.density_term import DensityTerm
 
 
 def density_scale(
-    terms: tuple[DensityTermProto, ...],
+    terms: tuple[DensityTermProtocol, ...],
     c: complex,
-) -> tuple[DensityTermProto, ...]:
+) -> tuple[DensityTerm, ...]:
     r"""Scale all density terms by a complex coefficient.
 
     Multiplies each term's coefficient by :math:`c` and returns a new tuple.

@@ -30,14 +30,14 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from symop.ccr.common.signatures import sig_mono
-from symop.core.protocols import KetTermProto
-from symop.core.protocols.monomials import MonomialProto
-from symop.core.protocols.signature import SignatureProto
-from symop.core.terms import KetTerm
+from symop.core.protocols.ops import Monomial
+from symop.core.protocols.terms import KetTerm as KetTermProtocol
+from symop.core.terms.ket_term import KetTerm
+from symop.core.types.signature import Signature
 
 
 def combine_like_terms_ket(
-    terms: Iterable[KetTermProto],
+    terms: Iterable[KetTermProtocol],
     eps: float = 1e-12,
     *,
     approx: bool = False,
@@ -79,8 +79,8 @@ def combine_like_terms_ket(
         Combined terms sorted by monomial exact signature.
 
     """
-    acc_coeff: dict[SignatureProto, complex] = {}
-    acc_mono: dict[SignatureProto, MonomialProto] = {}
+    acc_coeff: dict[Signature, complex] = {}
+    acc_mono: dict[Signature, Monomial] = {}
 
     for t in terms:
         k = sig_mono(

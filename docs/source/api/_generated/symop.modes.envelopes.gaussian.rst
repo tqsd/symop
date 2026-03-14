@@ -1,4 +1,4 @@
-﻿symop.modes.envelopes.gaussian
+symop.modes.envelopes.gaussian
 ==============================
 
 .. automodule:: symop.modes.envelopes.gaussian

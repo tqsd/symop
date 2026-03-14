@@ -21,12 +21,12 @@ The monomials are left unchanged; only the coefficients are scaled.
 
 from __future__ import annotations
 
-from symop.core.protocols import KetTermProto
+from symop.core.protocols.terms import KetTerm as KetTermProtocol
 from symop.core.terms import KetTerm
 
 
 def ket_scale(
-    terms: tuple[KetTermProto, ...],
+    terms: tuple[KetTermProtocol, ...],
     c: complex,
 ) -> tuple[KetTerm, ...]:
     r"""Scale a ket expansion by a complex scalar.

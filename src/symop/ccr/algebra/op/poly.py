@@ -1,7 +1,7 @@
 r"""Operator polynomials.
 
 This module defines :class:`OpPoly`, a finite linear combination of operator
-words (:class:`~symop.ccr.algebra.op.terms.OpTerm`).
+words (:class:`~symop.core.terms.op_term.OpTerm`).
 
 .. math::
 
@@ -15,23 +15,25 @@ from __future__ import annotations
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from math import cos, sin, sqrt
+from typing import TYPE_CHECKING, Self
 
-from symop.ccr.protocols.density import (
-    SupportsLeftActionDensity,
-    SupportsRightActionDensity,
+from symop.ccr.protocols.actions import (
+    SupportsLeftWordAction,
+    SupportsRightWordAction,
 )
-from symop.ccr.protocols.ket import KetPolyProto
-from symop.ccr.protocols.op import OpPolyProto, OpTermProto
-from symop.core.protocols import LadderOpProto, ModeOpProto
+from symop.ccr.protocols.common import Additive, Scaled
+from symop.ccr.protocols.ket import KetPoly
+from symop.core.protocols.ops.operators import LadderOp, ModeOp
+from symop.core.terms.op_term import OpTerm
+from symop.core.types.signature import Signature
 
 from .combine import combine_like_terms
 from .from_words import from_words
 from .multiply import multiply
-from .term import OpTerm
 
 
 @dataclass(frozen=True)
-class OpPoly(OpPolyProto):
+class OpPoly:
     r"""Finite linear combination of :class:`OpTerm` objects.
 
     Parameters
@@ -46,11 +48,11 @@ class OpPoly(OpPolyProto):
 
     """
 
-    terms: tuple[OpTermProto, ...] = ()
+    terms: tuple[OpTerm, ...] = ()
 
     @staticmethod
     def from_words(
-        words: Iterable[Iterable[LadderOpProto]],
+        words: Iterable[Iterable[LadderOp]],
         coeffs: Iterable[complex] | None = None,
     ) -> OpPoly:
         """Construct an operator polynomial from words and coefficients."""
@@ -67,41 +69,41 @@ class OpPoly(OpPolyProto):
         return OpPoly(())
 
     @staticmethod
-    def a(mode: ModeOpProto) -> OpPoly:
+    def a(mode: ModeOp) -> OpPoly:
         """Return the annihilation operator for ``mode``."""
         return OpPoly.from_words([[mode.ann]])
 
     @staticmethod
-    def adag(mode: ModeOpProto) -> OpPoly:
+    def adag(mode: ModeOp) -> OpPoly:
         """Return the creation operator for ``mode``."""
         return OpPoly.from_words([[mode.create]])
 
     @staticmethod
-    def n(mode: ModeOpProto) -> OpPoly:
+    def n(mode: ModeOp) -> OpPoly:
         r"""Return the number operator :math:`a^\dagger a` for ``mode``."""
         return OpPoly.from_words([[mode.create, mode.ann]])
 
     @staticmethod
-    def q(mode: ModeOpProto) -> OpPoly:
+    def q(mode: ModeOp) -> OpPoly:
         r"""Return the quadrature :math:`q = (a + a^\dagger)/\sqrt{2}`."""
         return (
             OpPoly.from_words([[mode.ann]]) + OpPoly.from_words([[mode.create]])
         ) * (1.0 / sqrt(2))
 
     @staticmethod
-    def x(mode: ModeOpProto) -> OpPoly:
+    def x(mode: ModeOp) -> OpPoly:
         """Alias for :meth:`q`."""
         return OpPoly.q(mode)
 
     @staticmethod
-    def p(mode: ModeOpProto) -> OpPoly:
+    def p(mode: ModeOp) -> OpPoly:
         r"""Return the quadrature :math:`p = (i a^\dagger - i a)/\sqrt{2}`."""
         return OpPoly.from_words([[mode.create]]) * (1j / sqrt(2)) + OpPoly.from_words(
             [[mode.ann]]
         ) * (-1j / sqrt(2))
 
     @staticmethod
-    def X_theta(mode: ModeOpProto, theta: float) -> OpPoly:
+    def X_theta(mode: ModeOp, theta: float) -> OpPoly:
         r"""Return the rotated quadrature :math:`X_\theta`."""
         e_m = cos(theta) - 1j * sin(theta)
         e_p = cos(theta) + 1j * sin(theta)
@@ -111,19 +113,19 @@ class OpPoly(OpPolyProto):
         ) * (1.0 / sqrt(2))
 
     @staticmethod
-    def q2(mode: ModeOpProto) -> OpPoly:
+    def q2(mode: ModeOp) -> OpPoly:
         """Return :math:`q^2`."""
         q = OpPoly.q(mode)
         return (q * q).combine_like_terms()
 
     @staticmethod
-    def p2(mode: ModeOpProto) -> OpPoly:
+    def p2(mode: ModeOp) -> OpPoly:
         """Return :math:`p^2`."""
         p = OpPoly.p(mode)
         return (p * p).combine_like_terms()
 
     @staticmethod
-    def n2(mode: ModeOpProto) -> OpPoly:
+    def n2(mode: ModeOp) -> OpPoly:
         """Return :math:`n^2`."""
         n = OpPoly.n(mode)
         return (n * n).combine_like_terms()
@@ -236,7 +238,21 @@ class OpPoly(OpPolyProto):
         """Return ``True`` iff all terms are empty words and there is at least one."""
         return len(self.terms) > 0 and all(len(t.ops) == 0 for t in self.terms)
 
-    def __add__(self, other: OpPolyProto) -> OpPoly:
+    @property
+    def unique_modes(self) -> tuple[ModeOp, ...]:
+        """Return unique modes appearing in the polynomial (first-seen order)."""
+        seen: dict[Signature, ModeOp] = {}
+        for t in self.terms:
+            for lop in t.ops:
+                seen.setdefault(lop.mode.signature, lop.mode)
+        return tuple(seen.values())
+
+    @property
+    def mode_count(self) -> int:
+        """Return the number of unique modes appearing in the polynomial."""
+        return len(self.unique_modes)
+
+    def __add__(self, other: Self) -> OpPoly:
         r"""Return the symbolic sum ``self + other``.
 
         Addition concatenates term tuples and does not automatically merge
@@ -256,7 +272,7 @@ class OpPoly(OpPolyProto):
         """
         return OpPoly((*self.terms, *other.terms))
 
-    def __sub__(self, other: OpPolyProto) -> OpPoly:
+    def __sub__(self, other: OpPoly) -> OpPoly:
         r"""Return the symbolic difference ``self - other``.
 
         Defined as
@@ -285,7 +301,7 @@ class OpPoly(OpPolyProto):
         """
         return self.scaled(-1.0)
 
-    def __mul__(self, other: OpPolyProto | complex) -> OpPoly:
+    def __mul__(self, other: Self | complex) -> OpPoly:
         r"""Return the symbolic product.
 
         This operator implements two cases:
@@ -440,7 +456,7 @@ class OpPoly(OpPolyProto):
         """
         return len(self.terms)
 
-    def __iter__(self) -> Iterator[OpTermProto]:
+    def __iter__(self) -> Iterator[OpTerm]:
         r"""Iterate over operator terms.
 
         Yields
@@ -477,10 +493,14 @@ class OpPoly(OpPolyProto):
         if isinstance(other, OpPoly):
             return OpPoly(multiply(self.terms, other.terms, term_factory=OpTerm))
 
-        if isinstance(other, KetPolyProto):
+        if isinstance(other, KetPoly):
             return other.apply_words((t.coeff, t.ops) for t in self.terms)
 
-        if isinstance(other, SupportsLeftActionDensity):
+        if (
+            isinstance(other, SupportsLeftWordAction)
+            and isinstance(other, Scaled)
+            and isinstance(other, Additive)
+        ):
             out = other.zero()
             for t in self.terms:
                 out = out + other.apply_left(t.ops).scaled(t.coeff)
@@ -496,10 +516,20 @@ class OpPoly(OpPolyProto):
         - ``SupportsRightActionDensity @ OpPoly``:
           Right action on a density via :meth:`apply_right`.
         """
-        if isinstance(other, SupportsRightActionDensity):
+        if (
+            isinstance(other, SupportsRightWordAction)
+            and isinstance(other, Scaled)
+            and isinstance(other, Additive)
+        ):
             out = other.zero()
             for t in self.terms:
                 out = out + other.apply_right(t.ops).scaled(t.coeff)
             return out
 
         return NotImplemented
+
+
+if TYPE_CHECKING:
+    from symop.ccr.protocols.op import OpPoly as OpPolyProtocol
+
+    _op_check: OpPolyProtocol = OpPoly.identity()

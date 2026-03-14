@@ -208,4 +208,4 @@ Dependencies
 
 - Internal: ``core``, ``modes``
 - External: NumPy (minimal use for scalar handling)
-- No plotting or visualization dependencies allowed.
+- No plotting or visualization dependencies allowedn ww

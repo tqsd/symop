@@ -8,7 +8,5 @@ symop.ccr.protocols.density
 
    .. autosummary::
    
-      DensityPolyProto
-      SupportsLeftActionDensity
-      SupportsRightActionDensity
+      DensityPoly
    

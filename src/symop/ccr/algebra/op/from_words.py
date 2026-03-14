@@ -20,12 +20,12 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from symop.ccr.protocols.typing import OpTermFactory, OpTermT
-from symop.core.protocols import LadderOpProto
+from symop.ccr._typing import OpTermFactory, OpTermT
+from symop.core.protocols.ops.operators import LadderOp
 
 
 def from_words(
-    words: Iterable[Iterable[LadderOpProto]],
+    words: Iterable[Iterable[LadderOp]],
     coeffs: Iterable[complex] | None = None,
     *,
     term_factory: OpTermFactory[OpTermT],

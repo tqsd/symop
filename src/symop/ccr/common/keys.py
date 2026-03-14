@@ -39,7 +39,8 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from symop.core.protocols import HasSignature, SignatureProto
+from symop.core.protocols.base.signature import HasSignature
+from symop.core.types.signature import Signature
 
 
 def sig_obj(
@@ -48,7 +49,7 @@ def sig_obj(
     approx: bool = False,
     decimals: int = 12,
     ignore_global_phase: bool = False,
-) -> SignatureProto:
+) -> Signature:
     """Return an exact or approximate key for a signature-bearing object.
 
     Parameters
@@ -84,7 +85,7 @@ def sig_lop(
     approx: bool = False,
     decimals: int = 12,
     ignore_global_phase: bool = False,
-) -> SignatureProto:
+) -> Signature:
     """Return an exact or approximate key for a ladder operator.
 
     Parameters
@@ -126,7 +127,7 @@ def sig_word(
     approx: bool = False,
     decimals: int = 12,
     ignore_global_phase: bool = False,
-) -> tuple[SignatureProto, ...]:
+) -> tuple[Signature, ...]:
     """Return a key for an operator word (ordered product of ladder operators).
 
     Parameters

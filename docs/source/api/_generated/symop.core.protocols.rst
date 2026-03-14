@@ -10,9 +10,9 @@ symop.core.protocols
    :toctree:
    :recursive:
 
-   envelope
-   labels
-   monomials
-   operators
-   signature
+   base
+   devices
+   modes
+   ops
+   states
    terms

@@ -16,14 +16,14 @@ coefficient equal to the sum of their coefficients.
 
 from __future__ import annotations
 
-from symop.ccr.protocols.op import OpTermProto
-from symop.ccr.protocols.typing import OpTermFactory, OpTermT
-from symop.core.protocols import LadderOpProto
-from symop.core.protocols.signature import SignatureProto
+from symop.ccr._typing import OpTermFactory, OpTermT
+from symop.core.protocols.ops.operators import LadderOp
+from symop.core.protocols.terms.op_term import OpTerm
+from symop.core.types.signature import Signature
 
 
 def combine_like_terms(
-    terms: tuple[OpTermProto, ...],
+    terms: tuple[OpTerm, ...],
     *,
     approx: bool = False,
     term_factory: OpTermFactory[OpTermT],
@@ -67,18 +67,18 @@ def combine_like_terms(
     """
     if approx:
 
-        def key(t: OpTermProto) -> SignatureProto:
+        def key(t: OpTerm) -> Signature:
             return t.approx_signature(
                 decimals=decimals, ignore_global_phase=ignore_global_phase
             )
 
     else:
 
-        def key(t: OpTermProto) -> SignatureProto:
+        def key(t: OpTerm) -> Signature:
             return t.signature
 
-    buckets: dict[SignatureProto, complex] = {}
-    reps: dict[SignatureProto, tuple[LadderOpProto, ...]] = {}
+    buckets: dict[Signature, complex] = {}
+    reps: dict[Signature, tuple[LadderOp, ...]] = {}
 
     for t in terms:
         k = key(t)

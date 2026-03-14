@@ -23,13 +23,13 @@ where ``W_i || V_j`` denotes concatenation of operator words.
 
 from __future__ import annotations
 
-from symop.ccr.protocols.op import OpTermProto
-from symop.ccr.protocols.typing import OpTermFactory, OpTermT
+from symop.ccr._typing import OpTermFactory, OpTermT
+from symop.core.protocols.terms.op_term import OpTerm
 
 
 def multiply(
-    a: tuple[OpTermProto, ...],
-    b: tuple[OpTermProto, ...],
+    a: tuple[OpTerm, ...],
+    b: tuple[OpTerm, ...],
     *,
     term_factory: OpTermFactory[OpTermT],
 ) -> tuple[OpTermT, ...]:

@@ -22,20 +22,19 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from symop.ccr.common.signatures import sig_density
-from symop.core.protocols import DensityTermProto
-from symop.core.protocols.monomials import MonomialProto
-from symop.core.protocols.signature import SignatureProto
+from symop.core.protocols.ops import Monomial as MonomialProtocol
 from symop.core.terms import DensityTerm
+from symop.core.types.signature import Signature
 
 
 def combine_like_terms_density(
-    terms: Iterable[DensityTermProto],
+    terms: Iterable[DensityTerm],
     eps: float = 1e-12,
     *,
     approx: bool = False,
     decimals: int = 12,
     ignore_global_phase: bool = False,
-) -> tuple[DensityTermProto, ...]:
+) -> tuple[DensityTerm, ...]:
     r"""Combine like density terms by summing coefficients and dropping zeros.
 
     This function groups density terms by a (left, right) signature key and
@@ -64,7 +63,7 @@ def combine_like_terms_density(
 
     Returns
     -------
-    tuple[DensityTermProto, ...]
+    tuple[DensityTerm, ...]
         A tuple of merged density terms with like terms combined, near-zero
         groups removed, and deterministic ordering.
 
@@ -81,8 +80,8 @@ def combine_like_terms_density(
     accumulation and a final sort over the ``K`` merged terms.
 
     """
-    acc_coeff: dict[SignatureProto, complex] = {}
-    acc_rep: dict[SignatureProto, tuple[MonomialProto, MonomialProto]] = {}
+    acc_coeff: dict[Signature, complex] = {}
+    acc_rep: dict[Signature, tuple[MonomialProtocol, MonomialProtocol]] = {}
 
     for t in terms:
         key = sig_density(

@@ -1,4 +1,4 @@
-symop.ccr.protocols
+﻿symop.ccr.protocols
 ===================
 
 .. automodule:: symop.ccr.protocols
@@ -10,7 +10,8 @@ symop.ccr.protocols
    :toctree:
    :recursive:
 
+   actions
+   common
    density
    ket
    op
-   typing

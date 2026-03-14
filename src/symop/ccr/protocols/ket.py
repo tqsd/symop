@@ -1,58 +1,47 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import Protocol, runtime_checkable
+from typing import Protocol, Self, runtime_checkable
 
-from symop.core.protocols import KetTermProto, LadderOpProto, ModeOpProto
+from symop.ccr.protocols.common import (
+    Additive,
+    Canonical,
+    HasModes,
+    HasTerms,
+    ScalarMultipliable,
+    Scaled,
+)
+from symop.core.protocols.ops.operators import LadderOp
+from symop.core.protocols.terms.ket_term import KetTerm
 
 
 @runtime_checkable
-class KetPolyProto(Protocol):
-    terms: tuple[KetTermProto, ...]
-
-    # ---- Constructors -------------------------------------------------------
-    @staticmethod
-    def from_ops(
-        *,
-        creators: Iterable[LadderOpProto] = ...,
-        annihilators: Iterable[LadderOpProto] = ...,
-        coeff: complex = ...,
-    ) -> KetPolyProto: ...
-
-    @staticmethod
-    def from_word(*, ops: Iterable[LadderOpProto]) -> KetPolyProto: ...
-
-    # ---- Algebra ------------------------------------------------------------
-    def combine_like_terms(
-        self,
-        *,
-        eps: float = 1e-12,
-        approx: bool = False,
-        decimals: int = 12,
-        ignore_global_phase: bool = False,
-    ) -> KetPolyProto: ...
-
-    def scaled(self, c: complex) -> KetPolyProto: ...
-    def multiply(self, other: KetPolyProto) -> KetPolyProto: ...
-    def inner(self, other: KetPolyProto) -> complex: ...
+class KetPoly(
+    HasTerms[KetTerm],
+    Additive,
+    Scaled,
+    ScalarMultipliable,
+    Canonical,
+    HasModes,
+    Protocol,
+):
+    def multiply(self, other: Self) -> Self: ...
+    def inner(self, other: Self) -> complex: ...
     def norm2(self) -> float: ...
-    def normalize(self, *, eps: float = ...) -> KetPolyProto: ...
+    def normalize(self, *, eps: float = ...) -> Self: ...
 
-    def apply_word(self, word: Iterable[LadderOpProto]) -> KetPolyProto: ...
+    def apply_word(self, word: Iterable[LadderOp]) -> Self: ...
 
     def apply_words(
-        self, terms: Iterable[tuple[complex, Iterable[LadderOpProto]]]
-    ) -> KetPolyProto: ...
+        self, terms: Iterable[tuple[complex, Iterable[LadderOp]]]
+    ) -> Self: ...
 
     # ---- Operators ----------------------------------------------------------
-    def __add__(self, other: KetPolyProto) -> KetPolyProto: ...
-
-    def __mul__(self, other: KetPolyProto | complex) -> KetPolyProto: ...
-
-    def __rmul__(self, other: complex) -> KetPolyProto: ...
+    def __mul__(self, other: Self | complex) -> Self: ...
+    def __rmatmul__(self, other: object) -> object: ...
 
     # ---- Queries / properties ----------------------------------------------
-    def is_normalized(self, eps: float = ...) -> bool: ...
+    def is_normalized(self, *, eps: float = ...) -> bool: ...
 
     @property
     def is_creator_only(self) -> bool: ...
@@ -71,12 +60,6 @@ class KetPolyProto(Protocol):
 
     @property
     def total_degree(self) -> int: ...
-
-    @property
-    def unique_modes(self) -> tuple[ModeOpProto, ...]: ...
-
-    @property
-    def mode_count(self) -> int: ...
 
     # ---- Guards -------------------------------------------------------------
     def require_creator_only(self) -> None: ...

@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:04.213** total execution time for 6 files **from examples/modes**:
+**00:05.430** total execution time for 7 files **from examples/modes**:
 
 .. container::
 
@@ -32,8 +32,14 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_examples_modes_plot_006_mode_labels.py` (``plot_006_mode_labels.py``)
-     - 00:04.213
+   * - :ref:`sphx_glr_examples_modes_plot_007_transfer_functions.py` (``plot_007_transfer_functions.py``)
+     - 00:03.006
+     - 0.0
+   * - :ref:`sphx_glr_examples_modes_plot_004_gaussian_mixture.py` (``plot_004_gaussian_mixture.py``)
+     - 00:01.485
+     - 0.0
+   * - :ref:`sphx_glr_examples_modes_plot_005_gaussian_lowpass.py` (``plot_005_gaussian_lowpass.py``)
+     - 00:00.939
      - 0.0
    * - :ref:`sphx_glr_examples_modes_plot_001_gaussian_envelopes.py` (``plot_001_gaussian_envelopes.py``)
      - 00:00.000
@@ -44,9 +50,6 @@ Computation times
    * - :ref:`sphx_glr_examples_modes_plot_003_phase_invariance.py` (``plot_003_phase_invariance.py``)
      - 00:00.000
      - 0.0
-   * - :ref:`sphx_glr_examples_modes_plot_004_gaussian_lowpass.py` (``plot_004_gaussian_lowpass.py``)
-     - 00:00.000
-     - 0.0
-   * - :ref:`sphx_glr_examples_modes_plot_005_transfer_functions.py` (``plot_005_transfer_functions.py``)
+   * - :ref:`sphx_glr_examples_modes_plot_006_mode_labels.py` (``plot_006_mode_labels.py``)
      - 00:00.000
      - 0.0
