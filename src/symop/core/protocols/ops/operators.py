@@ -39,8 +39,11 @@ class ModeOp(HasSignature, Protocol):
 
 @runtime_checkable
 class LadderOp(HasSignature, Protocol):
-    kind: OperatorKind
-    mode: ModeOp
+    @property
+    def kind(self) -> OperatorKind: ...
+
+    @property
+    def mode(self) -> ModeOp: ...
 
     @property
     def is_annihilation(self) -> bool: ...
