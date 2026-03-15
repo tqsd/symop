@@ -91,7 +91,7 @@ def ket_multiply(
     This routine is symbolic. It does not apply the result to a vacuum state.
 
     """
-    out: list[KetTermProtocol] = []
+    out: list[KetTerm] = []
 
     for ti in a:
         if abs(ti.coeff) <= eps:

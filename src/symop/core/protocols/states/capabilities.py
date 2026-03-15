@@ -1,10 +1,17 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from typing import Protocol, Self, runtime_checkable
 
 from symop.core.protocols.base.signature import Signature
-from symop.core.protocols.modes.labels import ModeLabel, Path
-from symop.core.protocols.ops.operators import ModeOp
+from symop.core.protocols.devices.label_edit import LabelEdit
+from symop.core.protocols.modes.labels import (
+    ModeLabel as ModeLabelProtocol,
+)
+from symop.core.protocols.modes.labels import (
+    Path as PathProtocol,
+)
+from symop.core.protocols.ops.operators import ModeOp as ModeOpProtocol
 from symop.core.protocols.states.state_kind import DensityState
 
 
@@ -26,13 +33,13 @@ class SupportsToDensity(Protocol):
 @runtime_checkable
 class SupportsModeLabels(Protocol):
     @property
-    def mode_labels(self) -> dict[Signature, ModeLabel]: ...
+    def mode_labels(self) -> Mapping[Signature, ModeLabelProtocol]: ...
 
-    def label_for_mode(self, mode_sig: Signature) -> ModeLabel: ...
+    def label_for_mode(self, mode_sig: Signature) -> ModeLabelProtocol: ...
 
-    def apply_label_edits(self, edits: tuple[object, ...]) -> Self: ...
+    def apply_label_edits(self, edits: tuple[LabelEdit, ...]) -> Self: ...
 
     @property
-    def modes(self) -> tuple[ModeOp, ...]: ...
+    def modes(self) -> tuple[ModeOpProtocol, ...]: ...
 
-    def modes_on_path(self, path: Path) -> tuple[ModeOp, ...]: ...
+    def modes_on_path(self, path: PathProtocol) -> tuple[ModeOpProtocol, ...]: ...

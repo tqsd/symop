@@ -40,7 +40,7 @@ from symop.core.protocols.terms import (
     DensityTerm as DensityTermProtocol,
 )
 from symop.core.protocols.terms import (
-    KetTerm as KetTermProtocol,
+    KetTerm as KetTerm,
 )
 from symop.core.types.signature import Signature
 
@@ -82,7 +82,7 @@ def sig_mono(
 
 
 def sig_ket(
-    t: KetTermProtocol,
+    t: KetTerm,
     *,
     approx: bool = False,
     decimals: int = 12,

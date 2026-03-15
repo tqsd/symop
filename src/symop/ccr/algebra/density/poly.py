@@ -21,6 +21,7 @@ from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from symop.ccr.protocols.ket import KetPoly as KetPolyProtocol
 from symop.ccr.protocols.op import OpPoly as OpPolyProtocol
 from symop.core.monomial import Monomial
 from symop.core.protocols.ops import (
@@ -29,7 +30,6 @@ from symop.core.protocols.ops import (
 from symop.core.protocols.ops import (
     ModeOp as ModeOpProtocol,
 )
-from symop.core.protocols.terms import KetTerm as KetTermProtocol
 from symop.core.terms import DensityTerm
 from symop.core.types.signature import Signature
 
@@ -74,13 +74,13 @@ class DensityPoly:
     terms: tuple[DensityTerm, ...] = ()
 
     @staticmethod
-    def pure(ket_terms: tuple[KetTermProtocol, ...]) -> DensityPoly:
+    def pure(ket: KetPolyProtocol) -> DensityPoly:
         r"""Construct a pure-state density polynomial ``|psi><psi|``.
 
         Parameters
         ----------
-        ket_terms:
-            Ket polynomial terms describing :math:`|\psi\rangle`.
+        ket:
+            Ket polynomial describing :math:`|\psi\rangle`.
 
         Returns
         -------
@@ -88,7 +88,7 @@ class DensityPoly:
             Density polynomial representing :math:`|\psi\rangle\langle\psi|`.
 
         """
-        return DensityPoly(density_pure(ket_terms))
+        return DensityPoly(density_pure(ket.terms))
 
     @staticmethod
     def zero() -> DensityPoly:
