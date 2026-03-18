@@ -14,7 +14,9 @@ from __future__ import annotations
 import math
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
+from typing import cast
 
+from symop.ccr.algebra.density.poly import DensityPoly
 from symop.ccr.protocols.density import DensityPoly as DensityPolyProtocol
 from symop.core.protocols.ops import ModeOp as ModeOpProtocol
 from symop.polynomial.channels.primitives.unitary_dilation import (
@@ -64,7 +66,7 @@ def pure_loss_densitypoly(
     eta: float,
     normalize_trace: bool = True,
     eps: float = 1e-14,
-) -> DensityPolyProtocol:
+) -> DensityPoly:
     r"""Apply a single-mode pure-loss channel to a symbolic density polynomial.
 
     Channel definition
@@ -133,11 +135,14 @@ def pure_loss_densitypoly(
         check_unitary=False,
     )
 
-    return apply_unitary_dilation_densitypoly(
-        rho,
-        dilation=dilation,
-        normalize_trace=normalize_trace,
-        eps=eps,
+    return cast(
+        DensityPoly,
+        apply_unitary_dilation_densitypoly(
+            rho,
+            dilation=dilation,
+            normalize_trace=normalize_trace,
+            eps=eps,
+        ),
     )
 
 
@@ -167,7 +172,7 @@ def pure_loss_densitypoly_many(
     specs: Iterable[PureLossSpec],
     normalize_trace: bool = True,
     eps: float = 1e-14,
-) -> DensityPolyProtocol:
+) -> DensityPoly:
     r"""Apply multiple pure-loss channels sequentially.
 
     This is a convenience wrapper that repeatedly applies
@@ -206,7 +211,7 @@ def pure_loss_densitypoly_many(
             normalize_trace=normalize_trace,
             eps=eps,
         )
-    return out
+    return cast(DensityPoly, out)
 
 
 def pure_loss_densitypoly_by_mode(
@@ -216,7 +221,7 @@ def pure_loss_densitypoly_by_mode(
     env_by_signal_mode: Mapping[ModeOpProtocol, ModeOpProtocol],
     normalize_trace: bool = True,
     eps: float = 1e-14,
-) -> DensityPolyProtocol:
+) -> DensityPoly:
     r"""Apply pure loss to several modes specified by mappings.
 
     Parameters

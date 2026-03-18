@@ -25,11 +25,11 @@ polynomial is creators only (plus the identity term).
 
 from __future__ import annotations
 
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass, field, replace
 from functools import cached_property
 from itertools import count
-from typing import Literal
+from typing import TYPE_CHECKING, Literal, cast
 
 from symop.ccr.algebra.ket.poly import KetPoly
 from symop.core.protocols.devices.label_edit import (
@@ -61,7 +61,7 @@ _state_counter = count(1)
 
 
 @dataclass(frozen=True)
-class KetPolyState(KetPolyStateProtocol):
+class KetPolyState:
     r"""Polynomial ket state wrapper.
 
     Invariant
@@ -377,7 +377,7 @@ class KetPolyState(KetPolyStateProtocol):
 
     def apply_label_edits(
         self,
-        edits: tuple[LabelEdit, ...],
+        edits: Sequence[LabelEdit],
     ) -> KetPolyState:
         r"""Apply semantic label edits to the state.
 
@@ -639,4 +639,8 @@ class KetPolyState(KetPolyStateProtocol):
         """
         from symop.polynomial.state.density import DensityPolyState
 
-        return DensityPolyState.pure(self)
+        return DensityPolyState.pure(cast(KetPolyStateProtocol, self))
+
+
+if TYPE_CHECKING:
+    _ket_check: KetPolyStateProtocol = KetPolyState.vacuum()

@@ -202,7 +202,7 @@ def make_substitution(bmap: BogoliubovMap) -> SubstFn:
     index = {m.signature: i for i, m in enumerate(modes)}
 
     def subst(op: LadderOpProtocol) -> list[tuple[complex, LadderOpProtocol]]:
-        k = index.get(op.mode.signature, None)
+        k = index.get(op.mode.signature)
         if k is None:
             return [(1.0 + 0.0j, op)]
 

@@ -25,11 +25,11 @@ metadata when transformations rewrite the polynomial.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field, replace
 from functools import cached_property
 from itertools import count
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 from symop.ccr.algebra.density.poly import DensityPoly
 from symop.core.protocols.base.signature import Signature
@@ -358,7 +358,7 @@ class DensityPolyState(DensityPolyStateProtocol):
 
     def apply_label_edits(
         self,
-        edits: tuple[LabelEdit, ...],
+        edits: Sequence[LabelEdit],
     ) -> DensityPolyState:
         r"""Apply semantic label edits to the state.
 
@@ -598,3 +598,7 @@ class DensityPolyState(DensityPolyStateProtocol):
 
         """
         return abs(self.trace() - 1.0) <= eps
+
+
+if TYPE_CHECKING:
+    _density_check: DensityPolyStateProtocol = DensityPolyState.vacuum()

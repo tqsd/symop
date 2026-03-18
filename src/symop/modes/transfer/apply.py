@@ -42,7 +42,6 @@ represents the transmitted power of the mode after filtering.
 from __future__ import annotations
 
 from symop.core.protocols.modes.transfer import TransferFunction
-from symop.modes.envelopes.base import BaseEnvelope
 from symop.modes.envelopes.filtered import FilteredEnvelope
 from symop.modes.protocols.envelope import (
     GaussianClosedEnvelope,
@@ -55,7 +54,7 @@ from symop.modes.protocols.transfer import (
 
 def apply_transfer(
     transfer: TransferFunction,
-    env: BaseEnvelope,
+    env: TimeFrequencyEnvelope,
     *,
     n_fft: int = 2**15,
     w_span_sigma: float = 12.0,

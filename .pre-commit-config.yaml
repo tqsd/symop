@@ -18,3 +18,4 @@ repos:
           - scipy
           - matplotlib
           - typing-extensions
+          - ipython

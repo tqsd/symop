@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from typing import Protocol, Self, runtime_checkable
 
 from symop.core.protocols.base.signature import Signature
@@ -37,7 +37,7 @@ class SupportsModeLabels(Protocol):
 
     def label_for_mode(self, mode_sig: Signature) -> ModeLabelProtocol: ...
 
-    def apply_label_edits(self, edits: tuple[LabelEdit, ...]) -> Self: ...
+    def apply_label_edits(self, edits: Sequence[LabelEdit]) -> Self: ...
 
     @property
     def modes(self) -> tuple[ModeOpProtocol, ...]: ...

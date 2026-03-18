@@ -1,12 +1,16 @@
 from __future__ import annotations
 
-from typing import Protocol, TypeAlias, TypeVar, runtime_checkable
+from typing import Protocol, TypeVar, runtime_checkable
 
 from symop.core.protocols.devices.action import DeviceAction
 from symop.core.protocols.devices.apply_context import ApplyContext
+from symop.core.protocols.states.base import State
 from symop.core.protocols.states.capabilities import SupportsModeLabels
 
 StateT = TypeVar("StateT", bound=SupportsModeLabels)
+
+
+class ActionableState(SupportsModeLabels, State, Protocol): ...
 
 
 @runtime_checkable
@@ -20,4 +24,4 @@ class DeviceKernel(Protocol[StateT]):
     ) -> StateT: ...
 
 
-KernelFn: TypeAlias = DeviceKernel
+KernelFn = DeviceKernel[ActionableState]
