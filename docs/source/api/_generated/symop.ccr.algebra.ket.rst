@@ -1,4 +1,4 @@
-symop.ccr.algebra.ket
+﻿symop.ccr.algebra.ket
 =====================
 
 .. automodule:: symop.ccr.algebra.ket

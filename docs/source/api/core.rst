@@ -3,6 +3,8 @@ Core
 
 .. autosummary::
    :toctree: _generated
-   :recursive:
 
-   symop.core
+   symop.core.terms
+   symop.core.types
+   symop.core.monomial
+   symop.core.operators

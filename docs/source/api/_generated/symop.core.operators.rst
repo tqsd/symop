@@ -1,4 +1,4 @@
-symop.core.operators
+﻿symop.core.operators
 ====================
 
 .. automodule:: symop.core.operators

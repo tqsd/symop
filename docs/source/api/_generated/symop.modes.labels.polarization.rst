@@ -1,4 +1,4 @@
-﻿symop.modes.labels.polarization
+symop.modes.labels.polarization
 ===============================
 
 .. automodule:: symop.modes.labels.polarization

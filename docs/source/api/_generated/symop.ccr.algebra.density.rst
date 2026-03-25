@@ -1,4 +1,4 @@
-symop.ccr.algebra.density
+﻿symop.ccr.algebra.density
 =========================
 
 .. automodule:: symop.ccr.algebra.density
@@ -16,6 +16,7 @@ symop.ccr.algebra.density
    expand_monomial_times_word
    expand_word_times_monomial
    inner
+   multiply
    normalize_trace
    overlap_right_left
    partial_trace

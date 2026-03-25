@@ -22,10 +22,11 @@ are identified and compared.
 
     </div>
 
-CCR
-===
+Devices
+=======
 
-These examples show the basics of the ``ccr`` module.
+These examples show how different devices can be combined
+into a bigger simulation.
 
 
 
@@ -37,52 +38,52 @@ These examples show the basics of the ``ccr`` module.
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates the generalized CCR implemented at the ladder-operator level:">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates the use of the NumberStateSource with the polynomial state.">
 
 .. only:: html
 
-  .. image:: /examples/ccr/images/thumb/sphx_glr_example_003_ccr_overlap_thumb.png
+  .. image:: /examples/devices/images/thumb/sphx_glr_example_001_number_state_source_thumb.png
     :alt:
 
-  :doc:`/examples/ccr/example_003_ccr_overlap`
+  :doc:`/examples/devices/example_001_number_state_source`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Overlap-driven CCR commutators (LadderOp)</div>
+      <div class="sphx-glr-thumbnail-title">Number State Source Example</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates the operator-polynomial layer OpPoly.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how spectral filtering is applied to a state using SpectralFilter model, we also make use of NumberStateSource to generate the state.">
 
 .. only:: html
 
-  .. image:: /examples/ccr/images/thumb/sphx_glr_example_001_ccr_basics_thumb.png
+  .. image:: /examples/devices/images/thumb/sphx_glr_example_002_spectral_filter_thumb.png
     :alt:
 
-  :doc:`/examples/ccr/example_001_ccr_basics`
+  :doc:`/examples/devices/example_002_spectral_filter`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">OpPoly basics: word polynomials and adjoints</div>
+      <div class="sphx-glr-thumbnail-title">Spectral Filter Example</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates the symbolic right action of operator polynomials on a density polynomial:">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates the use of the BeamSplitter model, we also make use of NumberStateSource to generate the state.">
 
 .. only:: html
 
-  .. image:: /examples/ccr/images/thumb/sphx_glr_example_002_density_poly_thumb.png
+  .. image:: /examples/devices/images/thumb/sphx_glr_example_004_beamsplitter_thumb.png
     :alt:
 
-  :doc:`/examples/ccr/example_002_density_poly`
+  :doc:`/examples/devices/example_004_beamsplitter`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">DensityPoly right action: rho @ OpPoly</div>
+      <div class="sphx-glr-thumbnail-title">Ideal Beam-Splitter Example</div>
     </div>
 
 
@@ -92,11 +93,11 @@ These examples show the basics of the ``ccr`` module.
 
     </div>
 
-Mode management
-===============
+Detectors
+=========
 
-These examples introduce envelopes and overlaps and build intuition for how
-modes behave in *symop*.
+These examples show how different detectors can be used in
+the simulation
 
 
 
@@ -108,120 +109,35 @@ modes behave in *symop*.
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example introduces symop.modes.envelopes.gaussian.GaussianEnvelope.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates the use of the NumberDetector.">
 
 .. only:: html
 
-  .. image:: /examples/modes/images/thumb/sphx_glr_plot_001_gaussian_envelopes_thumb.png
+  .. image:: /examples/measurement_devices/images/thumb/sphx_glr_example_001_number_detector_thumb.png
     :alt:
 
-  :doc:`/examples/modes/plot_001_gaussian_envelopes`
+  :doc:`/examples/measurement_devices/example_001_number_detector`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Gaussian envelopes: delay, phase, and overlap</div>
+      <div class="sphx-glr-thumbnail-title">Number Detector Example</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="We study how the magnitude of the overlap between two identical Gaussian envelopes decays with time delay, and we also inspect the corresponding spectral intensity profile.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example prepares two identical single-photon inputs, interferes them on a 50/50 beam splitter, and observes the joint output photon-number distribution across both output ports.">
 
 .. only:: html
 
-  .. image:: /examples/modes/images/thumb/sphx_glr_plot_002_overlap_vs_delay_thumb.png
+  .. image:: /examples/measurement_devices/images/thumb/sphx_glr_example_002_coincidence_detection_thumb.png
     :alt:
 
-  :doc:`/examples/modes/plot_002_overlap_vs_delay`
+  :doc:`/examples/measurement_devices/example_002_coincidence_detection`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Overlap magnitude vs delay and spectral profile</div>
-    </div>
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="A global phase on one envelope rotates the complex overlap but does not change its magnitude:">
-
-.. only:: html
-
-  .. image:: /examples/modes/images/thumb/sphx_glr_plot_003_phase_invariance_thumb.png
-    :alt:
-
-  :doc:`/examples/modes/plot_003_phase_invariance`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Global phase: magnitude invariance and phase rotation</div>
-    </div>
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="We construct a small mixture of normalized Gaussian envelopes and study:">
-
-.. only:: html
-
-  .. image:: /examples/modes/images/thumb/sphx_glr_plot_004_gaussian_mixture_thumb.png
-    :alt:
-
-  :doc:`/examples/modes/plot_004_gaussian_mixture`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Gaussian mixture: envelope shape, overlap vs delay, and spectrum</div>
-    </div>
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how a full mode label consists of:">
-
-.. only:: html
-
-  .. image:: /examples/modes/images/thumb/sphx_glr_plot_006_mode_labels_thumb.png
-    :alt:
-
-  :doc:`/examples/modes/plot_006_mode_labels`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Mode labels: envelope, polarization, and path</div>
-    </div>
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how a spectral filter transforms an envelope.">
-
-.. only:: html
-
-  .. image:: /examples/modes/images/thumb/sphx_glr_plot_005_gaussian_lowpass_thumb.png
-    :alt:
-
-  :doc:`/examples/modes/plot_005_gaussian_lowpass`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Filtering a Gaussian envelope in the frequency domain</div>
-    </div>
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how several common spectral transfer functions transform the same input Gaussian envelope.">
-
-.. only:: html
-
-  .. image:: /examples/modes/images/thumb/sphx_glr_plot_007_transfer_functions_thumb.png
-    :alt:
-
-  :doc:`/examples/modes/plot_007_transfer_functions`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Filtering a Gaussian envelope with multiple transfer functions</div>
+      <div class="sphx-glr-thumbnail-title">HOM Coincidence Observation Example</div>
     </div>
 
 
@@ -237,8 +153,8 @@ modes behave in *symop*.
    :includehidden:
 
 
-   /examples/ccr/index.rst
-   /examples/modes/index.rst
+   /examples/devices/index.rst
+   /examples/measurement_devices/index.rst
 
 
 .. only:: html

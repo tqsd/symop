@@ -1,4 +1,4 @@
-﻿symop.modes.transfer
+symop.modes.transfer
 ====================
 
 .. automodule:: symop.modes.transfer

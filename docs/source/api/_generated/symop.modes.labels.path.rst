@@ -1,4 +1,4 @@
-﻿symop.modes.labels.path
+symop.modes.labels.path
 =======================
 
 .. automodule:: symop.modes.labels.path

@@ -1,4 +1,4 @@
-symop.core.monomial
+﻿symop.core.monomial
 ===================
 
 .. automodule:: symop.core.monomial

@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:05.430** total execution time for 10 files **from all galleries**:
+**00:04.508** total execution time for 5 files **from all galleries**:
 
 .. container::
 
@@ -32,33 +32,18 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_examples_modes_plot_007_transfer_functions.py` (``../../examples/modes/plot_007_transfer_functions.py``)
-     - 00:03.006
+   * - :ref:`sphx_glr_examples_measurement_devices_example_001_number_detector.py` (``../../examples/measurement_devices/example_001_number_detector.py``)
+     - 00:01.551
      - 0.0
-   * - :ref:`sphx_glr_examples_modes_plot_004_gaussian_mixture.py` (``../../examples/modes/plot_004_gaussian_mixture.py``)
-     - 00:01.485
+   * - :ref:`sphx_glr_examples_devices_example_004_beamsplitter.py` (``../../examples/devices/example_004_beamsplitter.py``)
+     - 00:00.956
      - 0.0
-   * - :ref:`sphx_glr_examples_modes_plot_005_gaussian_lowpass.py` (``../../examples/modes/plot_005_gaussian_lowpass.py``)
-     - 00:00.939
+   * - :ref:`sphx_glr_examples_devices_example_002_spectral_filter.py` (``../../examples/devices/example_002_spectral_filter.py``)
+     - 00:00.913
      - 0.0
-   * - :ref:`sphx_glr_examples_ccr_example_001_ccr_basics.py` (``../../examples/ccr/example_001_ccr_basics.py``)
-     - 00:00.000
+   * - :ref:`sphx_glr_examples_devices_example_001_number_state_source.py` (``../../examples/devices/example_001_number_state_source.py``)
+     - 00:00.544
      - 0.0
-   * - :ref:`sphx_glr_examples_ccr_example_002_density_poly.py` (``../../examples/ccr/example_002_density_poly.py``)
-     - 00:00.000
-     - 0.0
-   * - :ref:`sphx_glr_examples_ccr_example_003_ccr_overlap.py` (``../../examples/ccr/example_003_ccr_overlap.py``)
-     - 00:00.000
-     - 0.0
-   * - :ref:`sphx_glr_examples_modes_plot_001_gaussian_envelopes.py` (``../../examples/modes/plot_001_gaussian_envelopes.py``)
-     - 00:00.000
-     - 0.0
-   * - :ref:`sphx_glr_examples_modes_plot_002_overlap_vs_delay.py` (``../../examples/modes/plot_002_overlap_vs_delay.py``)
-     - 00:00.000
-     - 0.0
-   * - :ref:`sphx_glr_examples_modes_plot_003_phase_invariance.py` (``../../examples/modes/plot_003_phase_invariance.py``)
-     - 00:00.000
-     - 0.0
-   * - :ref:`sphx_glr_examples_modes_plot_006_mode_labels.py` (``../../examples/modes/plot_006_mode_labels.py``)
-     - 00:00.000
+   * - :ref:`sphx_glr_examples_measurement_devices_example_002_coincidence_detection.py` (``../../examples/measurement_devices/example_002_coincidence_detection.py``)
+     - 00:00.543
      - 0.0

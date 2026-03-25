@@ -5,6 +5,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
+os.environ.setdefault("SYMOP_DOCS_BUILD", "1")
 os.environ.setdefault("MPLBACKEND", "Agg")
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
@@ -20,7 +21,9 @@ sphinx_gallery_conf = {
     "examples_dirs": str(ROOT / "examples"),
     "gallery_dirs": "examples",
     "filename_pattern": r"(plot_|example_).*\.py$",
-    "ignore_pattern": r"(^|/)_",
+    "ignore_pattern": r"(^|[\\/])(\.|_)",
+    "capture_repr": ("_repr_html_", "__repr__"),
+    "run_stale_examples": True,
 }
 
 extensions = [
@@ -94,7 +97,14 @@ pygments_style = "sphinx"
 pygments_dark_style = "native"
 
 templates_path = ["_templates"]
-exclude_patterns: list[str] = []
+exclude_patterns = [
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    "api/_generated/symop.core.protocols.*",
+    "api/_generated/symop.ccr.protocols.*",
+    "api/_generated/symop.modes.protocols.*",
+]
 
 html_theme = "furo"
 html_static_path = ["_static"]

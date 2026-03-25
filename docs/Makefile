@@ -25,7 +25,7 @@ livehtml:
 	  --ignore "**/*.pyc" \
 	  --ignore "**/.pytest_cache/**" \
 	  --ignore "**/.mypy_cache/**" \
-	  --port 8000
+	  --port 8888
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

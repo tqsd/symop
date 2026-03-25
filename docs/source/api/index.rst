@@ -11,3 +11,5 @@ modules, classes and functions of ``symop_proto``.
     core
     modes
     ccr
+    polynomial
+    devices

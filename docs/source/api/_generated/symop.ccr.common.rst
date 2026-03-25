@@ -1,4 +1,4 @@
-symop.ccr.common
+﻿symop.ccr.common
 ================
 
 .. automodule:: symop.ccr.common

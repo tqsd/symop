@@ -1,4 +1,4 @@
-﻿symop.modes.protocols
+symop.modes.protocols
 =====================
 
 .. automodule:: symop.modes.protocols
