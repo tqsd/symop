@@ -1,8 +1,15 @@
 from __future__ import annotations
 
+from random import Random
 from typing import Protocol, runtime_checkable
 
 from symop.core.protocols.modes.labels import Path
+
+
+@runtime_checkable
+class SupportsRng(Protocol):
+    @property
+    def rng(self) -> Random: ...
 
 
 @runtime_checkable
