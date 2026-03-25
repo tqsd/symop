@@ -21,6 +21,7 @@ from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from symop.ccr.algebra.density.multiply import density_multiply
 from symop.ccr.protocols.ket import KetPoly as KetPolyProtocol
 from symop.ccr.protocols.op import OpPoly as OpPolyProtocol
 from symop.core.monomial import Monomial
@@ -441,6 +442,39 @@ class DensityPoly:
                 return False
         return True
 
+    def multiply(
+        self,
+        other: DensityPoly,
+        *,
+        eps: float = 1e-12,
+    ) -> DensityPoly:
+        r"""Return the symbolic product ``self * other``.
+
+        For density terms ``|L><R|`` and ``|A><B|``, multiplication is defined as
+
+        .. math::
+
+            |L\rangle\langle R|\,|A\rangle\langle B|
+            =
+            \langle R \mid A \rangle\, |L\rangle\langle B|,
+
+        extended linearly over all terms.
+
+        Parameters
+        ----------
+        other:
+            Right-hand density polynomial.
+        eps:
+            Contributions with negligible intermediate overlap are dropped.
+
+        Returns
+        -------
+        DensityPoly
+            Resulting symbolic density polynomial.
+
+        """
+        return DensityPoly(density_multiply(self.terms, other.terms, eps=eps))
+
     def __len__(self) -> int:
         r"""Return the number of density terms (structural length)."""
         return len(self.terms)
@@ -472,27 +506,12 @@ class DensityPoly:
         r"""Return the additive inverse ``-self``."""
         return self.scaled(-1.0)
 
-    def __mul__(self, other: complex) -> DensityPoly:
-        r"""Return scalar scaling ``self * c``.
-
-        Parameters
-        ----------
-        other:
-            Scalar multiplier.
-
-        Returns
-        -------
-        DensityPoly
-            Scaled polynomial.
-
-        Returns
-        -------
-        NotImplemented
-            If ``other`` is not a scalar.
-
-        """
+    def __mul__(self, other: DensityPoly | complex) -> DensityPoly:
+        r"""Return scalar scaling or symbolic density multiplication."""
         if isinstance(other, int | float | complex):
             return self.scaled(other)
+        if isinstance(other, DensityPoly):
+            return self.multiply(other)
         return NotImplemented
 
     def __rmul__(self, other: complex) -> DensityPoly:
