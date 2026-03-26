@@ -3,13 +3,26 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Protocol, runtime_checkable
 
+from symop.core.protocols.measurements.result import (
+    DetectionResult as DetectionResultProtocol,
+)
+from symop.core.protocols.measurements.result import (
+    ObservationResult as ObservationResultProtocol,
+)
+from symop.core.protocols.measurements.result import (
+    PostselectionResult as PostselectionResultProtocol,
+)
 from symop.core.protocols.modes.labels import Path as PathProtocol
 from symop.core.protocols.states.base import State
 from symop.core.types.state_kind import StateKind
+from symop.devices.measurement.outcomes import MeasurementOutcome
 from symop.devices.protocols.apply_context import ApplyContext
-from symop.devices.protocols.device import Device
+from symop.devices.protocols.device import Device, MeasurementDevice
 from symop.devices.protocols.registry import (
     KernelRegistry as KernelRegistryProtocol,
+)
+from symop.devices.protocols.registry import (
+    MeasurementKernelRegistry as MeasurementKernelRegistryProtocol,
 )
 
 
@@ -23,8 +36,10 @@ class DeviceRuntime(Protocol):
     """
 
     @property
-    def registry(self) -> KernelRegistryProtocol: ...
+    def device_registry(self) -> KernelRegistryProtocol: ...
 
+    @property
+    def measurement_registry(self) -> MeasurementKernelRegistryProtocol: ...
     def apply(
         self,
         *,
@@ -61,4 +76,41 @@ class DeviceRuntime(Protocol):
             Output state (StateProtocol) after device application.
 
         """
+        ...
+
+    def observe(
+        self,
+        *,
+        device: MeasurementDevice,
+        state: State,
+        ports: Mapping[str, PathProtocol],
+        selection: object | None = None,
+        ctx: ApplyContext | None = None,
+    ) -> ObservationResultProtocol:
+        """Evaluate an observation query for a measurement device."""
+        ...
+
+    def detect(
+        self,
+        *,
+        device: MeasurementDevice,
+        state: State,
+        ports: Mapping[str, PathProtocol],
+        selection: object | None = None,
+        ctx: ApplyContext | None = None,
+    ) -> DetectionResultProtocol:
+        """Evaluate an observation query for a measurement device."""
+        ...
+
+    def postselect(
+        self,
+        *,
+        device: MeasurementDevice,
+        state: State,
+        outcome: MeasurementOutcome,
+        ports: Mapping[str, PathProtocol],
+        selection: object | None = None,
+        ctx: ApplyContext | None = None,
+    ) -> PostselectionResultProtocol:
+        """Evaluate a postelectin query for a measurement device."""
         ...

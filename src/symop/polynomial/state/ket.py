@@ -51,6 +51,7 @@ from symop.core.protocols.ops import (
 )
 from symop.core.types.operator_kind import OperatorKind
 from symop.core.types.signature import Signature
+from symop.devices.measurement.target import MeasurementTarget
 from symop.polynomial.protocols.density import (
     DensityPolyState as DensityPolyStateProtocol,
 )
@@ -125,7 +126,7 @@ class KetPolyState:
         Returns
         -------
         tuple[ModeOpProtocol, ...]
-            Unique modes extracted from ``rho`` in the order provided by
+            Unique modes extracted from ``ket`` in the order provided by
             ``KetPoly.unique_modes``.
 
         """
@@ -640,6 +641,89 @@ class KetPolyState:
         from symop.polynomial.state.density import DensityPolyState
 
         return DensityPolyState.pure(cast(KetPolyStateProtocol, self))
+
+    def multiply(self, other: KetPolyState) -> KetPolyState:
+        r"""Return the symbolic product of two ket states.
+
+        Parameters
+        ----------
+        other:
+            Ket state whose polynomial should be multiplied onto this state.
+
+        Returns
+        -------
+        KetPolyState
+            State wrapper around the combined product polynomial.
+
+        Notes
+        -----
+        This operation does not require orthogonal or disjoint modes.
+        It multiplies the underlying ket polynomials algebraically and
+        returns the resulting creators-only state wrapper.
+
+        """
+        ket = (self.ket * other.ket).combine_like_terms()
+        return KetPolyState.from_ketpoly(ket)
+
+    def join(self, other: KetPolyState) -> KetPolyState:
+        r"""Return the algebraic join of two ket states.
+
+        Parameters
+        ----------
+        other:
+            Ket state to combine with this state.
+
+        Returns
+        -------
+        KetPolyState
+            Product state obtained by multiplying the two underlying ket
+            polynomials.
+
+        Notes
+        -----
+        This is a convenience alias for :meth:`multiply`. It is useful in
+        contexts where combining states is more naturally described as
+        joining branches or subsystems.
+
+        """
+        return self.multiply(other)
+
+    def resolve_target_modes(
+        self, target: MeasurementTarget
+    ) -> tuple[ModeOpProtocol, ...]:
+        r"""Resolve a semantic measurement target into concrete modes.
+
+        Parameters
+        ----------
+        target:
+            Semantic measurement target specifying paths and/or explicit
+            mode signatures to be selected.
+
+        Returns
+        -------
+        tuple[ModeOpProtocol, ...]
+            Concrete modes selected by the target. Modes referenced both
+            by path and by explicit signature are returned only once.
+
+        Notes
+        -----
+        Resolution proceeds by first collecting all modes on the target
+        paths and then adding any explicitly requested mode signatures.
+        Missing explicit signatures are ignored.
+
+        """
+        selected: dict[Signature, ModeOpProtocol] = {}
+
+        for path in target.paths:
+            for resolved_mode in self.modes_on_path(path):
+                selected[resolved_mode.signature] = resolved_mode
+
+        for mode_sig in target.mode_sigs:
+            maybe_mode = self.mode_by_signature.get(mode_sig)
+            if maybe_mode is not None:
+                selected[maybe_mode.signature] = maybe_mode
+
+        return tuple(selected.values())
 
 
 if TYPE_CHECKING:

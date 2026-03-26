@@ -27,22 +27,26 @@ from symop.devices.protocols.registry import (
     KernelRegistry as KernelRegistryProtocol,
 )
 from symop.devices.types.device_kind import DeviceKind
-from symop.polynomial.device_kernels.filter import (
+from symop.polynomial.kernels.devices.beamsplitter import (
+    beamsplitter_poly_density,
+    beamsplitter_poly_ket,
+)
+from symop.polynomial.kernels.devices.filter import (
     filter_poly_density,
     filter_poly_ket,
 )
-from symop.polynomial.device_kernels.number_state_source import (
+from symop.polynomial.kernels.devices.number_state_source import (
     number_state_source_poly_density,
     number_state_source_poly_ket,
 )
 
 
-def register_polynomial_kernels(registry: KernelRegistryProtocol) -> None:
+def register_polynomial_kernels(*, device_registry: KernelRegistryProtocol) -> None:
     r"""Register polynomial kernels for supported device types.
 
     Parameters
     ----------
-    registry:
+    device_registry:
         Kernel registry used to associate device kinds and state
         transformations with kernel implementations.
 
@@ -75,7 +79,8 @@ def register_polynomial_kernels(registry: KernelRegistryProtocol) -> None:
         out_kind: StateKind,
         fn: Any,
     ) -> None:
-        registry.register(
+        """Register a single device kernel entry."""
+        device_registry.register(
             device_kind=device_kind,
             rep=POLY,
             in_kind=in_kind,
@@ -113,4 +118,16 @@ def register_polynomial_kernels(registry: KernelRegistryProtocol) -> None:
         in_kind=DENSITY,
         out_kind=DENSITY,
         fn=filter_poly_density,
+    )
+    _reg(
+        device_kind=DeviceKind.BEAMSPLITTER,
+        in_kind=KET,
+        out_kind=KET,
+        fn=beamsplitter_poly_ket,
+    )
+    _reg(
+        device_kind=DeviceKind.BEAMSPLITTER,
+        in_kind=DENSITY,
+        out_kind=DENSITY,
+        fn=beamsplitter_poly_density,
     )

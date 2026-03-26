@@ -164,6 +164,7 @@ def filter_poly_density(
 
     out = DensityPolyState.from_densitypoly(rho)
     out = out.normalize_trace()
+
     return out
 
 

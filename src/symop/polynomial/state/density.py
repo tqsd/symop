@@ -45,6 +45,7 @@ from symop.core.protocols.modes.labels import (
     Path as PathProtocol,
 )
 from symop.core.protocols.ops.operators import ModeOp as ModeOpProtocol
+from symop.devices.measurement.target import MeasurementTarget
 from symop.polynomial.protocols.density import (
     DensityPolyState as DensityPolyStateProtocol,
 )
@@ -468,12 +469,12 @@ class DensityPolyState(DensityPolyStateProtocol):
 
     @staticmethod
     def pure(ket: KetPolyStateProtocol) -> DensityPolyState:
-        r"""Construct a pure density state from a ket polynomial.
+        r"""Construct a pure density state from a ket state.
 
         Parameters
         ----------
         ket:
-            Ket polynomial representing the pure state.
+            Ket state representing the pure state.
 
         Returns
         -------
@@ -598,6 +599,139 @@ class DensityPolyState(DensityPolyStateProtocol):
 
         """
         return abs(self.trace() - 1.0) <= eps
+
+    def multiply(self, other: DensityPolyState) -> DensityPolyState:
+        r"""Return the symbolic product of two density states.
+
+        Parameters
+        ----------
+        other:
+            Right-hand density state.
+
+        Returns
+        -------
+        DensityPolyState
+            State wrapping the product density polynomial.
+
+        """
+        return DensityPolyState.from_densitypoly(self.rho.multiply(other.rho))
+
+    def join(self, other: DensityPolyState) -> DensityPolyState:
+        r"""Return the algebraic join of two density states.
+
+        Parameters
+        ----------
+        other:
+            Density state to combine with this state.
+
+        Returns
+        -------
+        DensityPolyState
+            Product state obtained by multiplying the two underlying density
+            polynomials.
+
+        Notes
+        -----
+        This is a convenience alias for :meth:`multiply`. It is useful in
+        contexts where combining density-state branches or subsystems is more
+        naturally described as joining them.
+
+        """
+        return self.multiply(other)
+
+    def trace_out_modes(
+        self,
+        trace_over_modes: Sequence[ModeOpProtocol],
+    ) -> DensityPolyState:
+        r"""Return the reduced density state after tracing out selected modes.
+
+        Parameters
+        ----------
+        trace_over_modes:
+            Sequence of concrete modes to be traced out of the density
+            polynomial.
+
+        Returns
+        -------
+        DensityPolyState
+            Reduced density-state wrapper obtained after partial trace over
+            the selected modes.
+
+        Notes
+        -----
+        Modes not listed in ``trace_over_modes`` are retained. The resulting
+        density polynomial is combined before the new wrapper is returned.
+
+        """
+        rho2 = self.rho.partial_trace(trace_over_modes).combine_like_terms()
+        return replace(self, rho=rho2)
+
+    def trace_out_signatures(
+        self,
+        mode_sigs: Sequence[Signature],
+    ) -> DensityPolyState:
+        r"""Return the reduced density state after tracing out selected modes.
+
+        Parameters
+        ----------
+        mode_sigs:
+            Sequence of mode signatures identifying the modes to trace out.
+
+        Returns
+        -------
+        DensityPolyState
+            Reduced density-state wrapper obtained after partial trace over
+            the selected modes.
+
+        Notes
+        -----
+        Only signatures present in the state are used. Missing signatures are
+        ignored.
+
+        """
+        modes = [
+            self.mode_by_signature[sig]
+            for sig in mode_sigs
+            if sig in self.mode_by_signature
+        ]
+        return self.trace_out_modes(modes)
+
+    def resolve_target_modes(
+        self, target: MeasurementTarget
+    ) -> tuple[ModeOpProtocol, ...]:
+        r"""Resolve a semantic measurement target into concrete modes.
+
+        Parameters
+        ----------
+        target:
+            Semantic measurement target specifying paths and/or explicit
+            mode signatures to be selected.
+
+        Returns
+        -------
+        tuple[ModeOpProtocol, ...]
+            Concrete modes selected by the target. Modes referenced both
+            by path and by explicit signature are returned only once.
+
+        Notes
+        -----
+        Resolution proceeds by first collecting all modes on the target
+        paths and then adding any explicitly requested mode signatures.
+        Missing explicit signatures are ignored.
+
+        """
+        selected: dict[Signature, ModeOpProtocol] = {}
+
+        for path in target.paths:
+            for resolved_mode in self.modes_on_path(path):
+                selected[resolved_mode.signature] = resolved_mode
+
+        for mode_sig in target.mode_sigs:
+            maybe_mode = self.mode_by_signature.get(mode_sig)
+            if maybe_mode is not None:
+                selected[maybe_mode.signature] = maybe_mode
+
+        return tuple(selected.values())
 
 
 if TYPE_CHECKING:

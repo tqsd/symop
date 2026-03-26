@@ -21,6 +21,7 @@ it as a polynomial ket state.
 
 from __future__ import annotations
 
+import math
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from typing import cast
@@ -53,6 +54,21 @@ class _NumberStateSourceParams:
 
     source_modes: tuple[ModeOpProtocol, ...]
     excitations_by_mode: Mapping[Signature, int]
+
+
+def _number_state_normalization_coeff(
+    *,
+    source_modes: tuple[ModeOpProtocol, ...],
+    excitations_by_mode: Mapping[Signature, int],
+) -> float:
+    """Return the normalization coefficient for a multimode number state."""
+    factorial_product = 1
+
+    for mode in source_modes:
+        n = excitations_by_mode.get(mode.signature, 0)
+        factorial_product *= math.factorial(n)
+
+    return 1.0 / math.sqrt(factorial_product)
 
 
 def _parse_number_state_source_params(
@@ -206,8 +222,12 @@ def number_state_source_poly_ket(
         source_modes=parsed.source_modes,
         excitations_by_mode=parsed.excitations_by_mode,
     )
+    coeff = _number_state_normalization_coeff(
+        source_modes=parsed.source_modes,
+        excitations_by_mode=parsed.excitations_by_mode,
+    )
 
-    return KetPolyState.from_creators(creators)
+    return KetPolyState.from_creators(creators, coeff=coeff)
 
 
 def number_state_source_poly_density(

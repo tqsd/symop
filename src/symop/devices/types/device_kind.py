@@ -9,3 +9,5 @@ class DeviceKind(StrEnum):
     POLARIZING_FILTER = "polarizing_filter"
     BEAMSPLITTER = "beamsplitter"
     MZI = "mzi"
+    NUMBER_DETECTOR = "number_detector"
+    DELAY = "delay"

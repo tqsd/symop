@@ -3,6 +3,8 @@ from __future__ import annotations
 from typing import Protocol, TypeVar, runtime_checkable
 
 from symop.core.protocols.states.base import State
+from symop.devices.measurement.action import MeasurementAction
+from symop.devices.measurement.result import MeasurementResult
 from symop.devices.protocols.action import DeviceAction
 from symop.devices.protocols.apply_context import ApplyContext
 
@@ -26,3 +28,14 @@ class KernelFn(Protocol):
         action: DeviceAction,
         ctx: ApplyContext,
     ) -> State: ...
+
+
+@runtime_checkable
+class MeasurementKernelFn(Protocol):
+    def __call__(
+        self,
+        *,
+        state: State,
+        action: MeasurementAction,
+        ctx: ApplyContext,
+    ) -> MeasurementResult: ...
