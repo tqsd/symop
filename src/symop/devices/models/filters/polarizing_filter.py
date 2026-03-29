@@ -1,30 +1,29 @@
-r"""Spectral filter device.
+r"""Polarizing filter device.
 
-This module defines :class:`SpectralFilter`, a path-based device that updates
-mode envelopes according to a spectral transfer function and records the
-corresponding attenuation parameters for backend execution.
+This module defines :class:`PolarizingFilter`, a path-based device that
+projects mode polarizations onto a selected transmitted polarization and
+records the corresponding attenuation parameters for backend execution.
 
-The planning stage performs two tasks for every mode on the selected input
-path:
-
-1. It applies the transfer function to the mode envelope, producing a new
-   output envelope.
-2. It computes an effective transmissivity :math:`\eta \in [0, 1]` for that
-   envelope transformation.
-
-The physical attenuation itself is not applied in the planning stage. Instead,
-the planner stores per-mode transmissivities in ``action.params["eta_by_mode"]``
-for the backend kernel and emits label edits that update the output mode
-descriptors.
+For each mode on the selected input path, the planning stage computes an
+effective transmissivity from the overlap between the input polarization
+label and the configured transmitted polarization. The physical attenuation
+is not applied during planning. Instead, the planner stores per-mode
+transmissivities in ``action.params["eta_by_mode"]`` for the backend kernel
+and emits label edits that update output mode descriptors.
 
 Notes
 -----
-This device requires envelopes that implement the
-:class:`~symop.modes.protocols.envelope.TimeFrequencyEnvelope` protocol,
-because spectral filtering needs frequency-domain access.
+For an ideal polarizing filter with transmitted polarization
+:math:`|\psi\rangle` and input polarization :math:`|\phi\rangle`, the
+effective transmissivity is
 
-The backend kernel is expected to realize the attenuation channel, for example
-through a pure-loss dilation followed by tracing out the environment mode.
+.. math::
+
+    \eta = |\langle \psi \mid \phi \rangle|^2.
+
+The backend kernel is expected to realize the attenuation channel, for
+example through a pure-loss dilation followed by tracing out the
+environment mode.
 
 """
 
@@ -35,7 +34,9 @@ from dataclasses import dataclass
 
 from symop.core.protocols.devices.label_edit import SetModeLabel
 from symop.core.protocols.modes.labels import Path as PathProtocol
-from symop.core.protocols.modes.transfer import TransferFunction
+from symop.core.protocols.modes.labels import (
+    Polarization as PolarizationProtocol,
+)
 from symop.core.protocols.states.base import State as StateProtocol
 from symop.core.types.signature import Signature
 from symop.core.types.state_kind import DENSITY, StateKind
@@ -51,32 +52,32 @@ from symop.devices.protocols.runtime import (
 from symop.devices.protocols.state import LabelEditableState
 from symop.devices.runtime import get_default_runtime
 from symop.devices.types.device_kind import DeviceKind
-from symop.modes.protocols.envelope import TimeFrequencyEnvelope
-from symop.modes.transfer.apply import apply_transfer
 
 
 @dataclass(frozen=True)
-class SpectralFilter(DeviceBase):
-    r"""Spectral filter device.
+class PolarizingFilter(DeviceBase):
+    r"""Ideal polarizing filter device.
 
-    A spectral filter acts on all modes on a selected input path by applying a
-    transfer function to each mode envelope. The updated mode labels are routed
-    to the output path, while the corresponding attenuation strengths are
-    recorded for the backend kernel.
+    A polarizing filter acts on all modes on a selected input path by
+    projecting their polarization content onto a configured transmitted
+    polarization. The updated mode labels are routed to the output path,
+    while the corresponding attenuation strengths are recorded for the
+    backend kernel.
 
     Parameters
     ----------
-    transfer:
-        Spectral transfer function applied to each compatible mode envelope.
+    passed_polarization:
+        Polarization transmitted by the filter.
 
     Notes
     -----
-    Planning performs descriptor updates only. The actual physical attenuation
-    is delegated to the runtime kernel through ``action.params["eta_by_mode"]``.
+    Planning performs descriptor updates only. The actual physical
+    attenuation is delegated to the runtime kernel through
+    ``action.params["eta_by_mode"]``.
 
     """
 
-    transfer: TransferFunction
+    passed_polarization: PolarizationProtocol
 
     @property
     def kind(self) -> DeviceKind:
@@ -85,10 +86,10 @@ class SpectralFilter(DeviceBase):
         Returns
         -------
         DeviceKind
-            The spectral-filter device kind.
+            The polarizing-filter device kind.
 
         """
-        return DeviceKind.SPECTRAL_FILTER
+        return DeviceKind.POLARIZING_FILTER
 
     @property
     def port_specs(self) -> tuple[PortSpec, ...]:
@@ -109,7 +110,7 @@ class SpectralFilter(DeviceBase):
         *,
         ports: Mapping[str, PathProtocol],
         selection: object | None = None,
-        runtime: DeviceRuntimeProtocol | None,
+        runtime: DeviceRuntimeProtocol | None = None,
         ctx: ApplyContextProtocol | None = None,
         out_kind: StateKind | None = None,
     ) -> StateProtocol:
@@ -162,15 +163,14 @@ class SpectralFilter(DeviceBase):
         selection: object | None = None,
         ctx: ApplyContextProtocol | None = None,
     ) -> DeviceAction:
-        r"""Plan spectral filtering on all modes of the input path.
+        r"""Plan ideal polarization filtering on all modes of the input path.
 
         For every mode on ``ports["in"]``, this method:
 
-        1. checks that the mode envelope supports time/frequency access,
-        2. applies the transfer function to obtain a filtered envelope,
-        3. records the corresponding transmissivity,
-        4. emits a label edit redirecting the mode to ``ports["out"]`` with
-           the updated envelope.
+        1. computes the overlap with the transmitted polarization,
+        2. converts that overlap into an effective transmissivity,
+        3. emits a label edit redirecting the mode to ``ports["out"]``
+           with the transmitted polarization label.
 
         Parameters
         ----------
@@ -199,9 +199,6 @@ class SpectralFilter(DeviceBase):
         TypeError
             If the state does not support label editing and path-based mode
             lookup.
-        TypeError
-            If an affected mode carries an envelope that does not implement
-            :class:`TimeFrequencyEnvelope`.
 
         Notes
         -----
@@ -211,37 +208,33 @@ class SpectralFilter(DeviceBase):
         """
         del ctx
         del selection
+
         if not isinstance(state, LabelEditableState):
             raise TypeError(
                 "Cannot modify labels on this state implementation. "
                 "Expected LabelEditableState"
             )
+
         in_path = ports["in"]
         out_path = ports["out"]
 
         eta_by_mode: dict[Signature, float] = {}
         edits: list[SetModeLabel] = []
-        for mode in state.modes_on_path(in_path):
-            env_in = mode.label.envelope
-            if not isinstance(env_in, TimeFrequencyEnvelope):
-                raise TypeError(
-                    "Envelope is not compatible with this device. "
-                    "Expected TimeFrequencyEnvelope"
-                )
-            env_out, eta = apply_transfer(self.transfer, env_in)
 
+        for mode in state.modes_on_path(in_path):
+            pol_in = mode.label.polarization
+            eta = abs(self.passed_polarization.overlap(pol_in)) ** 2
+
+            new_label = mode.label.with_polarization(
+                self.passed_polarization
+            ).with_path(out_path)
+            edits.append(SetModeLabel(mode_sig=mode.signature, label=new_label))
             eta_by_mode[mode.signature] = float(eta)
 
-            new_label = mode.label.with_envelope(env_out).with_path(out_path)
-            if eta <= 1e-14:
-                continue
-            edits.append(SetModeLabel(mode_sig=mode.signature, label=new_label))
         return DeviceAction(
             ports=ports,
             kind=self.kind,
             selection=None,
-            params={
-                "eta_by_mode": eta_by_mode,
-            },
+            params={"eta_by_mode": eta_by_mode},
             edits=tuple(edits),
         )

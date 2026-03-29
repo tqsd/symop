@@ -23,6 +23,7 @@ Notes
 
 from __future__ import annotations
 
+import symop.viz.plots.measurements as _plot_measurements
 from symop.viz.latex_renderer import (
     density_poly_states as _latex_density_poly_states,
 )
@@ -31,6 +32,9 @@ from symop.viz.latex_renderer import envelopes as _latex_envelopes
 from symop.viz.latex_renderer import ket_poly_states as _latex_ket_poly_states
 from symop.viz.latex_renderer import ket_polys as _latex_ket_polys
 from symop.viz.latex_renderer import labels as _latex_labels
+from symop.viz.latex_renderer import (
+    measurement_results as _latex_measurement_results,
+)
 from symop.viz.latex_renderer import monomials as _latex_monomials
 from symop.viz.latex_renderer import op_polys as _latex_op_polys
 from symop.viz.latex_renderer import operators as _latex_operators
@@ -53,6 +57,9 @@ from symop.viz.text_renderer import envelopes as _text_envelopes
 from symop.viz.text_renderer import ket_poly_states as _text_ket_poly_states
 from symop.viz.text_renderer import ket_polys as _text_ket_polys
 from symop.viz.text_renderer import labels as _text_labels
+from symop.viz.text_renderer import (
+    measurement_results as _text_measurement_results,
+)
 from symop.viz.text_renderer import monomials as _text_monomials
 from symop.viz.text_renderer import op_polys as _text_op_polys
 from symop.viz.text_renderer import operators as _text_operators

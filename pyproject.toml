@@ -51,6 +51,7 @@ exclude = [
   "_old_examples",
   "_tst_old_",
   "docs",
+  "src/symop/viz",  # TODO: Add documentation in viz package
 ]
 
 # Keep the rule set tight and useful during refactors.

@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, TypeAlias
 
 import numpy as np
 import numpy.typing as npt
 
-FloatArray = npt.NDArray[np.float64]
-ComplexArray = npt.NDArray[np.complexfloating[Any, Any]]
-RCArray = npt.NDArray[np.complex128] | npt.NDArray[np.float64]
+FloatArray: TypeAlias = npt.NDArray[np.float64]
+ComplexArray: TypeAlias = npt.NDArray[np.complexfloating[Any, Any]]
+RCArray: TypeAlias = npt.NDArray[np.complex128] | npt.NDArray[np.float64]

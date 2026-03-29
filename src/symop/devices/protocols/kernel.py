@@ -3,9 +3,8 @@ from __future__ import annotations
 from typing import Protocol, TypeVar, runtime_checkable
 
 from symop.core.protocols.states.base import State
-from symop.devices.measurement.action import MeasurementAction
 from symop.devices.measurement.result import MeasurementResult
-from symop.devices.protocols.action import DeviceAction
+from symop.devices.protocols.action import DeviceAction, MeasurementAction
 from symop.devices.protocols.apply_context import ApplyContext
 
 InStateT = TypeVar("InStateT", bound=State, contravariant=True)

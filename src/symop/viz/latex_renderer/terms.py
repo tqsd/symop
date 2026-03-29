@@ -21,6 +21,16 @@ from symop.viz.latex_renderer._latex_utils import (
 )
 
 
+def _latex_monomial_for_state_side(
+    obj: Any, bra_side: bool = False, **kwargs: Any
+) -> str:
+    if bra_side:
+        s = latex(obj, adjoint_display=True, **kwargs)
+    else:
+        s = latex(obj, **kwargs)
+    return "" if s == r"\mathbb{I}" else s
+
+
 def _latex_monomial_or_identity(obj: Any, **kwargs: Any) -> str:
     r"""Render an object as LaTeX, defaulting to the identity operator.
 
@@ -75,9 +85,17 @@ def _latex_ket_term(obj: KetTerm, /, **kwargs: Any) -> str:
     cfg = latex_config_from_kwargs(kwargs)
 
     c = complex(obj.coeff)
-    m = _latex_monomial_or_identity(obj.monomial, **kwargs)
+    m = _latex_monomial_for_state_side(obj.monomial, **kwargs)
+    vac = r"|0\rangle"
 
-    return apply_coeff(c, m, decimals=cfg.decimals, empty_body="\\mathbb{I}")
+    core = m if m and m != r"\mathbb{I}" else vac
+
+    return apply_coeff(
+        c,
+        core,
+        decimals=cfg.decimals,
+        empty_body=vac,
+    )
 
 
 @latex.register(DensityTerm)
@@ -114,8 +132,18 @@ def _latex_density_term(obj: DensityTerm, /, **kwargs: Any) -> str:
     cfg = latex_config_from_kwargs(kwargs)
 
     c = complex(obj.coeff)
-    L = _latex_monomial_or_identity(obj.left, **kwargs)
-    R = _latex_monomial_or_identity(obj.right, **kwargs)
 
-    core = rf"{L}\,(\cdot)\,{R}"
-    return apply_coeff(c, core, decimals=cfg.decimals, empty_body="\\mathbb{I}")
+    L = _latex_monomial_for_state_side(obj.left, bra_side=False, **kwargs)
+    R = _latex_monomial_for_state_side(obj.right, bra_side=True, **kwargs)
+
+    vac = r"|0\rangle\langle 0|"
+    if not L and not R:
+        core = vac
+    elif not L:
+        core = rf"| 0 \rangle\!\langle 0 |\,{R}"
+    elif not R:
+        core = rf"{L}\,| 0 \rangle\!\langle 0 |"
+    else:
+        core = rf"{L}\,|0 \rangle\!\langle 0 |\,{R}"
+
+    return apply_coeff(c, core, decimals=cfg.decimals, empty_body=vac)

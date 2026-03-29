@@ -3,15 +3,6 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Protocol, runtime_checkable
 
-from symop.core.protocols.measurements.result import (
-    DetectionResult as DetectionResultProtocol,
-)
-from symop.core.protocols.measurements.result import (
-    ObservationResult as ObservationResultProtocol,
-)
-from symop.core.protocols.measurements.result import (
-    PostselectionResult as PostselectionResultProtocol,
-)
 from symop.core.protocols.modes.labels import Path as PathProtocol
 from symop.core.protocols.states.base import State
 from symop.core.types.state_kind import StateKind
@@ -23,6 +14,15 @@ from symop.devices.protocols.registry import (
 )
 from symop.devices.protocols.registry import (
     MeasurementKernelRegistry as MeasurementKernelRegistryProtocol,
+)
+from symop.devices.protocols.result import (
+    DetectionResult as DetectionResultProtocol,
+)
+from symop.devices.protocols.result import (
+    ObservationResult as ObservationResultProtocol,
+)
+from symop.devices.protocols.result import (
+    PostselectionResult as PostselectionResultProtocol,
 )
 
 

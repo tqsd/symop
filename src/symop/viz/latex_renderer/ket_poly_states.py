@@ -51,15 +51,18 @@ def _latex_ket_poly_state(obj: KetPolyState, /, **kwargs: Any) -> str:
       terms to preserve correct visual grouping.
 
     """
+    subs = rf"\text{{{obj.label}}}" if obj.label else str(obj.index)
+    prepend = rf"|\psi_{{{subs}}}\rangle="
     try:
-        body = latex(obj.ket, **kwargs)
+        poly = latex(obj.ket, **kwargs)
     except Exception:
-        body = ""
+        poly = ""
 
-    if not body or body.strip() == "0":
+    if not poly or poly.strip() == "0":
         return r"0"
 
-    need_parens = ("+" in body) or ("-" in body[1:])  # ignore leading '-'
+    need_parens = ("+" in poly) or ("-" in poly[1:])  # ignore leading '-'
     if need_parens:
-        return rf"\left({body}\right)\lvert 0\rangle"
-    return rf"{body}\lvert 0\rangle"
+        poly = rf"\left({poly}\right)"
+
+    return rf"{prepend}{poly}\lvert 0\rangle"

@@ -44,8 +44,11 @@ def _latex_density_poly_state(obj: DensityPolyState, /, **kwargs: Any) -> str:
     zero-like expression, the function returns ``"0"``.
 
     """
+    subs = rf"\text{{{obj.label}}}" if obj.label else str(obj.index)
+    prepend = rf"\rho_{{{subs}}}="
+
     try:
-        body = latex(obj.rho, **kwargs)
+        body = prepend + latex(obj.rho, **kwargs)
     except Exception:
         body = ""
 

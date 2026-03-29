@@ -81,9 +81,16 @@ def _latex_ladderop(obj: LadderOp, /, **kwargs: Any) -> str:
       :func:`mode_subscript`.
 
     """
+    adjoint_display = bool(kwargs.get("adjoint_display", False))
+
     sub = mode_subscript(cast(SupportsLatexLabel, obj.mode), latex_fn=latex)
     kind = getattr(obj.kind, "value", str(obj.kind))
 
+    if adjoint_display:
+        if kind == "adag":
+            kind = "a"
+        elif kind == "a":
+            kind = "adag"
     if kind == "adag":
         if sub:
             return rf"\hat{{a}}_{{{sub}}}^\dagger"

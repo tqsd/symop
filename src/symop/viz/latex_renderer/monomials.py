@@ -93,24 +93,20 @@ def _latex_monomial(obj: Monomial, /, **kwargs: Any) -> str:
     - Operators are joined using a thin space separator (``\\,``).
 
     """
+    adjoint_display = bool(kwargs.get("adjoint_display", False))
     # Identity
     if obj.is_identity:
         return r"\mathbb{I}"
 
+    ops = [*obj.creators, *obj.annihilators]
+    if adjoint_display:
+        ops = list(reversed(ops))
+
     parts: list[str] = []
 
     # creators then annihilators (normal order)
-    for op in obj.creators:
-        try:
-            parts.append(latex(op, **kwargs))
-        except Exception:
-            parts.append(_latex_ladder_symbol(op))
-
-    for op in obj.annihilators:
-        try:
-            parts.append(latex(op, **kwargs))
-        except Exception:
-            parts.append(_latex_ladder_symbol(op))
+    for op in ops:
+        parts.append(latex(op, **kwargs))
 
     parts = [p for p in parts if p]
     if not parts:

@@ -39,7 +39,7 @@ from __future__ import annotations
 import matplotlib as mpl
 
 from symop.viz import handlers  # noqa: F401
-from symop.viz._dispatch import display, latex, plot, text
+from symop.viz._dispatch import display, display_many, latex, plot, text
 
 # Configure math rendering globally for the viz subsystem
 mpl.rcParams["mathtext.fontset"] = "stix"
@@ -50,6 +50,7 @@ mpl.rcParams["font.family"] = "STIXGeneral"
 
 __all__ = [
     "display",
+    "display_many",
     "plot",
     "latex",
     "text",

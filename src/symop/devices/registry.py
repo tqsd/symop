@@ -21,13 +21,18 @@ from typing import TYPE_CHECKING, TypeAlias
 
 from symop.core.types.rep_kind import RepKind
 from symop.core.types.state_kind import StateKind
-from symop.devices.protocols.kernel import KernelFn
+from symop.devices.protocols.kernel import KernelFn, MeasurementKernelFn
 from symop.devices.protocols.registry import (
     KernelRegistry as KernelRegistryProtocol,
 )
+from symop.devices.protocols.registry import (
+    MeasurementKernelRegistry as MeasurementKernelRegistryProtocol,
+)
 from symop.devices.types.device_kind import DeviceKind
+from symop.devices.types.measurement import MeasurementIntent
 
 KernelKey: TypeAlias = tuple[DeviceKind, RepKind, StateKind, StateKind]
+MeasurementKernelKey: TypeAlias = tuple[DeviceKind, str, RepKind, StateKind]
 
 
 @dataclass
@@ -154,5 +159,78 @@ class KernelRegistry(KernelRegistryProtocol):
             ) from e
 
 
+@dataclass
+class MeasurementKernelRegistry(MeasurementKernelRegistryProtocol):
+    """Concrete registry for representation-specific measurement kernels.
+
+    The registry stores kernel functions that implement measurement
+    actions for a specific combination of:
+    - device kind
+    - measurement intent
+    - state representation
+    - input state kind
+
+    Notes
+    -----
+    A single semantic measurement device may have multiple kernels
+    registered for different intents or representations. For example:
+
+
+    - number detector / observe / polynomial / ket
+    - number detector / observe / polynomial / density
+    - number detector / postselect / polynomial / density
+
+    The registry ensures that a unique kernel exists for each
+    ``(device_kind, intent, rep, in_kind)`` combination.
+
+    """
+
+    _table: dict[MeasurementKernelKey, MeasurementKernelFn] = field(
+        default_factory=dict
+    )
+
+    def register(
+        self,
+        *,
+        device_kind: DeviceKind,
+        intent: MeasurementIntent,
+        rep: RepKind,
+        in_kind: StateKind,
+        fn: MeasurementKernelFn,
+    ) -> None:
+        """Register a measurement kernel function."""
+        key = (device_kind, intent, rep, in_kind)
+        if key in self._table:
+            raise KeyError(f"Measurement kernel already registered for key={key!r}")
+        self._table[key] = fn
+
+    def resolve(
+        self,
+        *,
+        device_kind: DeviceKind,
+        intent: MeasurementIntent,
+        rep: RepKind,
+        in_kind: StateKind,
+    ) -> MeasurementKernelFn:
+        """Resolve a measurement kernel function."""
+        key = (device_kind, intent, rep, in_kind)
+        try:
+            return self._table[key]
+        except KeyError as e:
+            available = sorted(
+                (k for k in self._table if k[0] == device_kind),
+                key=str,
+            )
+            raise KeyError(
+                "No measurement kernel registered for "
+                f"device_kind={device_kind!r}, intent={intent!r}, "
+                f"rep={rep!r}, in_kind={in_kind!r}. "
+                f"Available for this device: {available!r}"
+            ) from e
+
+
 if TYPE_CHECKING:
     _registry_check: KernelRegistryProtocol = KernelRegistry()
+    _measurement_registry_check: MeasurementKernelRegistryProtocol = (
+        MeasurementKernelRegistry()
+    )

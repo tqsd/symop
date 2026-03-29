@@ -9,6 +9,7 @@ newly created paths do not collide with existing or reserved ones.
 
 from __future__ import annotations
 
+import random
 from collections.abc import Collection, Iterator
 from dataclasses import dataclass, field
 from itertools import count
@@ -44,6 +45,7 @@ class SimpleApplyContext:
     """
 
     prefix: str = "p"
+    rng: random.Random = field(default_factory=random.Random)
     _counter: Iterator[int] = field(default_factory=lambda: count(1))
     _reserved: set[PathProtocol] = field(default_factory=set)
 

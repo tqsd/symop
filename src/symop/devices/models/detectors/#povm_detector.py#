@@ -1,0 +1,9 @@
+from __future__ import annotations
+
+from symop.devices.measurement.base import MeasurementDeviceBase
+
+
+
+@dataclass(frozen=True)
+class POVMDetector(MeasurementDeviceBase):
+    r"""Semantic POVM detector"""

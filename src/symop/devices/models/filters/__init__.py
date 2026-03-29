@@ -39,6 +39,7 @@ do not directly manipulate quantum states.
 
 """
 
+from .polarizing_filter import PolarizingFilter
 from .spectral_filter import SpectralFilter
 
-__all__ = ["SpectralFilter"]
+__all__ = ["SpectralFilter", "PolarizingFilter"]

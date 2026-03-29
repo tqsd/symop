@@ -16,7 +16,6 @@ from typing import Any
 from symop.ccr.algebra.density.poly import DensityPoly
 from symop.viz._dispatch import latex
 from symop.viz.latex_renderer._latex_utils import (
-    apply_coeff,
     join_signed,
     latex_config_from_kwargs,
 )
@@ -63,9 +62,6 @@ def _latex_density_poly(obj: DensityPoly, /, **kwargs: Any) -> str:
         c = complex(getattr(t, "coeff", 1.0))
         if abs(c) <= cfg.eps:
             continue
-        body = latex(t, **kwargs)
-        parts.append(
-            apply_coeff(c, body, decimals=cfg.decimals, empty_body="\\mathbb{I}")
-        )
+        parts.append(latex(t, **kwargs))
 
     return join_signed(parts)

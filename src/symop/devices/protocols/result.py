@@ -9,9 +9,9 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Protocol, runtime_checkable
 
-from symop.core.protocols.measurements.action import MeasurementAction
 from symop.core.protocols.states.base import State as StateProtocol
 from symop.devices.measurement.outcomes import MeasurementOutcome
+from symop.devices.protocols.action import MeasurementAction
 
 
 @runtime_checkable
@@ -71,7 +71,7 @@ class DetectionResult(MeasurementResult, Protocol):
         ...
 
     @property
-    def state(self) -> StateProtocol:
+    def state(self) -> StateProtocol | None:
         r"""Return the post measurement state."""
         ...
 
@@ -81,7 +81,7 @@ class PostselectionResult(MeasurementResult, Protocol):
     r"""Result of a postselection query."""
 
     @property
-    def outcome(self) -> MeasurementOutcome:
+    def outcome(self) -> MeasurementOutcome | None:
         r"""Return the selected outcome.
 
         Returns
@@ -92,7 +92,7 @@ class PostselectionResult(MeasurementResult, Protocol):
         ...
 
     @property
-    def probability(self) -> object:
+    def probability(self) -> object | None:
         r"""Return the probability weight of the selected branch.
 
         Returns
@@ -103,7 +103,7 @@ class PostselectionResult(MeasurementResult, Protocol):
         ...
 
     @property
-    def state(self) -> StateProtocol:
+    def state(self) -> StateProtocol | None:
         r"""Return the postselected state.
 
         Returns

@@ -33,6 +33,10 @@ class DeviceAction:
         Sequence of label edits to be applied to the output state.
     selection:
         Optional device-specific selection or configuration object.
+    requires_kernel:
+        Whether runtime must dispatch to a representation-specific apply
+        kernel before applying edits. Set to False for edit-only devices
+        whose effect is fully captured by label updates.
 
     Notes
     -----
@@ -48,3 +52,4 @@ class DeviceAction:
     params: Mapping[str, object]
     edits: Sequence[LabelEdit]
     selection: object | None = None
+    requires_kernel: bool = True

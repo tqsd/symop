@@ -24,3 +24,14 @@ Notes
   through the device and kernel registries.
 
 """
+
+from .beamsplitters import BeamSplitter
+from .filters import PolarizingFilter, SpectralFilter
+from .sources import NumberStateSource
+
+__all__ = [
+    "BeamSplitter",
+    "SpectralFilter",
+    "PolarizingFilter",
+    "NumberStateSource",
+]

@@ -19,20 +19,39 @@ from symop.core.protocols.modes.labels import Path as PathProtocol
 from symop.core.protocols.states.base import State as StateProtocol
 from symop.core.types.state_kind import StateKind
 from symop.devices.apply_context import SimpleApplyContext
-from symop.devices.dispatch import dispatch_apply
+from symop.devices.dispatch import (
+    dispatch_apply,
+    dispatch_detect,
+    dispatch_observe,
+    dispatch_postselect,
+)
+from symop.devices.measurement.outcomes import MeasurementOutcome
+from symop.devices.measurement.result import (
+    DetectionResult,
+    ObservationResult,
+    PostselectionResult,
+)
 from symop.devices.protocols.action import DeviceAction as DeviceActionProtocol
 from symop.devices.protocols.apply_context import (
     ApplyContext as ApplyContextProtocol,
 )
-from symop.devices.protocols.device import Device as DeviceProtocol
+from symop.devices.protocols.device import (
+    Device as DeviceProtocol,
+)
+from symop.devices.protocols.device import (
+    MeasurementDevice as MeasurementDeviceProtocol,
+)
 from symop.devices.protocols.registry import (
     KernelRegistry as KernelRegistryProtocol,
+)
+from symop.devices.protocols.registry import (
+    MeasurementKernelRegistry as MeasurementKernelRegistryProtocol,
 )
 from symop.devices.protocols.runtime import (
     DeviceRuntime as DeviceRuntimeProtocol,
 )
 from symop.devices.protocols.state import LabelEditableState
-from symop.devices.registry import KernelRegistry
+from symop.devices.registry import KernelRegistry, MeasurementKernelRegistry
 
 _default_runtime: DeviceRuntimeProtocol | None = None
 _registered: bool = False
@@ -40,7 +59,7 @@ _registered: bool = False
 
 def _validate_ports(
     *,
-    device: DeviceProtocol,
+    device: DeviceProtocol | MeasurementDeviceProtocol,
     ports: Mapping[str, PathProtocol],
 ) -> None:
     r"""Validate the provided port mapping against device port specs.
@@ -104,7 +123,8 @@ class DeviceRuntime:
 
     """
 
-    registry: KernelRegistryProtocol
+    device_registry: KernelRegistryProtocol
+    measurement_registry: MeasurementKernelRegistryProtocol
 
     def apply(
         self,
@@ -138,8 +158,7 @@ class DeviceRuntime:
         Returns
         -------
         StateProtocol
-            Output state produced by the dispatched kernel, after any label
-            edits have been applied.
+            Output state after optional kernel execution and any label edits.
 
         Raises
         ------
@@ -162,14 +181,21 @@ class DeviceRuntime:
 
         action = device.plan(state=state, ports=ports, selection=selection, ctx=ctx2)
 
-        state2 = dispatch_apply(
-            registry=self.registry,
-            device=device,
-            state=state,
-            action=action,
-            ctx=ctx2,
-            out_kind=out_kind,
-        )
+        if action.requires_kernel:
+            state2 = dispatch_apply(
+                registry=self.device_registry,
+                device=device,
+                state=state,
+                action=action,
+                ctx=ctx2,
+                out_kind=out_kind,
+            )
+        else:
+            if out_kind is not None and out_kind != state.state_kind:
+                raise ValueError(
+                    "Edit-only device actions cannot change output state kind."
+                )
+            state2 = state
 
         return self._apply_label_edits(state2, action)
 
@@ -212,14 +238,99 @@ class DeviceRuntime:
         state_editable = state
         return state_editable.apply_label_edits(action.edits)
 
+    def observe(
+        self,
+        *,
+        device: MeasurementDeviceProtocol,
+        state: StateProtocol,
+        ports: Mapping[str, PathProtocol],
+        selection: object | None = None,
+        ctx: ApplyContextProtocol | None = None,
+    ) -> ObservationResult:
+        r"""Evaluate an obesrvation query on the given state."""
+        _validate_ports(device=device, ports=ports)
 
-def _register_all_kernels(registry: KernelRegistryProtocol) -> None:
+        ctx2 = SimpleApplyContext() if ctx is None else ctx
+        action = device.plan_observe(
+            state=state, ports=ports, selection=selection, ctx=ctx2
+        )
+        return dispatch_observe(
+            registry=self.measurement_registry,
+            device=device,
+            state=state,
+            action=action,
+            ctx=ctx2,
+        )
+
+    def detect(
+        self,
+        *,
+        device: MeasurementDeviceProtocol,
+        state: StateProtocol,
+        ports: Mapping[str, PathProtocol],
+        selection: object | None = None,
+        ctx: ApplyContextProtocol | None = None,
+    ) -> DetectionResult:
+        r"""Evaluate a detection query on the given state."""
+        _validate_ports(device=device, ports=ports)
+
+        ctx2 = SimpleApplyContext() if ctx is None else ctx
+
+        action = device.plan_detect(
+            state=state,
+            ports=ports,
+            selection=selection,
+            ctx=ctx2,
+        )
+
+        return dispatch_detect(
+            registry=self.measurement_registry,
+            device=device,
+            state=state,
+            action=action,
+            ctx=ctx2,
+        )
+
+    def postselect(
+        self,
+        *,
+        device: MeasurementDeviceProtocol,
+        state: StateProtocol,
+        outcome: MeasurementOutcome,
+        ports: Mapping[str, PathProtocol],
+        selection: object | None = None,
+        ctx: ApplyContextProtocol | None = None,
+    ) -> PostselectionResult:
+        r"""Evaluate a postselection query on the given state."""
+        _validate_ports(device=device, ports=ports)
+
+        ctx2 = SimpleApplyContext() if ctx is None else ctx
+
+        action = device.plan_postselect(
+            state=state,
+            outcome=outcome,
+            ports=ports,
+            selection=selection,
+            ctx=ctx2,
+        )
+
+        return dispatch_postselect(
+            registry=self.measurement_registry,
+            device=device,
+            state=state,
+            action=action,
+            ctx=ctx2,
+        )
+
+
+def _register_all_kernels(rt: DeviceRuntimeProtocol) -> None:
     r"""Register all available device kernels into a registry.
 
     Parameters
     ----------
-    registry:
-        Kernel registry to populate.
+    rt:
+        Runtime whose device and measurement kernel registries
+        will be populated.
 
     Returns
     -------
@@ -230,11 +341,17 @@ def _register_all_kernels(registry: KernelRegistryProtocol) -> None:
     Registration currently delegates to the polynomial kernel registry.
 
     """
-    from symop.polynomial.device_kernels.registry import (
+    from symop.polynomial.kernels.devices.registry import (
         register_polynomial_kernels,
     )
+    from symop.polynomial.kernels.measurements.registry import (
+        register_polynomial_measurement_kernels,
+    )
 
-    register_polynomial_kernels(registry)
+    register_polynomial_kernels(device_registry=rt.device_registry)
+    register_polynomial_measurement_kernels(
+        measurement_registry=rt.measurement_registry
+    )
 
 
 def get_default_runtime() -> DeviceRuntimeProtocol:
@@ -254,14 +371,20 @@ def get_default_runtime() -> DeviceRuntimeProtocol:
     global _default_runtime, _registered
 
     if _default_runtime is None:
-        _default_runtime = DeviceRuntime(registry=KernelRegistry())
+        _default_runtime = DeviceRuntime(
+            device_registry=KernelRegistry(),
+            measurement_registry=MeasurementKernelRegistry(),
+        )
 
     if not _registered and _default_runtime is not None:
-        _register_all_kernels(_default_runtime.registry)
+        _register_all_kernels(_default_runtime)
         _registered = True
 
     return _default_runtime
 
 
 if TYPE_CHECKING:
-    _runtime_check: DeviceRuntimeProtocol = DeviceRuntime(registry=KernelRegistry())
+    _runtime_check: DeviceRuntimeProtocol = DeviceRuntime(
+        device_registry=KernelRegistry(),
+        measurement_registry=MeasurementKernelRegistry(),
+    )
