@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:03.752** total execution time for 5 files **from all galleries**:
+**00:04.711** total execution time for 5 files **from all galleries**:
 
 .. container::
 
@@ -33,17 +33,17 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_examples_measurement_devices_example_001_number_detector.py` (``../../examples/measurement_devices/example_001_number_detector.py``)
-     - 00:01.217
-     - 0.0
-   * - :ref:`sphx_glr_examples_devices_example_004_beamsplitter.py` (``../../examples/devices/example_004_beamsplitter.py``)
-     - 00:00.824
+     - 00:01.861
      - 0.0
    * - :ref:`sphx_glr_examples_devices_example_002_spectral_filter.py` (``../../examples/devices/example_002_spectral_filter.py``)
-     - 00:00.773
+     - 00:00.966
+     - 0.0
+   * - :ref:`sphx_glr_examples_devices_example_004_beamsplitter.py` (``../../examples/devices/example_004_beamsplitter.py``)
+     - 00:00.726
      - 0.0
    * - :ref:`sphx_glr_examples_devices_example_001_number_state_source.py` (``../../examples/devices/example_001_number_state_source.py``)
-     - 00:00.490
+     - 00:00.666
      - 0.0
    * - :ref:`sphx_glr_examples_measurement_devices_example_002_coincidence_detection.py` (``../../examples/measurement_devices/example_002_coincidence_detection.py``)
-     - 00:00.447
+     - 00:00.492
      - 0.0

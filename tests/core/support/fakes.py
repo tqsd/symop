@@ -132,6 +132,14 @@ def set_symmetric_overlap(
     table[(left.signature, right.signature)] = value
     table[(right.signature, left.signature)] = value
 
+def set_hermitian_overlap(
+    table: dict[tuple[Signature, Signature], complex],
+    left: EnvelopeProtocol,
+    right: EnvelopeProtocol,
+    value: complex,
+) -> None:
+    table[(left.signature, right.signature)] = value
+    table[(right.signature, left.signature)] = value.conjugate()
 
 def make_mode_label(
     *,
