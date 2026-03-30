@@ -24,6 +24,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from symop.core.types.arrays import RCArray
+from symop.modes.envelopes.base import BaseEnvelope
 from symop.modes.envelopes.gaussian import GaussianEnvelope
 from symop.modes.envelopes.gaussian_mixture import GaussianMixtureEnvelope
 from symop.modes.types import FloatArray
@@ -496,7 +497,50 @@ def _plot_env_impl(
         plt.show()
 
     return fig, ax_list
+@plot.register
+def _(env: BaseEnvelope, /, **kwargs: Any) -> Any:
+    """Plot a :class:`BaseEnvelope`.
 
+    Parameters
+    ----------
+    env:
+        Envelope to visualize.
+    **kwargs:
+        Plotting options forwarded to the internal implementation.
+
+    Returns
+    -------
+    Any
+        Plot result, typically ``(figure, axes)``.
+
+    Notes
+    -----
+    This is the generic fallback for all envelope types that implement
+    the base time/frequency interface. Specialized handlers may override
+    this behavior for particular subclasses when a more tailored
+    visualization is useful.
+    """
+    return _plot_env_impl(
+        env,
+        t=kwargs.pop("t", None),
+        w=kwargs.pop("w", None),
+        n=int(kwargs.pop("n", 2000)),
+        nw=int(kwargs.pop("nw", 2000)),
+        time_margin_sigma=float(kwargs.pop("time_margin_sigma", 6.0)),
+        freq_margin_sigma=float(kwargs.pop("freq_margin_sigma", 6.0)),
+        show_freq=bool(kwargs.pop("show_freq", True)),
+        show_real_imag=bool(kwargs.pop("show_real_imag", True)),
+        show_phase=bool(kwargs.pop("show_phase", False)),
+        show_freq_real_imag=bool(kwargs.pop("show_freq_real_imag", False)),
+        show_freq_phase=bool(kwargs.pop("show_freq_phase", False)),
+        phase_mask_frac=float(kwargs.pop("phase_mask_frac", 1e-3)),
+        normalize_envelope=bool(kwargs.pop("normalize_envelope", False)),
+        normalize_spectrum=bool(kwargs.pop("normalize_spectrum", True)),
+        freq_relative=bool(kwargs.pop("freq_relative", False)),
+        title=kwargs.pop("title", None),
+        label=kwargs.pop("label", None),
+        show=bool(kwargs.pop("show", True)),
+    )
 
 @plot.register
 def _(env: GaussianEnvelope, /, **kwargs: Any) -> Any:

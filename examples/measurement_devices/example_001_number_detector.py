@@ -126,7 +126,7 @@ VI.display(postselection.state)
 
 # %%
 # Interfere the input state on a beam splitter
-# ===========================================
+# ============================================
 # Next, we interfere the two input paths on a 50/50 beam splitter.
 # Interference changes the amplitudes and therefore changes the
 # measurement probabilities at the output ports.

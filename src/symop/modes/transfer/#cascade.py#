@@ -1,0 +1,112 @@
+r"""Cascade transfer function.
+
+This module defines a cascade transfer function implementing
+the :class:`~symop.modes.protocols.TransferFunctionProto` interface.
+
+A cascade function acts as multiplication of its parts:
+
+.. math::
+
+    H = H_n \ldots H_2 H_1
+
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+import numpy as np
+
+from symop.core.protocols.modes.transfer import TransferFunction
+from symop.core.types.arrays import RCArray
+from symop.core.types.signature import Signature
+from symop.modes.transfer.base import TransferBase
+from symop.modes.types import FloatArray, as_float_array
+
+
+@dataclass(frozen=True)
+class Cascade(TransferBase):
+    r"""Pointwise product of transfer functions.
+
+    A cascade represents sequential application of transfer functions in
+    the frequency domain:
+
+    .. math::
+
+        H(\omega) = H_n(\omega)\,\cdots\,H_2(\omega)\,H_1(\omega).
+
+    Attributes
+    ----------
+    parts
+        Ordered transfer functions applied from right to left in the
+        product expression.
+    """
+
+    _signature_tag = "cascade"
+
+    parts: tuple[TransferFunction, ...]
+
+    @property
+    def signature(self) -> Signature:
+        """Return the exact stable signature of the cascade.
+
+        Returns
+        -------
+        Signature
+            Signature containing the ordered exact signatures of all
+            component transfers.
+        """
+        return (self._signature_tag, tuple(p.signature for p in self.parts))
+
+    def approx_signature(
+        self,
+        *,
+        decimals: int = 12,
+        ignore_global_phase: bool = False,
+    ) -> Signature:
+        """Return an approximate signature of the cascade.
+
+        Parameters
+        ----------
+        decimals
+            Number of decimal places used for rounding component
+            signatures.
+        ignore_global_phase
+            Whether component signatures may suppress physically
+            irrelevant global phase factors.
+
+        Returns
+        -------
+        Signature
+            Approximate signature containing ordered approximate
+            component signatures.
+        """
+        return (
+            f"{self._signature_tag}_approx",
+            tuple(
+                p.approx_signature(
+                    decimals=decimals,
+                    ignore_global_phase=ignore_global_phase,
+                )
+                for p in self.parts
+            ),
+        )
+
+    def __call__(self, w: FloatArray) -> RCArray:
+        r"""Evaluate the cascade on an angular-frequency grid.
+
+        Parameters
+        ----------
+        w
+            Angular-frequency grid.
+
+        Returns
+        -------
+        RCArray
+            Complex transfer samples :math:`H(\omega)`.
+        """
+        w = as_float_array(w)
+        out = np.ones_like(w, dtype=complex)
+        for p in self.parts:
+            out *= p(w)
+        return out

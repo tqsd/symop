@@ -30,9 +30,7 @@ This document defines:
 
 Architectural Principles
 ------------------------
-
 The device system adheres to the following principles:
-
 1. Device models are representation-agnostic.
 2. Graph/path effects are separated from state transformations.
 3. State transformations are implemented as pure kernels.

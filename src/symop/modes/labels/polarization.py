@@ -223,7 +223,10 @@ class Polarization:
 
         .. math::
 
-            R(\theta)=\begin{pmatrix}\cos\theta & \sin\theta\\ -\sin\theta & \cos\theta\end{pmatrix}
+            R(\theta)=\begin{pmatrix}
+              \cos\theta & -\sin\theta\\
+              \sin\theta & \cos\theta
+             \end{pmatrix}
 
         to the Jones vector.
 
@@ -240,7 +243,63 @@ class Polarization:
         """
         a, b = self.jones
         c, s = np.cos(theta), np.sin(theta)
-        return type(self)((c * a + s * b, -s * a + c * b))
+        return type(self)((c * a - s * b, s * a + c * b))
+
+    def transformed(
+        self,
+        unitary: np.ndarray,
+        *,
+        atol: float = 1e-12,
+    ) -> Self:
+        r"""Apply a 2x2 unitary Jones transformation.
+
+        This method applies a unitary matrix :math:`U` to the Jones vector,
+
+        .. math::
+
+            \mathbf{v}' = U \mathbf{v},
+
+        where :math:`U` must satisfy
+
+        .. math::
+
+            U^\dagger U = I
+
+        up to the specified tolerance.
+
+        Since :class:`Polarization` canonicalizes global phase, transformed
+        states that differ only by a global phase compare equal.
+
+        Parameters
+        ----------
+        unitary:
+            Complex 2x2 unitary Jones matrix.
+        atol:
+            Absolute tolerance used when checking unitarity.
+
+        Returns
+        -------
+        Polarization
+            Transformed polarization label.
+
+        Raises
+        ------
+        ValueError
+            If ``unitary`` does not have shape ``(2, 2)`` or is not unitary
+            within the requested tolerance.
+
+        """
+        U = np.asarray(unitary, dtype=complex)
+        if U.shape != (2, 2):
+            raise ValueError("Polarization.transformed expects a 2x2 matrix")
+
+        identity = np.eye(2, dtype=complex)
+        if not np.allclose(U.conj().T @ U, identity, atol=atol):
+            raise ValueError("Polarization.transformed expects a unitary matrix")
+
+        v = np.array(self.jones, dtype=complex)
+        out = U @ v
+        return type(self)((complex(out[0]), complex(out[1])))
 
     @property
     def signature(self) -> Signature:

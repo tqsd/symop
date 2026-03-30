@@ -13,57 +13,78 @@ A cascade function acts as multiplication of its parts:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 import numpy as np
 
 from symop.core.protocols.modes.transfer import TransferFunction
 from symop.core.types.arrays import RCArray
 from symop.core.types.signature import Signature
+from symop.modes.transfer.base import TransferBase
 from symop.modes.types import FloatArray, as_float_array
 
 
 @dataclass(frozen=True)
-class Cascade:
+class Cascade(TransferBase):
     r"""Pointwise product of transfer functions.
 
-    :math:`H(\omega) = H_n(\omega)\,\cdots\,H_2(\omega)\,H_1(\omega)`.
+    A cascade represents sequential application of transfer functions in
+    the frequency domain:
+
+    .. math::
+
+        H(\omega) = H_n(\omega)\,\cdots\,H_2(\omega)\,H_1(\omega).
+
+    Attributes
+    ----------
+    parts
+        Ordered transfer functions applied from right to left in the
+        product expression.
+
     """
+
+    _signature_tag = "cascade"
 
     parts: tuple[TransferFunction, ...]
 
     @property
     def signature(self) -> Signature:
-        """Stable signature for caching and comparison.
+        """Return the exact stable signature of the cascade.
 
         Returns
         -------
         Signature
-            Tuple uniquely identifying this transfer function.
+            Signature containing the ordered exact signatures of all
+            component transfers.
 
         """
-        return ("cascade", tuple(p.signature for p in self.parts))
+        return (self._signature_tag, tuple(p.signature for p in self.parts))
 
     def approx_signature(
-        self, *, decimals: int = 12, ignore_global_phase: bool = False
+        self,
+        *,
+        decimals: int = 12,
+        ignore_global_phase: bool = False,
     ) -> Signature:
-        """Approximate signature with rounded floating parameters.
+        """Return an approximate signature of the cascade.
 
         Parameters
         ----------
-        decimals:
-            Number of decimal places used for rounding float parameters.
-        ignore_global_phase:
-            If True, component signatures may ignore global phase where applicable.
+        decimals
+            Number of decimal places used for rounding component
+            signatures.
+        ignore_global_phase
+            Whether component signatures may suppress physically
+            irrelevant global phase factors.
 
         Returns
         -------
         Signature
-            Approximate signature tuple.
+            Approximate signature containing ordered approximate
+            component signatures.
 
         """
         return (
-            "cascade_approx",
+            f"{self._signature_tag}_approx",
             tuple(
                 p.approx_signature(
                     decimals=decimals,
@@ -74,17 +95,17 @@ class Cascade:
         )
 
     def __call__(self, w: FloatArray) -> RCArray:
-        r"""Evaluate the transfer function on a frequency grid.
+        r"""Evaluate the cascade on an angular-frequency grid.
 
         Parameters
         ----------
-        w:
-            Angular frequency grid.
+        w
+            Angular-frequency grid.
 
         Returns
         -------
         RCArray
-            Complex-valued transfer samples :math:`H(\omega)`.
+            Complex transfer samples :math:`H(\omega)`.
 
         """
         w = as_float_array(w)
@@ -92,10 +113,3 @@ class Cascade:
         for p in self.parts:
             out *= p(w)
         return out
-
-
-if TYPE_CHECKING:
-    from symop.modes.transfer.gaussian_bandpass import GaussianBandpass
-
-    g = GaussianBandpass(w0=10, sigma_w=10)
-    _cascade: TransferFunction = Cascade(parts=(g,))

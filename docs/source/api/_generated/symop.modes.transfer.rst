@@ -1,4 +1,4 @@
-symop.modes.transfer
+﻿symop.modes.transfer
 ====================
 
 .. automodule:: symop.modes.transfer
@@ -11,15 +11,9 @@ symop.modes.transfer
    :recursive:
 
    apply
+   base
    cascade
-   constant_phase
-   gaussian_bandpass
-   gaussian_formalism
-   gaussian_highpass
-   gaussian_lowpass
-   product
+   gaussian
    quadratic_dispersion
    rect_bandpass
    supergaussian_bandpass
-   time_delay
-   utils

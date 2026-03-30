@@ -105,6 +105,9 @@ class ModeLabel:
     def overlap(self, other: ModeLabel) -> complex:
         r"""Compute the overlap with another mode label.
 
+        The total overlap factorizes into path, polarization, and envelope
+        contributions. Evaluatinon short-circuits when an intremediate factor is zero.
+
         Parameters
         ----------
         other:
@@ -116,11 +119,16 @@ class ModeLabel:
             Product of path, polarization, and envelope overlaps.
 
         """
-        return (
-            self.path.overlap(other.path)
-            * self.polarization.overlap(other.polarization)
-            * self.envelope.overlap(other.envelope)
-        )
+        path_overlap = self.path.overlap(other.path)
+        if path_overlap == 0:
+            return 0.0 + 0.0j
+
+        polarization_overlap = self.polarization.overlap(other.polarization)
+        if polarization_overlap == 0:
+            return 0.0 + 0.0j
+
+        envelope_overlap = self.envelope.overlap(other.envelope)
+        return path_overlap * polarization_overlap * envelope_overlap
 
     @property
     def signature(self) -> Signature:

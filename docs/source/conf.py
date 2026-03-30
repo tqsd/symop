@@ -32,6 +32,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.intersphinx",
     "sphinx.ext.mathjax",
+    "matplotlib.sphinxext.plot_directive",
     "myst_parser",
     "sphinx_autodoc_typehints",
     "jupyter_sphinx",
@@ -55,7 +56,7 @@ autodoc_default_options = {
     "inherited-members": False,
     "private-members": True,
 }
-autodoc_mock_imports = ["matplotlib"]
+autodoc_mock_imports = []
 
 
 add_module_names = False
@@ -91,6 +92,7 @@ napoleon_use_rtype = True
 napoleon_custom_sections = [
     ("Mathematics", "Admonition"),
     ("Numerical Note", "Admonition"),
+    ("Definition", "Admonition")
 ]
 
 pygments_style = "sphinx"

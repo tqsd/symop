@@ -1,7 +1,5 @@
-Concepts
+Overview
 ========
 
 .. toctree::
-   :maxdepth: 2
-
-   gaussian/index
+   modes/index

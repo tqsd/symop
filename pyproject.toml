@@ -6,17 +6,31 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "symop"
 version = "0.1.0"
-description = "Prototype implementation of hybrid Gaussian + symbolic quantum optics states"
+description = "Symbolic and Gaussian simulation framework for quantum optics and photonic systems"
 authors = [{ name = "Simon Sekavcnik", email = "simon.sekavcnik@tum.de" }]
 readme = "README.md"
 license = { text = "Apache-2.0" }
-requires-python = ">=3.13"
+requires-python = ">=3.11"
 dependencies = [
   "numpy",
   "scipy",
   "typing-extensions>=4.0",
   "matplotlib"
 ]
+keywords = ["quantum optics", "photonics", "simulation", "symbolic", "gaussian"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.13",
+  "License :: OSI Approved :: Apache Software License",
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering :: Physics",
+]
+
+[project.urls]
+Homepage = "https://github.com/tqsd/symop"
+Documentation = "https://tqsd.github.com/symop/"
+Repository = "https://github.com/tqsd/symop"
+Issues = "https://github.com/tqsd/symop/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -27,18 +41,19 @@ exclude = ["tests*", "examples*"]
 
 [project.optional-dependencies]
 dev = [
-  "mypy>=1.10",
-  "pytest",
-  "pre-commit"
+  "mypy>=1.10",     #  Static Type Checking
+  "pytest",         #  Testing
+  "pytest-cov",     #  Generate coverage reports
+  "pre-commit",     #  Commit Checks
+  "ruff",           #  Linting
+  "coverage",       #  Test Coverage Reporting
+  "tox",            #  Testing different python versions
 ]
-
-[tool.black]
-line-length = 79
-target-version = ["py313"]
-
-[tool.flake8]
-max-line-length = 79
-
+docs = [
+  "sphinx",         #  Documentation
+  "furo",           #  Sphinx Theme
+  "sphinx-gallery"  #  Example Gallery
+]
 
 
 [tool.ruff]
@@ -47,11 +62,19 @@ line-length = 88
 fix = true
 force-exclude = true
 exclude = [
-  "_old_symop_proto",
-  "_old_examples",
-  "_tst_old_",
   "docs",
   "src/symop/viz",  # TODO: Add documentation in viz package
+  ".git",
+  ".venv",
+  "__pycache__",
+  "build",
+  "dist",
+  ".mypy_cache",
+  ".pytest_cache",
+  ".ruff_cache",
+  "**/.#*",
+  "**/*~",
+  "**/#*#",
 ]
 
 # Keep the rule set tight and useful during refactors.
@@ -80,9 +103,6 @@ ignore = [
 "src/symop/**/types/**" = ["D"]
 "src/symop/**/types/*.py" = ["D"]
 "tests/**/*.py" = ["D"]
-"_old_examples/**" = ["D"]
-"_old_symop_proto/**" = ["D"]
-"_tst_old_" = ["D"]
 
 [tool.ruff.format]
 quote-style = "double"
@@ -91,7 +111,7 @@ line-ending = "lf"
 
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.11"
 mypy_path = ["src"]
 
 # Make it behave like a "contract checker".
@@ -125,7 +145,6 @@ ignore_missing_imports = true
 testpaths = [
   "tests",
 ]
-
 addopts = "-ra"
 
 [tool.coverage.run]

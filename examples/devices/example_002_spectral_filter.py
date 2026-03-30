@@ -14,7 +14,7 @@ from __future__ import annotations
 from symop.devices.models import SpectralFilter, NumberStateSource
 from symop.modes.labels import Path, Polarization
 from symop.modes.envelopes import GaussianEnvelope
-from symop.modes.transfer.gaussian_lowpass import GaussianLowpass
+from symop.modes.transfer import GaussianLowpass
 from symop.polynomial.state import KetPolyState
 
 # Visualization Package

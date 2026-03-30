@@ -29,6 +29,12 @@ docs-clean:
 
 .PHONY: coverage docs-coverage
 
+test:
+	python -m pytest
+
+test-all:
+	tox
+
 coverage:
 	python -m coverage run -m pytest
 	python -m coverage html

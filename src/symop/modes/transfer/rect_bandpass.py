@@ -1,8 +1,6 @@
 r"""Rectangular band-pass transfer function.
 
-This module defines an ideal rectangular band-pass amplitude transfer
-implementing the :class:`~symop.modes.protocols.TransferFunctionProto`
-interface.
+This module defines an ideal rectangular band-pass amplitude transfer.
 
 The transfer is
 
@@ -15,7 +13,13 @@ The transfer is
         0, & \text{otherwise}
     \end{cases}.
 
-It models a hard cutoff in the frequency domain (an idealized filter).
+This models an idealized hard cutoff in the frequency domain.
+
+Notes
+-----
+This transfer is not compatible with the Gaussian-closed formalism and
+therefore falls back to numerical filtering.
+
 """
 
 from __future__ import annotations
@@ -26,69 +30,41 @@ from typing import TYPE_CHECKING, cast
 import numpy as np
 
 from symop.core.types.arrays import FloatArray, RCArray
-from symop.core.types.signature import Signature
-from symop.modes.types import (
-    as_float_array,
-    require_pos_finite,
-)
+from symop.modes.transfer.base import TransferBase
+from symop.modes.types import as_float_array, require_pos_finite
 
 
 @dataclass(frozen=True)
-class RectBandpass:
+class RectBandpass(TransferBase):
     r"""Ideal rectangular band-pass amplitude transfer.
 
-    .. math::
+    Parameters
+    ----------
+    w0:
+        Center angular frequency :math:`\omega_0`.
+    width:
+        Full passband width :math:`\Delta\omega`.
 
-        H(\omega)
-        =
-        \begin{cases}
-            1, & |\omega-\omega_0|\le \Delta\omega/2 \\
-            0, & \text{otherwise}
-        \end{cases}.
     """
 
+    _signature_tag = "rect_bandpass"
+
     w0: float
-    width: float  # full width
+    width: float
 
-    @property
-    def signature(self) -> Signature:
-        """Stable signature for caching and comparison.
+    def __post_init__(self) -> None:
+        """Validate parameters.
 
-        Returns
-        -------
-        Signature
-            Tuple uniquely identifying this transfer function.
-
-        """
-        return ("rect_bandpass", float(self.w0), float(self.width))
-
-    def approx_signature(
-        self, *, decimals: int = 12, ignore_global_phase: bool = False
-    ) -> Signature:
-        """Approximate signature with rounded floating parameters.
-
-        Parameters
-        ----------
-        decimals:
-            Number of decimal places used for rounding float parameters.
-        ignore_global_phase:
-            Ignored for this transfer (no phase parameter).
-
-        Returns
-        -------
-        Signature
-            Approximate signature tuple.
+        Raises
+        ------
+        ValueError
+            If ``width`` is not positive and finite.
 
         """
-        r = round
-        return (
-            "rect_bandpass_approx",
-            r(float(self.w0), decimals),
-            r(float(self.width), decimals),
-        )
+        require_pos_finite("width", self.width)
 
     def __call__(self, w: FloatArray) -> RCArray:
-        r"""Evaluate the transfer function :math:`H(\omega)` on a frequency grid.
+        r"""Evaluate the transfer function.
 
         Parameters
         ----------
@@ -100,20 +76,14 @@ class RectBandpass:
         RCArray
             Complex samples of :math:`H(\omega)`.
 
-        Raises
-        ------
-        ValueError
-            If ``width`` is not positive and finite.
-
         """
         w = as_float_array(w)
-        width = require_pos_finite("width", self.width)
-        half = 0.5 * width
+        half = 0.5 * float(self.width)
         mask = np.abs(w - float(self.w0)) <= half
         return cast(RCArray, mask.astype(complex))
 
 
 if TYPE_CHECKING:
-    from symop.core.protocols.modes import TransferFunction
+    from symop.core.protocols.modes.transfer import TransferFunction
 
-    _check: TransferFunction = RectBandpass(w0=1, width=10)
+    _check: TransferFunction = RectBandpass(w0=1.0, width=10.0)

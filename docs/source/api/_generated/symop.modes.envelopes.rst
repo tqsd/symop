@@ -1,4 +1,4 @@
-symop.modes.envelopes
+﻿symop.modes.envelopes
 =====================
 
 .. automodule:: symop.modes.envelopes

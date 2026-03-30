@@ -1,0 +1,206 @@
+"""Base envelope abstraction.
+
+This module defines the abstract base class for mode envelopes.
+An envelope represents a complex time-domain field and provides:
+
+- Time-domain evaluation.
+- Frequency-domain evaluation.
+- Overlap computation.
+- Heuristic center/scale estimation.
+- Plotting utilities.
+
+Concrete envelope types must implement time and/or frequency
+evaluation consistently with the package Fourier convention.
+"""
+
+from __future__ import annotations
+
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from typing import ClassVar, Self, cast
+
+import numpy as np
+
+from symop.core.types import FloatArray, RCArray, Signature, TimeFunc
+from symop.modes.protocols.envelope import (
+    EnvelopeFormalism,
+    SupportsGaussianClosedOverlap,
+    SupportsOverlapWithGeneric,
+    TimeFrequencyEnvelope,
+)
+
+
+def _overlap_numeric(
+    f1: TimeFunc,
+    f2: TimeFunc,
+    *,
+    tmin: float,
+    tmax: float,
+    n: int = 2**16,
+) -> complex:
+    r"""Numerically approximate the overlap (inner product) between two time functions.
+
+    This approximates the integral
+
+    .. math::
+
+        \langle f_1, f_2 \rangle
+        \;=\;
+        \int_{t_\mathrm{min}}^{t_\mathrm{max}} f_1(t)^*\,f_2(t)\,dt
+
+    on a uniform grid using the trapezoidal rule.
+
+    Parameters
+    ----------
+    f1, f2:
+        Callables mapping a real-valued time grid to real-or-complex samples.
+    tmin, tmax:
+        Integration limits.
+    n:
+        Number of grid points used in the uniform grid (default: 2**16).
+
+    Returns
+    -------
+    complex
+        Approximation to the overlap integral.
+
+    Raises
+    ------
+    ValueError
+        If either function returns non-finite values on the grid.
+
+    ""
+    t: FloatArray = np.linspace(float(tmin), float(tmax), int(n), dtype=float)
+    y1: RCArray = f1(t)
+    y2: RCArray = f2(t)
+
+    if not np.isfinite(y1).all():
+        bad = np.argwhere(~np.isfinite(y1))
+        i = int(bad[0, 0])
+        raise ValueError(f"Non-finite values from f1 at t={t[i]}: {y1[i]!r}")
+    if not np.isfinite(y2).all():
+        bad = np.argwhere(~np.isfinite(y2))
+        i = int(bad[0, 0])
+        raise ValueError(f"Non-finite values from f2 at t={t[i]}: {y2[i]!r}")
+
+    y = cast(RCArray, np.conjugate(y1) * y2)
+    return complex(np.trapezoid(y, t))
+
+
+@dataclass(frozen=True)
+class BaseEnvelope(ABC):
+    """Abstract base class for time/frequency envelopes.
+
+    Subclasses must implement:
+    - time_eval: evaluate the complex field on a time grid
+    - freq_eval: evaluate the complex spectrum on a frequency grid
+    - delayed: return a time-shifted copy
+    - phased: return a phase-shifted copy
+    - signature: stable identifier used for caching / comparisons
+    - approx_signature: rounded or approximate identifier for grouping
+
+    This base class provides:
+    - a generic overlap implementation based on numeric quadrature
+    - plotting utilities (requires matplotlib)
+
+    Presentation:
+    Objects may optionally implement :class:`symop.modes.protocols.HasLatex` to
+    provide a LaTeX (mathtext) string for display in plots. If unavailable,
+    plotting uses a readable textual fallback.
+    """
+
+    formalism: ClassVar[EnvelopeFormalism] = "generic"
+
+    @abstractmethod
+    def time_eval(self, t: FloatArray) -> RCArray:
+        """Evaluate the envelope in the time domain on a grid of times t."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def freq_eval(self, w: FloatArray) -> RCArray:
+        """Evaluate the envelope in the frequency domain on a grid of frequencies w."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def delayed(self, dt: float) -> Self:
+        """Return a copy delayed by dt in time."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def phased(self, dphi: float) -> Self:
+        """Return a copy with an added global phase dphi."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def signature(self) -> Signature:
+        """Return a stable signature for this envelope."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def approx_signature(
+        self, *, decimals: int = 12, ignore_global_phase: bool = False
+    ) -> Signature:
+        """Return an approximate signature.
+
+        Implementations typically round floating parameters to a specified number
+        of decimals and/or ignore non-essential parameters (e.g., global phase),
+        depending on keyword arguments.
+        """
+        raise NotImplementedError
+
+    def center_and_scale(self) -> tuple[float, float]:
+        """Heuristic center and scale for choosing a plotting / overlap window.
+
+        Returns
+        -------
+        center:
+            Center time.
+        scale:
+            Characteristic scale
+
+        """
+        return 0.0, 1.0
+
+    def overlap(self, other: TimeFrequencyEnvelope) -> complex:
+        """Compute the overlap (inner product) with another envelope.
+
+        If either envelope implements :class:`SupportsOverlapWithGeneric`, that
+        hook is used. Otherwise, a numeric quadrature is performed over a window
+        selected from center_and_scale().
+
+        Parameters
+        ----------
+        other:
+            The envelope to overlap with.
+
+        Returns
+        -------
+        complex
+            The overlap value.
+
+        """
+        if (
+            self.formalism == "gaussian_closed"
+            and other.formalism == "gaussian_closed"
+            and isinstance(self, SupportsGaussianClosedOverlap)
+            and isinstance(other, SupportsGaussianClosedOverlap)
+        ):
+            return self.overlap_gaussian_closed(other)
+        if isinstance(other, SupportsOverlapWithGeneric):
+            return other.overlap_with_generic(self)
+
+        if isinstance(self, SupportsOverlapWithGeneric):
+            return self.overlap_with_generic(other)
+
+        c1, s1 = self.center_and_scale()
+        c2, s2 = other.center_and_scale()
+        c = 0.5 * (c1 + c2)
+        S = max(s1, s2)
+        T = 8.0 * S
+        return _overlap_numeric(self.time_eval, other.time_eval, tmin=c - T, tmax=c + T)
+
+    def norm2(self) -> float:
+        """Return the squared norm <zeta, zeta> (real, non-negative up to numerical noise)."""
+        v = self.overlap(cast(TimeFrequencyEnvelope, self))
+        return float(max(v.real, 0.0))
