@@ -1,4 +1,18 @@
-"""Density term for operator-algebra expressions."""
+"""Density-operator terms built from left and right monomials.
+
+This module defines :class:`DensityTerm`, a structural building block for
+density-operator expressions in the operator algebra.
+
+A density term consists of a complex coefficient together with two monomials,
+one acting on the left and one acting on the right. This makes it suitable
+for representing operator-basis expansions of density operators, outer-product
+like expressions, and intermediate forms used in symbolic manipulations of
+quantum channels and states.
+
+The class provides structural queries such as identity detection, creator-only
+and annihilator-only checks, degree counts, mode extraction, and exact or
+approximate signatures for hashing and merging.
+"""
 
 from __future__ import annotations
 

@@ -7,7 +7,7 @@ signatures used for hashing and merging.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from symop.core.protocols.ops import (
@@ -65,8 +65,8 @@ class Monomial:
 
     """
 
-    creators: tuple[LadderOpProtocol, ...] = ()
-    annihilators: tuple[LadderOpProtocol, ...] = ()
+    creators: tuple[LadderOpProtocol, ...] = field(default_factory=tuple)
+    annihilators: tuple[LadderOpProtocol, ...] = field(default_factory=tuple)
 
     def __post_init__(self) -> None:
         """Normalize fields to tuples for immutability and predictable behavior."""

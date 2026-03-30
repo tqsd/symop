@@ -14,9 +14,14 @@ from symop.core.types import OperatorKind
 
 @runtime_checkable
 class ModeOp(HasSignature, Protocol):
-    label: ModeLabel
-    user_label: str | None
-    display_index: int | None
+    @property
+    def label(self) -> ModeLabel: ...
+
+    @property
+    def user_label(self) -> str | None: ...
+
+    @property
+    def display_index(self) -> int | None: ...
 
     @property
     def ann(self) -> LadderOp: ...
