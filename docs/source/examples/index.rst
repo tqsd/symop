@@ -87,6 +87,23 @@ into a bigger simulation.
     </div>
 
 
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example first demonstrates the use of the PhaseShifter model on a single path.">
+
+.. only:: html
+
+  .. image:: /examples/devices/images/thumb/sphx_glr_example_006_phase_shifter_thumb.png
+    :alt:
+
+  :doc:`/examples/devices/example_006_phase_shifter`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Phase Shifter and Mach-Zehnder Interferometer Example</div>
+    </div>
+
+
 .. thumbnail-parent-div-close
 
 .. raw:: html

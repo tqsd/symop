@@ -1,0 +1,28 @@
+import unittest
+
+from symop.devices.apply_context import SimpleApplyContext
+from symop.modes.labels.path import Path
+
+
+class TestSimpleApplyContext(unittest.TestCase):
+    def test_allocate_path_returns_unique_paths(self) -> None:
+        ctx = SimpleApplyContext(prefix="p")
+        p1 = ctx.allocate_path()
+        p2 = ctx.allocate_path()
+        self.assertNotEqual(p1, p2)
+
+    def test_allocate_path_respects_reserved_paths(self) -> None:
+        ctx = SimpleApplyContext(prefix="p")
+        ctx.reserve_paths([Path("p_1")])
+        p = ctx.allocate_path()
+        self.assertEqual(str(p), "p_2")
+
+    def test_allocate_path_respects_hint(self) -> None:
+        ctx = SimpleApplyContext(prefix="p")
+        p = ctx.allocate_path(hint="out")
+        self.assertEqual(str(p), "out_1")
+
+    def test_allocate_path_respects_avoid(self) -> None:
+        ctx = SimpleApplyContext(prefix="p")
+        p = ctx.allocate_path(avoid=[Path("p_1")])
+        self.assertEqual(str(p), "p_2")

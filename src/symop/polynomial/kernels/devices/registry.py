@@ -39,6 +39,10 @@ from symop.polynomial.kernels.devices.number_state_source import (
     number_state_source_poly_density,
     number_state_source_poly_ket,
 )
+from symop.polynomial.kernels.devices.phase_shifter import (
+    phase_shifter_poly_density,
+    phase_shifter_poly_ket,
+)
 
 
 def register_polynomial_kernels(*, device_registry: KernelRegistryProtocol) -> None:
@@ -130,4 +134,16 @@ def register_polynomial_kernels(*, device_registry: KernelRegistryProtocol) -> N
         in_kind=DENSITY,
         out_kind=DENSITY,
         fn=beamsplitter_poly_density,
+    )
+    _reg(
+        device_kind=DeviceKind.PHASE_SHIFTER,
+        in_kind=KET,
+        out_kind=KET,
+        fn=phase_shifter_poly_ket,
+    )
+    _reg(
+        device_kind=DeviceKind.PHASE_SHIFTER,
+        in_kind=DENSITY,
+        out_kind=DENSITY,
+        fn=phase_shifter_poly_density,
     )
