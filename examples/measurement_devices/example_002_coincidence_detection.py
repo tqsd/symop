@@ -28,8 +28,8 @@ from symop.polynomial.state.ket import KetPolyState
 import symop.viz as VI
 
 # %%
-# Setup
-# =====
+# **Setup**
+#
 # Two identical single-photon sources and a coincidence detector.
 
 src = NumberStateSource(
@@ -44,8 +44,8 @@ bs = BeamSplitter(theta=np.pi / 4)
 
 
 # %%
-# Prepare the input state
-# =======================
+# **Prepare the input state**
+#
 # One photon in each input path.
 
 vac = KetPolyState.vacuum()
@@ -58,8 +58,8 @@ VI.display(state_in)
 
 
 # %%
-# Interfere on a 50/50 beam splitter
-# ==================================
+# **Interfere on a 50/50 beam splitter**
+#
 
 state_out = bs(
     state_in,
@@ -75,8 +75,8 @@ VI.display(state_out)
 
 
 # %%
-# Observe the joint output distribution
-# =====================================
+# **Observe the joint output distribution**
+#
 # This is the HOM signature:
 # the joint (1, 1) event should be suppressed for perfectly
 # indistinguishable photons.
@@ -93,8 +93,8 @@ VI.display(observation)
 print(observation)
 
 # %%
-# Detect one joint output event
-# =============================
+# **Detect one joint output event**
+#
 # Detection samples one concrete joint outcome from the HOM output
 # distribution and returns the corresponding post-measurement state.
 
@@ -110,15 +110,14 @@ VI.display(detection)
 print(detection)
 
 # %%
-# Post-measurement state after joint detection
-# ============================================
+# **Post-measurement state after joint detection**
 
 VI.display(detection.state)
 print(detection.state)
 
 # %%
-# Hong-Ou-Mandel coincidence scan
-# ===============================
+# **Hong-Ou-Mandel coincidence scan**
+#
 # We delay one input arm, interfere the two photons on the 50/50 beam
 # splitter, and record the coincidence probability P(1,1) at the outputs.
 

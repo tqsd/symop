@@ -3,12 +3,12 @@ SymOp documentation
 
 .. toctree::
    :maxdepth: 2
-   :caption: Tutorial
+   :caption: Install
 
-   tutorial/index
+   installation
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Examples
 
    examples/index
@@ -26,6 +26,13 @@ SymOp documentation
    architecture/index
    architecture/packages
    architecture/coverage
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Citation
+
+   citation
 
 .. toctree::
    :maxdepth: 2

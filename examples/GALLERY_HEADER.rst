@@ -1,5 +1,5 @@
-Examples
-========
+Example Gallery
+===============
 
 This gallery contains runnable examples for *symop*.
 

@@ -22,8 +22,8 @@ import symop.viz as VI
 
 
 # %%
-# Setup
-# -----
+# **Setup**
+#
 # set up a mode labels and then the single photon source
 # together with filter defined by a transfer function.
 
@@ -37,8 +37,8 @@ tf = GaussianLowpass(w0=100.0, sigma_w=0.01)
 filt_dev = SpectralFilter(transfer=tf)
 
 # %%
-# 1) Generate the state
-# ---------------------
+# **1) Generate the state**
+#
 # - Generate the vacuum state for the source to populate
 # - For populating the vacuum ``__call__()`` can be used or ``.apply()``
 
@@ -50,8 +50,7 @@ single_photon_state = src_dev(
 
 
 # %%
-# 2) Use filtering device to filter
-# ---------------------------------
+# **2) Use filtering device to filter**
 filtered_state = filt_dev(
     single_photon_state,
     ports={
@@ -61,18 +60,15 @@ filtered_state = filt_dev(
 ).with_label("filt")
 
 # %%
-# 3) Inspect the state after filtering
-# ------------------------------------
+# **3) Inspect the state after filtering**
 
 VI.plot(single_photon_state)
 VI.plot(filtered_state)
 
 # %%
-# 3a) Display the input state
-# ===========================
+# **3a) Display the input state**
 VI.display(single_photon_state)
 
 # %%
-# 3b) Display the filtered state
-# ==============================
+# **3b) Display the filtered state**
 VI.display(filtered_state)

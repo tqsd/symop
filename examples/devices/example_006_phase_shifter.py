@@ -1,6 +1,6 @@
 r"""
 Phase Shifter and Mach-Zehnder Interferometer Example
-====================================================
+=====================================================
 
 This example first demonstrates the use of the
 :class:`~symop.devices.models.phase_shifters.phase_shifter.PhaseShifter`
@@ -28,8 +28,8 @@ from symop.polynomial.state.ket import KetPolyState
 import symop.viz as VI
 
 # %%
-# Setup
-# =====
+# **Setup**
+#
 # Create one single-photon source, one phase shifter, and two 50/50 beam
 # splitters for the Mach-Zehnder interferometer.
 
@@ -45,8 +45,8 @@ bs1 = BeamSplitter(theta=np.pi / 4, phi_r=0.0)
 bs2 = BeamSplitter(theta=np.pi / 4, phi_r=0.0)
 
 # %%
-# 1) Generate the input state
-# ===========================
+# **Generate the input state**
+#
 # Start from vacuum and populate one path with a single photon.
 
 vac = KetPolyState.vacuum()
@@ -54,8 +54,8 @@ vac = KetPolyState.vacuum()
 state_in = src(vac, ports={"out": Path("src_out")}).with_label("input")
 
 # %%
-# 2) Standalone phase shifter
-# ===========================
+# **2) Standalone phase shifter**
+#
 # Apply the phase shifter directly to the occupied path.
 #
 # For an isolated single path, this changes only the phase of the state.
@@ -70,8 +70,8 @@ state_shifted = ps(
 VI.display_many(state_in, state_shifted)
 
 # %%
-# Why does the standalone output look almost the same?
-# ====================================================
+# **Why does the standalone output look almost the same?**
+#
 # The phase shifter applies the unitary
 #
 #     U(phi) = exp(i phi n)
@@ -87,8 +87,8 @@ VI.display_many(state_in, state_shifted)
 # with another path.
 
 # %%
-# 3) First beam splitter: create the two MZI arms
-# ===============================================
+# **3) First beam splitter: create the two MZI arms**
+#
 # Send the single input path through a 50/50 beam splitter.
 # The unused second input is treated as vacuum.
 
@@ -105,8 +105,8 @@ state_after_bs1 = bs1(
 VI.display_many(state_in, state_after_bs1)
 
 # %%
-# 4) Apply the phase shifter to one arm
-# =====================================
+# **4) Apply the phase shifter to one arm**
+#
 # This creates a relative phase between the two interferometer arms.
 
 state_after_ps = ps(
@@ -117,8 +117,8 @@ state_after_ps = ps(
 VI.display_many(state_after_bs1, state_after_ps)
 
 # %%
-# 5) Second beam splitter: recombine the two arms
-# ===============================================
+# **5) Second beam splitter: recombine the two arms**
+#
 # The relative phase now affects the interference at the output.
 
 state_out = bs2(
@@ -134,8 +134,8 @@ state_out = bs2(
 VI.display_many(state_after_ps, state_out)
 
 # %%
-# Why does the phase matter in the MZI?
-# =====================================
+# **Why does the phase matter in the MZI?**
+#
 # After the first beam splitter, the photon amplitude is distributed over
 # two paths. The phase shifter changes the relative phase of one arm.
 # When both arms are recombined at the second beam splitter, this relative
@@ -146,8 +146,8 @@ VI.display_many(state_after_ps, state_out)
 # physically visible through interference.
 
 # %%
-# 6) Density-state version
-# ========================
+# **6) Density-state version**
+#
 # The same sequence can also be applied to density states.
 
 state_in_dense = state_in.to_density().with_label("input_density")

@@ -18,8 +18,7 @@ import symop.viz as VI
 
 
 # %%
-# Setup: set up a mode labels and then the single photon source
-# -------------------------------------------------------------
+# **Setup: set up a mode labels and then the single photon source**
 
 
 src_env = GaussianEnvelope(omega0=2.0, sigma=1.0, tau=0.0)
@@ -28,8 +27,7 @@ src_pol = Polarization.H()
 src_dev = NumberStateSource(envelope=src_env, polarization=src_pol, n=1)
 
 # %%
-# 1) Generate the state
-# ---------------------
+# **1) Generate the state**
 # - Generate the vacuum state for the source to populate
 # - For populating the vacuum ``__call__()`` can be used or ``.apply()``
 
@@ -40,7 +38,6 @@ single_photon_state = src_dev(
 )
 
 # %%
-# 2) Inspect state
-# ----------------
+# **2) Inspect state**
 VI.plot(single_photon_state)
 VI.display(single_photon_state)

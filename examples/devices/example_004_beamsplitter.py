@@ -20,8 +20,8 @@ from symop.polynomial.state.ket import KetPolyState
 import symop.viz as VI
 
 # %%
-# Setup
-# =====
+# **Setup**
+#
 # Set up mode labels for sources and beamsplitter (50/50)
 
 src_a = NumberStateSource(
@@ -39,8 +39,8 @@ src_b = NumberStateSource(
 bs = BeamSplitter(theta=np.pi / 4, phi_r=0)
 
 # %%
-# 1) Generate the states
-# ======================
+# **1) Generate the states**
+#
 # - Generate vacuum states for the sources to populate
 
 vac = KetPolyState.vacuum()
@@ -49,8 +49,8 @@ state_a = src_a(vac, ports={"out": Path("src_a_out")}).with_label("in_A")
 state_b = src_b(vac, ports={"out": Path("src_b_out")}).with_label("in_B")
 
 # %%
-# 2) Interfere the two states
-# ===========================
+# **2) Interfere the two states**
+#
 # - Join the states
 # - Interfere them
 
@@ -67,13 +67,12 @@ state_interfered = bs(
 ).with_label("interfered")
 
 # %%
-# 2a) Inspect the states
-# ~~~~~~~~~~~~~~~~~~~~~~
+# **2a) Inspect the states**
 VI.display_many(state_a, state_b, state_joint, state_interfered)
 
 # %%
-# Why does the output contain several terms?
-# =============================================
+# *Why does the output contain several terms?*
+#
 # The beamsplitter acts linearly on each input creation operator.
 # Since the joint input state contains one photon in each input
 # path, the output is obtained by expanding the product of two
@@ -94,8 +93,8 @@ VI.display_many(state_a, state_b, state_joint, state_interfered)
 # bunching, as in the Hong-Ou-Mandel effect.
 
 # %%
-# 3) Interfering just one pulse with vacuum
-# ==========================================
+# **3) Interfering just one pulse with vacuum**
+#
 # Beam splitter can also work without the counterpart provided
 # In the example below, we interfere the photon in path ``src_a_out``
 # with vacuum in the other port
@@ -115,8 +114,8 @@ VI.display_many(state_a, state_interfered_single)
 
 
 # %%
-# 4) Interfere the two states
-# ===========================
+# **4) Interfere the two states**
+#
 # - Join the states
 # - Interfere them
 

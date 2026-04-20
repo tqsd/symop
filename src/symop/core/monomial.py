@@ -53,10 +53,10 @@ class Monomial:
             swapping creators and annihilators and taking their individual
             adjoints.
 
-    Notes:
+    Notes
     -----
     - The monomial is assumed to be in *normal order*, meaning all
-      creation operators precese the annihilation operators.
+      creation operators precede the annihilation operators.
     - An empty monomial (``creators=(), annihilators=()``) represents
       the identity operator :math:`\\mathbb{I}`.
 

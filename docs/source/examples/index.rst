@@ -1,7 +1,7 @@
 :orphan:
 
-Examples
-========
+Example Gallery
+===============
 
 This gallery contains runnable examples for *symop*.
 
@@ -22,11 +22,6 @@ are identified and compared.
 
     </div>
 
-Devices
-=======
-
-These examples show how different devices can be combined
-into a bigger simulation.
 
 
 
@@ -110,11 +105,6 @@ into a bigger simulation.
 
     </div>
 
-Detectors
-=========
-
-These examples show how different detectors can be used in
-the simulation
 
 
 

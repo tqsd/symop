@@ -40,8 +40,8 @@ from symop.polynomial.state.ket import KetPolyState
 import symop.viz as VI
 
 # %%
-# Setup
-# =====
+# **Setup**
+#
 # Create a two-photon source and a number detector.
 #
 # The source emits photons into a path with a Gaussian spectral envelope
@@ -58,8 +58,8 @@ det = NumberDetector()
 
 
 # %%
-# Generate the input state
-# ========================
+# **Generate the input state**
+#
 # Start from vacuum and populate two distinct paths with identical
 # two-photon states. The joint state therefore contains a total of
 # four photons, distributed across two input paths.
@@ -73,8 +73,8 @@ state = state_a.join(state_b).with_label("joint")
 VI.display(state)
 
 # %%
-# Observe the measurement
-# =======================
+# **Observe the measurement**
+#
 # Observation is a non-destructive query. It does not collapse the state.
 # Instead, it returns the full probability distribution over all possible
 # detector outcomes for the selected path.
@@ -87,8 +87,8 @@ observation = det.observe(state=state, ports={"in": Path("src_out")})
 VI.display(observation)
 
 # %%
-# Detect
-# ======
+# **Detect**
+#
 # Detection represents one concrete realization of the measurement.
 # It returns a sampled outcome together with the corresponding
 # post-measurement state.
@@ -97,15 +97,15 @@ detection = det.detect(state=state, ports={"in": Path("src_out")})
 VI.display(detection)
 
 # %%
-# Post-measurement state after detection
-# ======================================
+# **Post-measurement state after detection**
+#
 # This is the collapsed state associated with the sampled detection event.
 
 VI.display(detection.state)
 
 # %%
-# Postselection
-# =============
+# **Postselection**
+#
 # Postselection conditions the original state on a chosen outcome.
 # In this case we reuse the outcome sampled above and explicitly build
 # the corresponding conditional branch.
@@ -118,15 +118,15 @@ postselection = det.postselect(
 VI.display(postselection)
 
 # %%
-# Postselected state
-# ==================
+# **Postselected state**
+#
 # This is the state conditioned on the selected outcome.
 
 VI.display(postselection.state)
 
 # %%
-# Interfere the input state on a beam splitter
-# ============================================
+# **Interfere the input state on a beam splitter**
+#
 # Next, we interfere the two input paths on a 50/50 beam splitter.
 # Interference changes the amplitudes and therefore changes the
 # measurement probabilities at the output ports.
@@ -146,8 +146,8 @@ state_interfered = bs(
 VI.display(state_interfered)
 
 # %%
-# Observe the output distribution after interference
-# ==================================================
+# **Observe the output distribution after interference**
+# 
 # We now observe the photon-number distribution in one beam-splitter
 # output path. The set of possible outcomes is still determined by the
 # allowed photon numbers in that path, but the probabilities are changed
@@ -164,8 +164,8 @@ VI.display(interfered_observation)
 VI.plot(interfered_observation)
 
 # %%
-# Detect one output event after interference
-# ==========================================
+# **Detect one output event after interference**
+#
 # As before, detection returns one concrete sampled outcome and the
 # corresponding collapsed branch.
 
@@ -176,6 +176,5 @@ interfered_detection = det.detect(
 VI.display(interfered_detection)
 
 # %%
-# Post-measurement state after interfered detection
-# =================================================
+# **Post-measurement state after interfered detection**
 VI.display(interfered_detection.state)
