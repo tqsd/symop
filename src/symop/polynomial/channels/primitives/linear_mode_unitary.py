@@ -168,6 +168,40 @@ def make_substitution(lmap: LinearModeMap) -> SubstFn:
     return subst
 
 
+def make_right_substitution(lmap: LinearModeMap) -> SubstFn:
+    r"""Construct the bra-side substitution induced by a linear mode map.
+
+    This is the substitution used on the right monomial of a density term,
+    corresponding to the adjoint-side action needed for
+
+        rho -> U rho U^\dagger.
+
+    For creation operators, the coefficients are conjugated relative to the
+    ket-side map. For annihilation operators, the unconjugated coefficients
+    are used.
+
+    """
+    modes = lmap.modes
+    U = lmap.U
+    index = {m.signature: i for i, m in enumerate(modes)}
+
+    def subst(op: LadderOpProtocol) -> list[tuple[complex, LadderOpProtocol]]:
+        k = index.get(op.mode.signature)
+        if k is None:
+            return [(1.0 + 0.0j, op)]
+        col = U[:, k]
+
+        if op.kind == OperatorKind.CRE:
+            return [
+                (complex(np.conjugate(col[j])), modes[j].create)
+                for j in range(len(modes))
+            ]
+
+        return [(complex(col[j]), modes[j].ann) for j in range(len(modes))]
+
+    return subst
+
+
 def _apply_ketpoly_to_vacuum(poly: KetPoly) -> KetPoly:
     """Project a rewritten ket polynomial onto the vacuum reference sector.
 
@@ -256,8 +290,9 @@ def apply_to_densitypoly(
     convention.
 
     """
-    subst = make_substitution(lmap)
-    return rewrite_densitypoly(rho, subst)
+    left_subst = make_substitution(lmap)
+    right_subst = make_right_substitution(lmap)
+    return rewrite_densitypoly(rho, left_subst, right_subst)
 
 
 def apply_to_oppoly(op: OpPolyProtocol, *, lmap: LinearModeMap) -> OpPolyProtocol:

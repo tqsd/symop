@@ -228,14 +228,58 @@ def make_substitution(bmap: BogoliubovMap) -> SubstFn:
     return subst
 
 
+def make_right_substitution(bmap: BogoliubovMap) -> SubstFn:
+    r"""Construct the bra-side substitution induced by a Bogoliubov map.
+
+    This is the substitution used on the right monomial of a density term,
+    corresponding to the adjoint-side action needed for
+
+        rho -> S rho S^\dagger.
+
+    """
+    modes = bmap.modes
+    X = bmap.X
+    Y = bmap.Y
+    index = {m.signature: i for i, m in enumerate(modes)}
+
+    def subst(op: LadderOpProtocol) -> list[tuple[complex, LadderOpProtocol]]:
+        k = index.get(op.mode.signature)
+        if k is None:
+            return [(1.0 + 0.0j, op)]
+
+        xcol = X[:, k]
+        ycol = Y[:, k]
+        out: list[tuple[complex, LadderOpProtocol]] = []
+
+        if op.kind == OperatorKind.CRE:
+            for j in range(len(modes)):
+                if xcol[j] != 0:
+                    out.append((complex(np.conjugate(xcol[j])), modes[j].create))
+                if ycol[j] != 0:
+                    out.append((complex(np.conjugate(ycol[j])), modes[j].ann))
+            return out
+
+        for j in range(len(modes)):
+            if ycol[j] != 0:
+                out.append((complex(ycol[j]), modes[j].create))
+            if xcol[j] != 0:
+                out.append((complex(xcol[j]), modes[j].ann))
+        return out
+
+    return subst
+
+
 def apply_to_densitypoly(
     rho: DensityPolyProtocol, *, bmap: BogoliubovMap
 ) -> DensityPolyProtocol:
     r"""Apply a Bogoliubov rewrite to a density polynomial.
 
-    The density polynomial is rewritten by substituting ladder operators
-    on both the left and right monomials according to the Bogoliubov
-    transformation defined by ``bmap``.
+    The density polynomial is rewritten as the symbolic adjoint action
+
+        rho -> S rho S^\dagger
+
+    by using the ket-side substitution on the left monomials and the
+    corresponding bra-side substitution on the right monomials.
 
     Parameters
     ----------
@@ -251,8 +295,9 @@ def apply_to_densitypoly(
         transformation.
 
     """
-    subst = make_substitution(bmap)
-    return rewrite_densitypoly(rho, subst)
+    left_subst = make_substitution(bmap)
+    right_subst = make_right_substitution(bmap)
+    return rewrite_densitypoly(rho, left_subst, right_subst)
 
 
 def apply_to_oppoly(op: OpPolyProtocol, *, bmap: BogoliubovMap) -> OpPolyProtocol:

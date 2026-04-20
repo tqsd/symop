@@ -1,4 +1,4 @@
-symop_proto documentation
+SymOp documentation
 =========================
 
 .. toctree::
