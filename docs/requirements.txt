@@ -1,0 +1,7 @@
+matplotlib
+myst-parser
+sphinx-autodoc-typehints
+jupyter-sphinx
+sphinx-gallery
+furo
+numpy
