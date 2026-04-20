@@ -44,11 +44,11 @@ SymOp focuses on:
 If you use this work, please cite:
 
 ```bibtex
-@article{sekavcnik2026symop,
-  title   = {SymOp: Symbolic and Gaussian Simulation Framework for Quantum Optics},
-  author  = {Sekavcnik, Simon},
-  year    = {2026},
-  journal = {arXiv preprint arXiv:2603.11824}
+@article{sekavcnik2026symbolic,
+  title={Symbolic Quantum State Representation and its Simulation},
+  author={Sekavcnik, Simon and Noetzel, Janis},
+  journal={arXiv preprint arXiv:2603.11824},
+  year={2026}
 }
 ```
 
