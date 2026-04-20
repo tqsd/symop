@@ -36,7 +36,6 @@ SymOp focuses on:
 * Symbolic representations of quantum optical systems
 * Non-orthogonal mode handling
 * Device-based simulation workflows
-* Hybrid symbolic / Gaussian modeling
 
 ---
 
