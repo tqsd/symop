@@ -11,7 +11,7 @@ label formatting across the rendering pipeline.
 
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import Any, cast, Callable
 
 from symop.core.operators import (
     LadderOp,
@@ -23,6 +23,48 @@ from symop.viz.latex_renderer._latex_utils import (
     mode_subscript,
 )
 
+
+def escape_latex_text(value: str) -> str:
+    replacements = {
+        "\\": r"\textbackslash{}",
+        "_": r"\_",
+        "%": r"\%",
+        "&": r"\&",
+        "#": r"\#",
+        "{": r"\{",
+        "}": r"\}",
+        "$": r"\$",
+    }
+    for old, new in replacements.items():
+        value = value.replace(old, new)
+    return value
+
+
+def mode_path_name(mode: SupportsLatexLabel) -> str | None:
+    label = getattr(mode, "label", None)
+    path = getattr(label, "path", None)
+    name = getattr(path, "name", None)
+    return str(name) if name else None
+
+
+def mode_subscript_with_path(
+    mode: SupportsLatexLabel,
+    *,
+    latex_fn: Callable[[Any], str],
+    show_path: bool = True,
+) -> str:
+    sub = mode_subscript(mode, latex_fn=latex_fn)
+    path = mode_path_name(mode)
+
+    if not show_path or not path:
+        return sub
+
+    path_latex = r"\mathrm{" + escape_latex_text(path) + r"}"
+
+    if sub:
+        return sub + r"[" + path_latex + r"]"
+
+    return path_latex
 
 @latex.register(ModeOp)
 def _latex_modeop(obj: ModeOp, /, **kwargs: Any) -> str:
@@ -48,7 +90,12 @@ def _latex_modeop(obj: ModeOp, /, **kwargs: Any) -> str:
     - Otherwise, a generic ``m`` symbol is returned.
 
     """
-    sub = mode_subscript(cast(SupportsLatexLabel, obj), latex_fn=latex)
+    #sub = mode_subscript(cast(SupportsLatexLabel, obj), latex_fn=latex)
+    sub = mode_subscript_with_path(
+        cast(SupportsLatexLabel, obj),
+        latex_fn=latex,
+        show_path=bool(kwargs.get("show_path", True)),
+    )
     return (r"m_{" + sub + r"}") if sub else r"m"
 
 
@@ -83,7 +130,12 @@ def _latex_ladderop(obj: LadderOp, /, **kwargs: Any) -> str:
     """
     adjoint_display = bool(kwargs.get("adjoint_display", False))
 
-    sub = mode_subscript(cast(SupportsLatexLabel, obj.mode), latex_fn=latex)
+    #sub = mode_subscript(cast(SupportsLatexLabel, obj.mode), latex_fn=latex)
+    sub = mode_subscript_with_path(
+        cast(SupportsLatexLabel, obj.mode),
+        latex_fn=latex,
+        show_path=bool(kwargs.get("show_path", True)),
+    )
     kind = getattr(obj.kind, "value", str(obj.kind))
 
     if adjoint_display:

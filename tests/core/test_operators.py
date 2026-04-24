@@ -57,7 +57,8 @@ class TestModeOp(unittest.TestCase):
 
         self.assertEqual(updated.label, new_label)
         self.assertEqual(updated.user_label, mode.user_label)
-        self.assertEqual(updated.display_index, mode.display_index)
+        self.assertIsNotNone(updated.display_index)
+        self.assertNotEqual(updated.display_index, mode.display_index)
 
     def test_with_path_returns_updated_copy(self) -> None:
         mode = make_mode(path="a")

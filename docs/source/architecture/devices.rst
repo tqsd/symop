@@ -31,6 +31,7 @@ This document defines:
 Architectural Principles
 ------------------------
 The device system adheres to the following principles:
+
 1. Device models are representation-agnostic.
 2. Graph/path effects are separated from state transformations.
 3. State transformations are implemented as pure kernels.
@@ -85,6 +86,7 @@ Mode label assignment and transformations
 A physical optical mode in this project is described by a
 :class:`~symop.modes.protocols.labels.ModeLabelProto` which
 contains:
+
 - a path label,
 - a polarization label,
 - an envelope.

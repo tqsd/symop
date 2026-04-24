@@ -64,6 +64,6 @@ def _latex_ket_poly(obj: KetPoly, /, **kwargs: Any) -> str:
         if abs(c) <= cfg.eps:
             continue
         m = latex(t.monomial, **kwargs)
-        parts.append(apply_coeff(c, m, decimals=cfg.decimals, empty_body="\\mathbb{I}"))
+        parts.append(apply_coeff(c, m, decimals=cfg.decimals, empty_body=r"\mathbb{I}"))
 
     return join_signed(parts) if parts else "0"

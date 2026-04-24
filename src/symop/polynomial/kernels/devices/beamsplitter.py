@@ -4,9 +4,35 @@ This module implements backend kernels for applying one or more
 two-mode beamsplitter transformations to polynomial ket and density
 states.
 
-Each beamsplitter acts on an ordered pair of modes identified by their
-mode signatures. The semantic planning stage is expected to provide the
-target pairs, output paths, and unitary parameters in ``action.params``.
+The semantic planning stage provides the input mode signatures, output
+paths, and beamsplitter parameters through ``action.params``. The backend
+uses the package Heisenberg convention, where creation operators transform
+as
+
+.. math::
+
+    \hat a^\dagger_{\mathrm{out},k}
+    =
+    \sum_j U_{k j}\,\hat a^\dagger_{\mathrm{in},j}.
+
+For the angle parameter ``theta`` used by the high-level beamsplitter
+device, the transmission and reflection amplitudes are
+
+.. math::
+
+    t = \cos(\theta), \qquad r = \sin(\theta).
+
+The corresponding two-mode unitary is
+
+.. math::
+
+    U =
+    \begin{pmatrix}
+        t e^{i\phi_t} & r e^{i\phi_r} \\
+        -r e^{-i\phi_r} & t e^{-i\phi_t}
+    \end{pmatrix}.
+
+Thus ``theta = pi / 4`` gives a 50/50 beamsplitter.
 
 Notes
 -----
