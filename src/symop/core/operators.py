@@ -71,7 +71,8 @@ class ModeOp:
 
     user_label: str | None = None
     display_index: int | None = field(
-        default_factory=lambda: next(_mode_display_counter)
+        default_factory=lambda: next(_mode_display_counter),
+        compare=False,
     )
 
     _ann: LadderOp = field(init=False, repr=False, compare=False)
@@ -102,6 +103,13 @@ class ModeOp:
         """Alias for `self.cre`."""
         return self.cre
 
+    def _with_semantic_label(self, label: ModeLabelProtocol) -> Self:
+        return replace(
+            self,
+            label=label,
+            display_index=next(_mode_display_counter),
+        )
+
     def with_user_label(self, tag: str) -> Self:
         """Return an updated ``ModeOp`` with new ``user_label``."""
         return replace(self, user_label=tag)
@@ -112,19 +120,19 @@ class ModeOp:
 
     def with_envelope(self, envelope: EnvelopeProtocol) -> Self:
         """Return an updated ``ModeOp`` with new ``Envelope``."""
-        return replace(self, label=self.label.with_envelope(envelope))
+        return self._with_semantic_label(self.label.with_envelope(envelope))
 
     def with_label(self, label: ModeLabelProtocol) -> Self:
         """Return an updated ``ModeOp`` with new ``label``."""
-        return replace(self, label=label)
+        return self._with_semantic_label(label)
 
     def with_polarization(self, polarization: PolarizationProtocol) -> Self:
         """Return an updated ``ModeOp`` with new ``Polarization``."""
-        return replace(self, label=self.label.with_polarization(polarization))
+        return self._with_semantic_label(self.label.with_polarization(polarization))
 
     def with_path(self, path: PathProtocol) -> Self:
         """Return an updated ``ModeOp`` with new ``Path``."""
-        return replace(self, label=self.label.with_path(path))
+        return self._with_semantic_label(self.label.with_path(path))
 
     @property
     def signature(self) -> Signature:

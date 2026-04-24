@@ -12,6 +12,7 @@ to generate the state.
 from __future__ import annotations
 import numpy as np
 from symop.devices.models import BeamSplitter, NumberStateSource
+from symop.devices.models.detectors.number_detector import NumberDetector
 from symop.modes.labels import Path, Polarization
 from symop.modes.envelopes import GaussianEnvelope
 from symop.polynomial.state.ket import KetPolyState
@@ -70,6 +71,7 @@ state_interfered = bs(
 # **2a) Inspect the states**
 VI.display_many(state_a, state_b, state_joint, state_interfered)
 
+
 # %%
 # *Why does the output contain several terms?*
 #
@@ -91,6 +93,21 @@ VI.display_many(state_a, state_b, state_joint, state_interfered)
 # indistinguishable (same envelope and same polarization),
 # interference can cancel coincidence contributions and enhance
 # bunching, as in the Hong-Ou-Mandel effect.
+
+# %%
+# **2b) Detection statistics**
+# Inspecting the states gives all possibilities, but due to generality
+# the effective state is hidden in the canonicalization. To see the outcome statistics we can measure each port with number detector. Which should detect either 0 or 2 photons.
+det = NumberDetector()
+observation_port_top = det.observe(state_interfered, ports={"in": Path("bs_out0")})
+observation_port_bot = det.observe(state_interfered, ports={"in": Path("bs_out0")})
+
+VI.plot(observation_port_top)
+# %%
+#
+VI.plot(observation_port_bot)
+
+
 
 # %%
 # **3) Interfering just one pulse with vacuum**
