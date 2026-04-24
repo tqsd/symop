@@ -15,16 +15,70 @@ Full documentation is available at:
 
 ## 🚀 Installation
 
+**From PyPI (stable release)**
+
 ```bash
 pip install symop
 ```
 
-For development:
+**From GitHub (latest master branch)**
+
+```bash
+pip install git+https://github.com/tqsd/symop.git
+```
+
+**From GitHub (Specific branch)**
+
+```bash
+pip install git+https://github.com/tqsd/symop.git@branch-name
+```
+
+**From GitHub (Specific commit)**
+
+```bash
+pip install git+https://github.com/tqsd/symop.git@<commit-hash>
+```
+
+---
+
+## 🛠️ Development
+
+**Setup:**
 
 ```bash
 git clone https://github.com/tqsd/symop.git
 cd symop
 pip install -e .
+# or
+pip install -e .[dev]
+```
+
+**Common Tasks**
+```bash
+make format       # format code (ruff)
+make lint         # lint code (ruff)
+make typecheck    # static typing (mypy)
+make contracts    # import structure checks
+make check        # run all checks
+```
+
+**Testing**
+```bash
+make test         # run pytest
+make test-all     # run full tox suite
+```
+
+**Coverage**
+```bash
+make coverage         # generate coverage reports
+make docs-coverage    # include coverage in docs
+```
+
+**Documentation**
+```bash
+make docs-html   # build docs
+make docs-live   # live docs server
+make docs-clean  # clean docs build
 ```
 
 ---

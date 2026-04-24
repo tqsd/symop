@@ -12,7 +12,7 @@ The wrapper serves several roles:
 - supports relabeling operations used by device kernels
 - provides normalization helpers for ket states
 
-Important:
+Important
 ---------
 Mode labels are not stored independently. They are derived directly
 from the concrete modes present in the ket polynomial, ensuring that
@@ -290,7 +290,7 @@ class KetPolyState:
         self,
         mode_map: dict[Signature, ModeOpProtocol],
     ) -> KetPolyState:
-        r"""Return a new ket state with selected ``ModeOp``s relabeled.
+        r"""Return a new ket state with selected ``ModeOp`` objectss relabeled.
 
         Parameters
         ----------

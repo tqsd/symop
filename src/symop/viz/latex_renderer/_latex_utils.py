@@ -137,7 +137,7 @@ def format_complex(z: complex, *, decimals: int) -> str:
         im_part = "i"
     else:
         im_part = f"{fmt_real(im_abs, decimals=decimals)}\\,i"
-    return rf"\left({fmt_real(re, decimals=decimals)} {sign} {im_part}\\right)"
+    return rf"\left({fmt_real(re, decimals=decimals)} {sign} {im_part}\right)"
 
 
 def apply_coeff(coeff: complex, body: str, *, decimals: int, empty_body: str) -> str:

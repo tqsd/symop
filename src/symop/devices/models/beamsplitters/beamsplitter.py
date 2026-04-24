@@ -7,6 +7,10 @@ For each matched pair of modes on the two input paths, the planning stage
 records a pair specification in ``action.params["pairs"]`` for the backend
 kernel. The physical two-mode unitary is not applied during planning.
 
+The high-level device parameter ``theta`` is interpreted through
+``t = cos(theta)`` and ``r = sin(theta)``. Therefore ``theta = pi / 4``
+corresponds to a balanced 50/50 beamsplitter.
+
 Notes
 -----
 The backend kernel is expected to realize the full beamsplitter rewrite,
@@ -45,14 +49,71 @@ class BeamSplitter(DeviceBase):
     Planning records the participating input modes, output paths, and
     beamsplitter parameters for backend execution.
 
+    The device uses the package Heisenberg convention, where creation
+    operators transform as
+
+    .. math::
+
+        \hat a^\dagger_{\mathrm{out},k}
+        =
+        \sum_j U_{k j}\,\hat a^\dagger_{\mathrm{in},j}.
+
+    The angle ``theta`` determines the transmission and reflection
+    amplitudes by
+
+    .. math::
+
+        t = \cos(\theta), \qquad r = \sin(\theta).
+
+    With phases ``phi_t`` and ``phi_r``, the two-mode unitary is
+
+    .. math::
+
+        U =
+        \begin{pmatrix}
+            t e^{i\phi_t} & r e^{i\phi_r} \\
+            -r e^{-i\phi_r} & t e^{-i\phi_t}
+        \end{pmatrix}.
+
+    Thus ``theta = pi / 4`` gives a balanced 50/50 beamsplitter.
+
+    In this implementation, transmission corresponds to remaining on the same
+    path index, while reflection corresponds to switching to the opposite path:
+
+    - ``in0 -> out0``: transmission
+    - ``in0 -> out1``: reflection
+    - ``in1 -> out1``: transmission
+    - ``in1 -> out0``: reflection, with the phase determined by the lower-left
+    unitary element
+
+    Thus a fully transmitting beamsplitter (theta = 0) leaves paths unchanged,
+    while a fully reflecting beamsplitter (theta = pi/2) swaps the two paths.
+
     Parameters
     ----------
     theta:
-        Mixing angle of the beamsplitter.
+        Mixing angle of the beamsplitter. The transmission and reflection
+        amplitudes are ``cos(theta)`` and ``sin(theta)``, respectively.
     phi_t:
         Transmission phase.
     phi_r:
         Reflection phase.
+
+    Examples
+    --------
+    Create a balanced (50/50) beamsplitter and apply it to two paths:
+
+    >>> import numpy as np
+    >>> bs = BeamSplitter(theta=np.pi / 4)
+    >>> state_out = bs(
+    ...     state_in,
+    ...     ports={
+    ...         "in0": Path("a"),
+    ...         "in1": Path("b"),
+    ...         "out0": Path("c"),
+    ...         "out1": Path("d"),
+    ...     },
+    ... )
 
     Notes
     -----
